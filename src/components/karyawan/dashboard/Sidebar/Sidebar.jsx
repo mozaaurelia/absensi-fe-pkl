@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const menus = [
     { label: "Dashboard", href: "/karyawan/dashboard", icon: DashboardIcon },
@@ -15,13 +16,13 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-[#1E3A5F] min-h-screen flex flex-col px-4 py-6 shrink-0">
+    <aside className="w-64 bg-[#1E3A5F] h-screen flex flex-col px-4 py-6 shrink-0 overflow-y-auto sticky top-0">
       <div className="px-2 mb-8">
         <p className="text-white font-bold text-base">E-Absensi</p>
         <p className="text-blue-200/70 text-xs mt-0.5">Sistem Absensi Elektronik</p>
       </div>
 
-      <nav className="flex flex-col gap-1">
+      <nav className="flex flex-col gap-1 flex-1">
         {menus.map((menu) => {
           const active = pathname === menu.href;
           const Icon = menu.icon;
@@ -43,6 +44,25 @@ export default function Sidebar() {
           );
         })}
       </nav>
+
+      <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
+        <button
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-blue-100/80 hover:bg-white/10 transition-colors"
+        >
+          <NotificationIcon />
+          Notifikasi
+        </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("user");
+            router.push("/auth/login");
+          }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors"
+        >
+          <LogoutIcon />
+          Keluar
+        </button>
+      </div>
     </aside>
   );
 }
@@ -94,6 +114,25 @@ function SettingsIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
       />
+    </svg>
+  );
+}
+
+function NotificationIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
