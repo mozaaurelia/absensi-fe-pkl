@@ -9,7 +9,6 @@ import Overview from "@/components/karyawan/dashboard/Overview/Overview";
 import Attendance from "@/components/karyawan/dashboard/Attendance/Attendance";
 import WeeklyWork from "@/components/karyawan/dashboard/WeeklyWork/WeeklyWork";
 
-import AttendanceHistory from "@/components/karyawan/dashboard/AttendanceHistory/AttendanceHistory";
 import Agenda from "@/components/karyawan/dashboard/Agenda/Agenda";
 
 export default function DashboardKaryawanPage() {
@@ -51,12 +50,7 @@ export default function DashboardKaryawanPage() {
 
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <AttendanceHistory />
-          </div>
-          <Agenda />
-        </div>
+        <Agenda />
       </main>
     </div>
   );

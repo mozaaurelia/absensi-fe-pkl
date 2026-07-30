@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Sidebar from "@/components/karyawan/dashboard/Sidebar/Sidebar";
-import AttendanceHeader from "@/components/karyawan/attendance/AttendanceHeader";
+import AttendanceHeader from "@/components/karyawan/attendance/Header/AttendanceHeader";
+import AttendanceContent from "@/components/karyawan/attendance/AttendanceContent";
 
 
 export default function AttendancePage() {
@@ -35,6 +36,7 @@ export default function AttendancePage() {
           onNextDay={handleNextDay}
         />
 
+        <AttendanceContent selectedDate={selectedDate} />
       </main>
     </div>
   );
