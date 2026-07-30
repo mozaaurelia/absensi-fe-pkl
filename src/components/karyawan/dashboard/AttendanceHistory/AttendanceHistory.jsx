@@ -1,3 +1,5 @@
+import { FiList, FiCalendar } from "react-icons/fi";
+
 export default function AttendanceHistory() {
   const logs = [
     { date: "Senin, 6 Juli 2026", masuk: "08:56", pulang: "18:03", total: "9j 07m", status: "Hadir", color: "bg-green-100 text-green-700" },
@@ -7,14 +9,22 @@ export default function AttendanceHistory() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-1">
-        <h3 className="font-bold text-gray-900">Log Absensi Minggu Ini</h3>
-        <p className="text-xs text-gray-400">Periode: 6 - 12 Juli 2026</p>
+    <div className="bg-white rounded-2xl border border-gray-100 p-6 card-hover opacity-0 animate-fade-slide-up">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center">
+            <FiList size={20} />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Log Absensi Minggu Ini</h3>
+            <p className="text-xs text-gray-400">Ringkasan pencatatan masuk dan pulang</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+          <FiCalendar size={13} />
+          <span>6 - 12 Juli 2026</span>
+        </div>
       </div>
-      <p className="text-xs text-gray-400 mb-5">
-        Ringkasan pencatatan masuk dan pulang karyawan.
-      </p>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -28,8 +38,12 @@ export default function AttendanceHistory() {
             </tr>
           </thead>
           <tbody>
-            {logs.map((log) => (
-              <tr key={log.date} className="border-b border-gray-50 last:border-0">
+            {logs.map((log, i) => (
+              <tr
+                key={log.date}
+                className="border-b border-gray-50 last:border-0 opacity-0 animate-fade-slide-in"
+                style={{ animationDelay: `${0.2 + i * 0.08}s` }}
+              >
                 <td className="py-3 text-gray-800">{log.date}</td>
                 <td className="py-3 text-gray-600">{log.masuk}</td>
                 <td className="py-3 text-gray-600">{log.pulang}</td>

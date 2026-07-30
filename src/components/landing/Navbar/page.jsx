@@ -47,7 +47,7 @@ export default function Navbar() {
             href="/auth/login"
             className="bg-white text-[#1E3A5F] text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-50 transition-colors"
           >
-            Masuk Aplikasi
+            Masuk
           </a>
         </div>
 
@@ -83,7 +83,7 @@ export default function Navbar() {
             href="/auth/login"
             className="bg-white text-[#1E3A5F] text-sm font-semibold px-5 py-2.5 rounded-lg text-center"
           >
-            Masuk Aplikasi
+            Masuk
           </a>
         </div>
       )}

@@ -17,20 +17,6 @@ export default function LoginCard() {
         <LoginForm />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-4 flex items-center justify-between">
-        <div>
-          <p className="font-semibold text-gray-900 text-sm">
-            Belum punya akun?
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            Ajukan registrasi akun melalui Admin HRM perusahaan.
-          </p>
-        </div>
-        <button suppressHydrationWarning className="border border-gray-200 rounded-lg px-4 py-2 text-sm font-semibold text-[#1E3A5F] hover:bg-gray-50 whitespace-nowrap">
-          Register Akun
-        </button>
-      </div>
-
       <p className="text-center text-xs text-gray-400 mt-6">
         © 2026 E-Absensi - Sistem Absensi Elektronik Internal
       </p>

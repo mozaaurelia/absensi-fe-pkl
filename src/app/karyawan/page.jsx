@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/karyawan/dashboard/Sidebar/Sidebar";
+import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader/DashboardHeader";
 import Overview from "@/components/karyawan/dashboard/Overview/Overview";
 import Attendance from "@/components/karyawan/dashboard/Attendance/Attendance";
 import WeeklyWork from "@/components/karyawan/dashboard/WeeklyWork/WeeklyWork";
-import ProfileSummary from "@/components/karyawan/dashboard/ProfileSummary/ProfileSummary";
+
 import AttendanceHistory from "@/components/karyawan/dashboard/AttendanceHistory/AttendanceHistory";
 import Agenda from "@/components/karyawan/dashboard/Agenda/Agenda";
 
@@ -38,26 +39,7 @@ export default function DashboardKaryawanPage() {
       <Sidebar />
 
       <main className="flex-1 p-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">
-              Halo, Andi Pratama
-            </h1>
-            <p className="text-xs text-gray-400 mt-1">
-              Rabu, 8 Juli 2026 · Dashboard Karyawan
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm font-semibold text-gray-800">Karyawan</p>
-              <p className="text-xs text-gray-400">Operasional</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center">
-              AP
-            </div>
-          </div>
-        </div>
+        <DashboardHeader user={user} />
 
         <div className="mb-6">
           <Overview />
@@ -66,7 +48,7 @@ export default function DashboardKaryawanPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           <Attendance />
           <WeeklyWork />
-          <ProfileSummary />
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

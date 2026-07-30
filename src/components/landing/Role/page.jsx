@@ -12,7 +12,7 @@ export default function Role() {
           />
         </svg>
       ),
-      iconBg: "bg-green-100 text-green-700",
+      iconBg: "bg-blue-100 text-blue-700",
       title: "Karyawan",
       desc: "Melakukan clock-in/out, melihat jam kerja, mengajukan izin, cuti, dan lembur.",
       tags: ["Clock In / Clock Out", "Izin, Cuti & Lembur", "Riwayat Presensi"],
@@ -42,7 +42,7 @@ export default function Role() {
           <path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
       ),
-      iconBg: "bg-purple-100 text-purple-700",
+      iconBg: "bg-blue-100 text-blue-700",
       title: "Admin / HRD",
       desc: "Mengelola data SDM, shift kerja, pengaturan sistem, rekap presensi, dan payroll.",
       tags: ["Data SDM", "Rekap Presensi", "Payroll & Sistem"],

@@ -24,7 +24,7 @@ export default function LoginLeftSection() {
           dan laporan payroll secara aman dan terstruktur.
         </p>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3 mb-10">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -34,6 +34,31 @@ export default function LoginLeftSection() {
               <p className="text-blue-200/70 text-xs mt-1">{stat.label}</p>
             </div>
           ))}
+        </div>
+
+        <div className="flex gap-4">
+          <div className="bg-white/10 rounded-xl px-5 py-4 flex items-center gap-4 flex-1">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <circle cx="12" cy="12" r="3" />
+              <circle cx="16" cy="9" r="1" fill="white" />
+              <path d="M12 15v2" />
+            </svg>
+            <div>
+              <p className="text-white text-sm font-semibold">Face ID</p>
+              <p className="text-blue-200/70 text-xs">Absensi Wajah</p>
+            </div>
+          </div>
+          <div className="bg-white/10 rounded-xl px-5 py-4 flex items-center gap-4 flex-1">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <div>
+              <p className="text-white text-sm font-semibold">Lokasi Terkini</p>
+              <p className="text-blue-200/70 text-xs">Google Maps</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

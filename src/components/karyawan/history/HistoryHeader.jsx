@@ -1,4 +1,10 @@
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
+
 export default function HistoryHeader() {
+  const { user } = useAuth();
+
   return (
     <div className="flex items-center justify-between mb-8">
       <div>
@@ -17,8 +23,12 @@ export default function HistoryHeader() {
             1 Juni 2026 - 30 Juni 2026
           </p>
         </div>
-        <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center">
-          AP
+        <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center overflow-hidden">
+          {user?.avatar ? (
+            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+          ) : (
+            user?.initials || "AP"
+          )}
         </div>
       </div>
     </div>

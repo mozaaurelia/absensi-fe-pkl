@@ -7,6 +7,7 @@ export default function LoginInput({
   showToggle = false,
   visible,
   onToggleVisible,
+  error,
 }) {
   return (
     <div className="mb-5">
@@ -20,7 +21,11 @@ export default function LoginInput({
           value={value}
           onChange={onChange}
           suppressHydrationWarning
-          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white transition-colors"
+          className={`w-full rounded-lg border px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-colors ${
+            error
+              ? "border-red-300 bg-red-50 focus:border-red-400"
+              : "border-gray-200 bg-gray-50 focus:border-[#1E3A5F] focus:bg-white"
+          }`}
         />
         {showToggle && (
           <button
@@ -33,6 +38,16 @@ export default function LoginInput({
           </button>
         )}
       </div>
+      {error && (
+        <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          {error}
+        </p>
+      )}
     </div>
   );
 }

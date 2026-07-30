@@ -1,69 +1,98 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Sidebar() {
+  const [open, setOpen] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+  const { logout } = useAuth();
 
   const menus = [
     { label: "Dashboard", href: "/karyawan/dashboard", icon: DashboardIcon },
-    { label: "Clock In/Out", href: "/karyawan/attendance", icon: ClockIcon, noWhite: true },
+    { label: "Clock In/Out", href: "/karyawan/attendance", icon: ClockIcon },
     { label: "Riwayat Presensi", href: "/karyawan/history", icon: HistoryIcon },
     { label: "Izin & Cuti", href: "/karyawan/leave", icon: LeaveIcon },
     { label: "Pengaturan", href: "/karyawan/settings", icon: SettingsIcon },
   ];
 
   return (
-    <aside className="w-64 bg-[#1E3A5F] h-screen flex flex-col px-4 py-6 shrink-0 overflow-y-auto sticky top-0">
-      <div className="px-2 mb-8">
-        <p className="text-white font-bold text-base">E-Absensi</p>
-        <p className="text-blue-200/70 text-xs mt-0.5">Sistem Absensi Elektronik</p>
-      </div>
+    <>
+      <aside
+        className={`bg-[#1E3A5F] h-screen flex flex-col px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-all duration-300 ${
+          open ? "w-64" : "w-[68px]"
+        }`}
+      >
+        <div className={`flex items-center mb-8 ${open ? "px-2 justify-between" : "justify-center"}`}>
+          {open && (
+            <div>
+              <p className="text-white font-bold text-base">E-Absensi</p>
+              <p className="text-blue-200/70 text-xs mt-0.5">Sistem Absensi Elektronik</p>
+            </div>
+          )}
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="text-blue-200/80 hover:text-white transition-colors shrink-0"
+            aria-label={open ? "Tutup sidebar" : "Buka sidebar"}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {open ? (
+                <>
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="15" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
 
-      <nav className="flex flex-col gap-1 flex-1">
-        {menus.map((menu) => {
-          const active = pathname === menu.href;
-          const Icon = menu.icon;
-          return (
-            <Link
-              key={menu.label}
-              href={menu.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                active
-                  ? menu.noWhite
-                    ? "text-white bg-white/10"
-                    : "bg-white text-[#1E3A5F]"
-                  : "text-blue-100/80 hover:bg-white/10"
-              }`}
-            >
-              <Icon />
-              {menu.label}
-            </Link>
-          );
-        })}
-      </nav>
+        <nav className="flex flex-col gap-1 flex-1">
+          {menus.map((menu) => {
+            const active = pathname === menu.href;
+            const Icon = menu.icon;
+            return (
+              <Link
+                key={menu.label}
+                href={menu.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-white/10 text-white"
+                    : "text-blue-100/80 hover:bg-white/10"
+                } ${open ? "" : "justify-center"}`}
+                title={!open ? menu.label : undefined}
+              >
+                <Icon />
+                {open && menu.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-      <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
-        <button
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-blue-100/80 hover:bg-white/10 transition-colors"
-        >
-          <NotificationIcon />
-          Notifikasi
-        </button>
-        <button
-          onClick={() => {
-            localStorage.removeItem("user");
-            router.push("/auth/login");
-          }}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors"
-        >
-          <LogoutIcon />
-          Keluar
-        </button>
-      </div>
-    </aside>
+        <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
+          <button
+            onClick={() => {
+              logout();
+              router.push("/auth/login");
+            }}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors ${open ? "" : "justify-center"}`}
+            title={!open ? "Keluar" : undefined}
+          >
+            <LogoutIcon />
+            {open && "Keluar"}
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
 
@@ -114,15 +143,6 @@ function SettingsIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
       />
-    </svg>
-  );
-}
-
-function NotificationIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

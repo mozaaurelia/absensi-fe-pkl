@@ -1,3 +1,13 @@
+import { FiClock, FiBriefcase, FiCalendar, FiAlertTriangle } from "react-icons/fi";
+
+const iconMap = [FiClock, FiBriefcase, FiCalendar, FiAlertTriangle];
+const colorMap = [
+  { bg: "bg-amber-50", ic: "text-amber-600" },
+  { bg: "bg-green-50", ic: "text-green-600" },
+  { bg: "bg-blue-50", ic: "text-blue-600" },
+  { bg: "bg-red-50", ic: "text-red-600" },
+];
+
 export default function Overview() {
   const stats = [
     { label: "Status Hari Ini", value: "Belum Absen", tag: "Pending", tagColor: "bg-amber-100 text-amber-700" },
@@ -8,22 +18,30 @@ export default function Overview() {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="bg-white rounded-2xl border border-gray-100 p-5"
-        >
-          <div className="flex items-start justify-between mb-3">
-            <p className="text-xs text-gray-400">{stat.label}</p>
-            <span
-              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${stat.tagColor}`}
-            >
-              {stat.tag}
-            </span>
+      {stats.map((stat, i) => {
+        const Icon = iconMap[i];
+        const colors = colorMap[i];
+        return (
+          <div
+            key={stat.label}
+            className="bg-white rounded-2xl border border-gray-100 p-5 card-hover opacity-0 animate-fade-slide-up"
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className={`w-10 h-10 rounded-xl ${colors.bg} flex items-center justify-center ${colors.ic}`}>
+                <Icon size={20} />
+              </div>
+              <span
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${stat.tagColor}`}
+              >
+                {stat.tag}
+              </span>
+            </div>
+            <p className="font-bold text-gray-900 text-lg">{stat.value}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{stat.label}</p>
           </div>
-          <p className="font-bold text-gray-900 text-lg">{stat.value}</p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

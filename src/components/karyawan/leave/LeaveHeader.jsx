@@ -1,4 +1,10 @@
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
+
 export default function LeaveHeader() {
+  const { user } = useAuth();
+
   return (
     <div className="flex items-center justify-between mb-8">
       <div>
@@ -18,8 +24,12 @@ export default function LeaveHeader() {
         <button className="bg-[#1E3A5F] text-white rounded-lg px-4 py-2.5 text-sm font-semibold hover:bg-[#16304f] transition-colors whitespace-nowrap">
           Buat Pengajuan Baru
         </button>
-        <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center shrink-0">
-          AP
+        <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center overflow-hidden">
+          {user?.avatar ? (
+            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+          ) : (
+            user?.initials || "AP"
+          )}
         </div>
       </div>
     </div>
