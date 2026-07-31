@@ -1,8 +1,14 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function LoginRoleTabs({ role, setRole }) {
+  const { t } = useLanguage();
+
   const roles = [
-    { id: "karyawan", label: "Karyawan" },
-    { id: "supervisor", label: "Supervisor" },
-    { id: "admin", label: "Admin HRM" },
+    { id: "karyawan", label: t("login.roleEmployee") },
+    { id: "supervisor", label: t("login.roleSupervisor") },
+    { id: "admin", label: t("login.roleAdmin") },
   ];
 
   return (

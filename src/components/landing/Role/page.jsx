@@ -1,4 +1,10 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function Role() {
+  const { t } = useLanguage();
+
   const roles = [
     {
       icon: (
@@ -13,9 +19,9 @@ export default function Role() {
         </svg>
       ),
       iconBg: "bg-blue-100 text-blue-700",
-      title: "Karyawan",
-      desc: "Melakukan clock-in/out, melihat jam kerja, mengajukan izin, cuti, dan lembur.",
-      tags: ["Clock In / Clock Out", "Izin, Cuti & Lembur", "Riwayat Presensi"],
+      title: t("role.employee.title"),
+      desc: t("role.employee.desc"),
+      tags: t("role.employee.tags"),
     },
     {
       icon: (
@@ -31,9 +37,9 @@ export default function Role() {
         </svg>
       ),
       iconBg: "bg-blue-100 text-blue-700",
-      title: "Atasan / Supervisor",
-      desc: "Memantau kehadiran tim, mengecek jadwal, dan menyetujui atau menolak pengajuan.",
-      tags: ["Dashboard Tim", "Approve Izin / Cuti", "Jadwal & Riwayat Tim"],
+      title: t("role.supervisor.title"),
+      desc: t("role.supervisor.desc"),
+      tags: t("role.supervisor.tags"),
     },
     {
       icon: (
@@ -43,9 +49,9 @@ export default function Role() {
         </svg>
       ),
       iconBg: "bg-blue-100 text-blue-700",
-      title: "Admin / HRD",
-      desc: "Mengelola data SDM, shift kerja, pengaturan sistem, rekap presensi, dan payroll.",
-      tags: ["Data SDM", "Rekap Presensi", "Payroll & Sistem"],
+      title: t("role.admin.title"),
+      desc: t("role.admin.desc"),
+      tags: t("role.admin.tags"),
     },
   ];
 
@@ -53,14 +59,13 @@ export default function Role() {
     <section id="role" className="bg-slate-50 py-24">
       <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center mb-14">
         <p className="text-xs font-bold text-[#1E3A5F] tracking-wide uppercase mb-3">
-          Satu Sistem Untuk Semua Role
+          {t("role.eyebrow")}
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Dirancang untuk kebutuhan karyawan, atasan, dan HRD
+          {t("role.title")}
         </h2>
         <p className="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">
-          Setiap role mendapatkan tampilan dan fitur yang berbeda, sehingga
-          proses kerja menjadi lebih fokus, ringkas, dan mudah dipantau.
+          {t("role.desc")}
         </p>
       </div>
 

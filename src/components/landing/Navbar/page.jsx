@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle/LanguageToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   const links = [
-    { label: "Beranda", href: "#beranda" },
-    { label: "Fitur", href: "#fitur" },
-    { label: "Role", href: "#role" },
-    { label: "Alur", href: "#alur" },
-    { label: "Kontak", href: "#kontak" },
+    { label: t("nav.home"), href: "#beranda" },
+    { label: t("nav.features"), href: "#fitur" },
+    { label: t("nav.roles"), href: "#role" },
+    { label: t("nav.flow"), href: "#alur" },
+    { label: t("nav.contact"), href: "#kontak" },
   ];
 
   return (
@@ -25,7 +28,7 @@ export default function Navbar() {
               E-Absensi
             </p>
             <p className="text-blue-200/70 text-xs leading-tight">
-              Sistem Absensi Elektronik
+              {t("nav.tagline")}
             </p>
           </div>
         </div>
@@ -42,29 +45,33 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-3">
+          <LanguageToggle />
           <a
             href="/auth/login"
             className="bg-white text-[#1E3A5F] text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-50 transition-colors"
           >
-            Masuk
+            {t("nav.signIn")}
           </a>
         </div>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="md:hidden text-white"
-          aria-label="Toggle menu"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageToggle className="md:hidden" />
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="text-white"
+            aria-label={t("nav.toggleMenu")}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -83,7 +90,7 @@ export default function Navbar() {
             href="/auth/login"
             className="bg-white text-[#1E3A5F] text-sm font-semibold px-5 py-2.5 rounded-lg text-center"
           >
-            Masuk
+            {t("nav.signIn")}
           </a>
         </div>
       )}

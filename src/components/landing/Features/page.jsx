@@ -1,4 +1,10 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function Features() {
+  const { t } = useLanguage();
+
   const features = [
     {
       icon: (
@@ -8,8 +14,8 @@ export default function Features() {
         </svg>
       ),
       iconBg: "bg-green-100 text-green-700",
-      title: "Clock In / Out",
-      desc: "Presensi masuk dan pulang dengan validasi GPS dan perangkat.",
+      title: t("features.clock.title"),
+      desc: t("features.clock.desc"),
     },
     {
       icon: (
@@ -23,8 +29,8 @@ export default function Features() {
         </svg>
       ),
       iconBg: "bg-blue-100 text-blue-700",
-      title: "Izin, Cuti & Lembur",
-      desc: "Pengajuan terstruktur dengan status pending, disetujui, atau ditolak.",
+      title: t("features.leave.title"),
+      desc: t("features.leave.desc"),
     },
     {
       icon: (
@@ -33,8 +39,8 @@ export default function Features() {
         </svg>
       ),
       iconBg: "bg-amber-100 text-amber-700",
-      title: "Approval Supervisor",
-      desc: "Atasan dapat melihat pengajuan tim dan mengambil keputusan cepat.",
+      title: t("features.approval.title"),
+      desc: t("features.approval.desc"),
     },
     {
       icon: (
@@ -43,8 +49,8 @@ export default function Features() {
         </svg>
       ),
       iconBg: "bg-indigo-100 text-indigo-700",
-      title: "Rekap & Payroll",
-      desc: "Data presensi siap dipakai untuk laporan bulanan dan penggajian.",
+      title: t("features.payroll.title"),
+      desc: t("features.payroll.desc"),
     },
   ];
 
@@ -53,20 +59,19 @@ export default function Features() {
       <div className="max-w-6xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-16 items-start">
         <div>
           <p className="text-xs font-bold text-[#1E3A5F] tracking-wide uppercase mb-3">
-            Fitur Utama
+            {t("features.eyebrow")}
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
-            Semua kebutuhan presensi internal dalam satu dashboard.
+            {t("features.title")}
           </h2>
           <p className="text-gray-500 text-sm leading-relaxed mb-8">
-            E-Absensi dibuat untuk mengurangi pekerjaan manual HR, mempercepat
-            approval atasan, dan memberi transparansi data kepada karyawan.
+            {t("features.desc")}
           </p>
           <a
             href="#alur"
             className="inline-block bg-[#1E3A5F] text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-[#16304f] transition-colors"
           >
-            Pelajari Fitur
+            {t("features.learnMore")}
           </a>
         </div>
 

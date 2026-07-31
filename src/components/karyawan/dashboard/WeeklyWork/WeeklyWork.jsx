@@ -1,12 +1,17 @@
+"use client";
+
 import { FiBarChart2, FiTarget } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function WeeklyWork() {
+  const { daysShort, t } = useLanguage();
+
   const days = [
-    { label: "Sen", value: 65 },
-    { label: "Sel", value: 55 },
-    { label: "Rab", value: 90 },
-    { label: "Kam", value: 25 },
-    { label: "Jum", value: 70 },
+    { label: daysShort[1], value: 65 },
+    { label: daysShort[2], value: 55 },
+    { label: daysShort[3], value: 90 },
+    { label: daysShort[4], value: 25 },
+    { label: daysShort[5], value: 70 },
   ];
 
   return (
@@ -16,15 +21,15 @@ export default function WeeklyWork() {
           <FiBarChart2 size={20} />
         </div>
         <div>
-          <h3 className="font-bold text-gray-900">Jam Kerja Mingguan</h3>
-          <p className="text-xs text-gray-400">Target mingguan: 40 jam kerja.</p>
+          <h3 className="font-bold text-gray-900">{t("weeklyWork.title")}</h3>
+          <p className="text-xs text-gray-400">{t("weeklyWork.target")}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5 text-xs text-gray-500">
           <FiTarget size={13} />
-          Progress Minggu Ini
+          {t("weeklyWork.progress")}
         </div>
         <p className="text-xs font-bold text-[#1E3A5F]">80%</p>
       </div>

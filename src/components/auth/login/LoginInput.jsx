@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function LoginInput({
   label,
   type = "text",
@@ -9,6 +13,8 @@ export default function LoginInput({
   onToggleVisible,
   error,
 }) {
+  const { t } = useLanguage();
+
   return (
     <div className="mb-5">
       <label className="block text-sm font-semibold text-gray-800 mb-2">
@@ -34,7 +40,7 @@ export default function LoginInput({
             suppressHydrationWarning
             className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-500 hover:text-[#1E3A5F]"
           >
-            {visible ? "Sembunyikan" : "Lihat"}
+            {visible ? t("login.hide") : t("login.show")}
           </button>
         )}
       </div>

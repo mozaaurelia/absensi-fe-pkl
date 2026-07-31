@@ -1,6 +1,11 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function AttendanceSuccess({ mode = "in", onFinish }) {
+  const { locale, t } = useLanguage();
   const isCheckIn = mode === "in";
-  const now = new Date().toLocaleTimeString("id-ID", {
+  const now = new Date().toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -15,10 +20,10 @@ export default function AttendanceSuccess({ mode = "in", onFinish }) {
       </div>
 
       <h3 className="font-bold text-gray-900 text-lg mb-2">
-        {isCheckIn ? "Absen Masuk Berhasil!" : "Absen Pulang Berhasil!"}
+        {isCheckIn ? t("attendanceSuccess.checkIn") : t("attendanceSuccess.checkOut")}
       </h3>
       <p className="text-sm text-gray-500 leading-relaxed mb-1 max-w-xs">
-        Kehadiran Anda telah tercatat pada pukul
+        {t("attendanceSuccess.desc")}
       </p>
       <p className="text-2xl font-bold text-[#1E3A5F] mb-6 tabular-nums">
         {now}
@@ -28,7 +33,7 @@ export default function AttendanceSuccess({ mode = "in", onFinish }) {
         onClick={onFinish}
         className="w-full bg-gradient-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md shadow-blue-900/20"
       >
-        Kembali ke Beranda
+        {t("attendanceSuccess.backHome")}
       </button>
     </div>
   );

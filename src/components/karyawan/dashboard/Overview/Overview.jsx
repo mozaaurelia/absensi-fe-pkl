@@ -1,4 +1,7 @@
+"use client";
+
 import { FiClock, FiBriefcase, FiCalendar, FiAlertTriangle } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 
 const iconMap = [FiClock, FiBriefcase, FiCalendar, FiAlertTriangle];
 const colorMap = [
@@ -9,11 +12,13 @@ const colorMap = [
 ];
 
 export default function Overview() {
+  const { t } = useLanguage();
+
   const stats = [
-    { label: "Status Hari Ini", value: "Belum Absen", tag: "Pending", tagColor: "bg-amber-100 text-amber-700" },
-    { label: "Jam Kerja Minggu Ini", value: "32j 14m", tag: "Normal", tagColor: "bg-green-100 text-green-700" },
-    { label: "Sisa Cuti Tahunan", value: "12 Hari", tag: "Aktif", tagColor: "bg-blue-100 text-blue-700" },
-    { label: "Terlambat Bulan Ini", value: "2 Kali", tag: "Perlu Cek", tagColor: "bg-amber-100 text-amber-700" },
+    { label: t("overview.todayStatus"), value: t("overview.notCheckedIn"), tag: t("overview.pendingTag"), tagColor: "bg-amber-100 text-amber-700" },
+    { label: t("overview.weekHours"), value: "32j 14m", tag: t("overview.normalTag"), tagColor: "bg-green-100 text-green-700" },
+    { label: t("overview.leaveRemaining"), value: `12 ${t("overview.daysUnit")}`, tag: t("overview.activeTag"), tagColor: "bg-blue-100 text-blue-700" },
+    { label: t("overview.lateThisMonth"), value: `2 ${t("overview.timesUnit")}`, tag: t("overview.needsReviewTag"), tagColor: "bg-amber-100 text-amber-700" },
   ];
 
   return (

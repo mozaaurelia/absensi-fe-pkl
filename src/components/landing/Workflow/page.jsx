@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Workflow() {
+  const { t } = useLanguage();
   const stepsRef = useRef(null);
   const cardsRef = useRef([]);
 
@@ -48,28 +50,22 @@ export default function Workflow() {
     return () => observer.disconnect();
   }, []);
 
-  const steps = [
-    { number: 1, title: "Login", desc: "User masuk sesuai role akun." },
-    { number: 2, title: "Presensi", desc: "Karyawan melakukan clock-in/out." },
-    { number: 3, title: "Pengajuan", desc: "Izin, cuti, dan lembur diajukan." },
-    { number: 4, title: "Approval", desc: "Supervisor memproses pengajuan." },
-    { number: 5, title: "Rekap", desc: "HRD mengekspor data payroll." },
-  ];
+  const steps = t("workflow.steps");
 
   const recap = [
-    { name: "Andi Pratama", status: "Hadir", color: "bg-green-100 text-green-700" },
-    { name: "Sinta Rahma", status: "Sakit", color: "bg-purple-100 text-purple-700" },
-    { name: "Maya Lestari", status: "Telat", color: "bg-amber-100 text-amber-700" },
+    { name: "Andi Pratama", status: t("workflow.statusPresent"), color: "bg-green-100 text-green-700" },
+    { name: "Sinta Rahma", status: t("workflow.statusSick"), color: "bg-purple-100 text-purple-700" },
+    { name: "Maya Lestari", status: t("workflow.statusLate"), color: "bg-amber-100 text-amber-700" },
   ];
 
   return (
     <section id="alur" className="bg-slate-50 py-24 overflow-hidden">
       <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center mb-16">
         <p className="text-xs font-bold text-[#1E3A5F] tracking-wide uppercase mb-3">
-          Alur Kerja
+          {t("workflow.eyebrow")}
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Proses presensi dari login sampai laporan
+          {t("workflow.title")}
         </h2>
       </div>
 
@@ -81,13 +77,13 @@ export default function Workflow() {
         >
           {steps.map((step, i) => (
             <div
-              key={step.number}
+              key={step.title}
               ref={(el) => (cardsRef.current[i] = el)}
               data-index={i}
               className="step-card bg-white rounded-2xl border border-gray-100 p-5 cursor-pointer"
             >
               <div className="step-number w-8 h-8 rounded-full bg-[#1E3A5F] text-white text-xs font-bold flex items-center justify-center mb-4">
-                {step.number}
+                {i + 1}
               </div>
               <h3 className="font-bold text-gray-900 text-sm mb-1">
                 {step.title}
@@ -104,10 +100,10 @@ export default function Workflow() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="font-bold text-gray-900 text-sm">
-                  Portal Admin / HRM
+                  {t("workflow.portalTitle")}
                 </p>
                 <p className="text-xs text-gray-400">
-                  Analitik presensi perusahaan
+                  {t("workflow.portalDesc")}
                 </p>
               </div>
               <div className="w-8 h-8 rounded-full bg-blue-100 text-[#1E3A5F] text-xs font-bold flex items-center justify-center">
@@ -117,10 +113,10 @@ export default function Workflow() {
 
             <div className="grid grid-cols-4 gap-4 mb-6">
               {[
-                ["Karyawan", "150"],
-                ["Hadir", "94%"],
-                ["Cuti", "5"],
-                ["Alfa", "2"],
+                [t("workflow.kpiEmployee"), "150"],
+                [t("workflow.kpiPresent"), "94%"],
+                [t("workflow.kpiLeave"), "5"],
+                [t("workflow.kpiAbsent"), "2"],
               ].map(([label, value]) => (
                 <div key={label}>
                   <p className="text-xs text-gray-400 mb-1">{label}</p>
@@ -131,10 +127,10 @@ export default function Workflow() {
 
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-gray-900">
-                Rekapitulasi Kehadiran
+                {t("workflow.recapTitle")}
               </p>
               <span className="bg-[#1E3A5F] text-white text-xs font-semibold px-3 py-1.5 rounded-lg">
-                Export
+                {t("workflow.export")}
               </span>
             </div>
 
@@ -158,28 +154,26 @@ export default function Workflow() {
 
         <div>
           <p className="text-xs font-bold text-[#1E3A5F] tracking-wide uppercase mb-3">
-            Desain Responsif
+            {t("workflow.responsiveEyebrow")}
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            Siap digunakan pada desktop dan mobile.
+            {t("workflow.responsiveTitle")}
           </h2>
           <p className="text-gray-500 text-sm leading-relaxed mb-8">
-            Tampilan desktop memaksimalkan data tabel dan dashboard analitik,
-            sedangkan tampilan mobile menyederhanakan fitur utama menjadi
-            navigasi yang mudah dipakai.
+            {t("workflow.responsiveDesc")}
           </p>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white rounded-xl border border-gray-100 p-4">
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Desktop</h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">{t("workflow.desktopTitle")}</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Cocok untuk admin HRD, payroll, dan manajemen data besar.
+                {t("workflow.desktopDesc")}
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-100 p-4">
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Mobile</h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">{t("workflow.mobileTitle")}</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Cocok untuk clock-in/out, approval, dan monitoring cepat.
+                {t("workflow.mobileDesc")}
               </p>
             </div>
           </div>

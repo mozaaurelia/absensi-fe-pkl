@@ -1,15 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { FiList, FiCalendar } from "react-icons/fi";
-
-const monthNames = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-];
-const dayNamesFull = [
-  "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu",
-];
+import { FiList, FiCalendar, FiTrash2 } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 
 function getMonday(date) {
   const d = new Date(date);
@@ -20,16 +13,13 @@ function getMonday(date) {
   return d;
 }
 
-function formatDate(d) {
-  return `${dayNamesFull[d.getDay()]}, ${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
-}
-
 function getDateKey(d) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
 export default function AttendanceHistory({ selectedDate }) {
   const [storedData, setStoredData] = useState({});
+  const { months, daysFull, t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -50,12 +40,20 @@ export default function AttendanceHistory({ selectedDate }) {
     setStoredData(data);
   }, [selectedDate]);
 
+  const deletePhoto = (dateKey) => {
+    localStorage.removeItem("selfie_" + dateKey);
+    setStoredData((prev) => ({
+      ...prev,
+      [dateKey]: { ...(prev[dateKey] || {}), selfie: null },
+    }));
+  };
+
   const { logs, period } = useMemo(() => {
     const monday = getMonday(selectedDate);
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
 
-    const periodText = `${monday.getDate()} ${monthNames[monday.getMonth()]} - ${sunday.getDate()} ${monthNames[sunday.getMonth()]} ${sunday.getFullYear()}`;
+    const periodText = `${monday.getDate()} ${months[monday.getMonth()]} - ${sunday.getDate()} ${months[sunday.getMonth()]} ${sunday.getFullYear()}`;
 
     const logs = [];
     for (let i = 0; i < 7; i++) {
@@ -65,11 +63,11 @@ export default function AttendanceHistory({ selectedDate }) {
       const entry = storedData[dateKey] || {};
       logs.push({
         no: i + 1,
-        date: formatDate(d),
+        date: `${daysFull[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`,
         dateKey,
         masuk: i < 4 ? (i === 0 ? "08:56" : i === 1 ? "09:14" : i === 2 ? "--:--" : "-") : "-",
         pulang: i < 4 ? (i === 0 ? "18:03" : i === 1 ? "18:00" : i === 2 ? "--:--" : "-") : "-",
-        status: i === 0 ? "Hadir" : i === 1 ? "Terlambat" : i === 2 ? "Belum Absen" : i === 3 ? "Terjadwal" : "-",
+        statusKey: i === 0 ? "present" : i === 1 ? "late" : i === 2 ? "notCheckedIn" : i === 3 ? "scheduled" : "-",
         color: i === 0 ? "bg-green-100 text-green-700" : i === 1 ? "bg-amber-100 text-amber-700" : i === 2 ? "bg-amber-100 text-amber-700" : i === 3 ? "bg-gray-100 text-gray-500" : "bg-gray-100 text-gray-500",
         selfie: entry.selfie || null,
         lokasi: entry.lokasi || null,
@@ -77,7 +75,7 @@ export default function AttendanceHistory({ selectedDate }) {
     }
 
     return { logs, period: periodText };
-  }, [selectedDate, storedData]);
+  }, [selectedDate, storedData, months, daysFull]);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 card-hover">
@@ -87,8 +85,8 @@ export default function AttendanceHistory({ selectedDate }) {
             <FiList size={20} />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Log Absensi Minggu Ini</h3>
-            <p className="text-xs text-gray-400">Ringkasan pencatatan masuk dan pulang</p>
+            <h3 className="font-bold text-gray-900">{t("attendanceHistory.title")}</h3>
+            <p className="text-xs text-gray-400">{t("attendanceHistory.subtitle")}</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -101,13 +99,13 @@ export default function AttendanceHistory({ selectedDate }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-gray-400 border-b border-gray-100">
-              <th className="pb-3 font-medium w-8">No</th>
-              <th className="pb-3 font-medium">Foto</th>
-              <th className="pb-3 font-medium">Tanggal</th>
-              <th className="pb-3 font-medium">Jam Masuk</th>
-              <th className="pb-3 font-medium">Jam Pulang</th>
-              <th className="pb-3 font-medium">Lokasi</th>
-              <th className="pb-3 font-medium">Status</th>
+              <th className="pb-3 font-medium w-8">{t("attendanceHistory.no")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.photo")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.date")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.checkIn")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.checkOut")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.location")}</th>
+              <th className="pb-3 font-medium">{t("attendanceHistory.status")}</th>
             </tr>
           </thead>
           <tbody>
@@ -119,18 +117,31 @@ export default function AttendanceHistory({ selectedDate }) {
               >
                 <td className="py-3 text-gray-400 text-xs font-medium">{log.no}</td>
                 <td className="py-3">
-                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-100 bg-gray-50 flex items-center justify-center">
-                    {log.selfie ? (
-                      <img
-                        src={log.selfie}
-                        alt="selfie"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gray-300">
-                        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
-                        <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
+                  <div className="group relative w-12 h-12">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-100 bg-gray-50 flex items-center justify-center">
+                      {log.selfie ? (
+                        <img
+                          src={log.selfie}
+                          alt="selfie"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gray-300">
+                          <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
+                          <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        </svg>
+                      )}
+                    </div>
+                    {log.selfie && (
+                      <button
+                        type="button"
+                        onClick={() => deletePhoto(log.dateKey)}
+                        title={t("attendanceHistory.deletePhoto")}
+                        aria-label={t("attendanceHistory.deletePhoto")}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <FiTrash2 size={10} />
+                      </button>
                     )}
                   </div>
                 </td>
@@ -150,7 +161,7 @@ export default function AttendanceHistory({ selectedDate }) {
                 </td>
                 <td className="py-3">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${log.color}`}>
-                    {log.status}
+                    {log.statusKey === "-" ? "-" : t(`attendanceHistory.${log.statusKey}`)}
                   </span>
                 </td>
               </tr>

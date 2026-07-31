@@ -2,23 +2,13 @@
 
 import { useEffect, useState } from "react";
 import useTypewriter from "@/hooks/useTypewriter";
-
-const greetings = {
-  id: ["Selamat Pagi", "Selamat Siang", "Selamat Sore", "Selamat Malam"],
-  en: ["Good Morning", "Good Afternoon", "Good Evening", "Good Night"],
-};
-
-const userLabel = { id: "Pengguna", en: "User" };
-const timezoneLabel = { id: "WIB", en: "WIB" };
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle/LanguageToggle";
+import Notification from "@/components/karyawan/notification/Notification";
 
 export default function DashboardHeader({ user }) {
   const [now, setNow] = useState(null);
-  const [lang, setLang] = useState("id");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("lang");
-    if (saved === "en" || saved === "id") setLang(saved);
-  }, []);
+  const { lang, locale, t } = useLanguage();
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -27,19 +17,13 @@ export default function DashboardHeader({ user }) {
     return () => clearInterval(interval);
   }, []);
 
-  const toggleLang = () => {
-    const next = lang === "id" ? "en" : "id";
-    setLang(next);
-    localStorage.setItem("lang", next);
-  };
-
   const fullGreeting = now
     ? (() => {
         const hour = now.getHours();
-        const gs = greetings[lang];
+        const gs = t("dashboardHeader.greetings");
         const g =
           hour < 11 ? gs[0] : hour < 14 ? gs[1] : hour < 18 ? gs[2] : gs[3];
-        const name = user?.nama?.split(" ")[0] || userLabel[lang];
+        const name = user?.nama?.split(" ")[0] || t("dashboardHeader.user");
         return `${g}, ${name}! 👋`;
       })()
     : "";
@@ -48,8 +32,8 @@ export default function DashboardHeader({ user }) {
 
   if (!now) return null;
 
-  const timeStr = now.toLocaleTimeString(lang === "id" ? "id-ID" : "en-US", { hour12: false });
-  const dateStr = now.toLocaleDateString(lang === "id" ? "id-ID" : "en-US", {
+  const timeStr = now.toLocaleTimeString(locale, { hour12: false });
+  const dateStr = now.toLocaleDateString(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -75,35 +59,13 @@ export default function DashboardHeader({ user }) {
             <span className="text-lg font-semibold tabular-nums tracking-wider">
               {timeStr}
             </span>
-            <span className="text-blue-200/60 text-xs ml-1">{timezoneLabel[lang]}</span>
+            <span className="text-blue-200/60 text-xs ml-1">{t("dashboardHeader.timezone")}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <button
-            onClick={toggleLang}
-            className="relative w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 transition-colors flex items-center justify-center"
-            aria-label="Ganti Bahasa"
-            title={lang === "id" ? "English" : "Indonesia"}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M3.6 9h16.8M3.6 15h16.8M12 3a15.5 15.5 0 0 1 0 18 15.5 15.5 0 0 1 0-18" />
-            </svg>
-            <span className="absolute -bottom-0.5 right-0.5 text-[9px] font-bold bg-white/20 rounded px-0.5 leading-tight">
-              {lang === "id" ? "ID" : "EN"}
-            </span>
-          </button>
-          <button
-            className="relative w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 transition-colors flex items-center justify-center"
-            aria-label="Notifikasi"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-[#1E3A5F]" />
-          </button>
+          <LanguageToggle />
+          <Notification />
           <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
             {user?.avatar ? (
               <img src={user.avatar} alt="" className="w-full h-full object-cover" />

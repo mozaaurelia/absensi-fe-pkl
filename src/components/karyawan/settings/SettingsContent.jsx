@@ -1,7 +1,6 @@
 import ProfileForm from "./ProfileForm";
 import AccountSummary from "./AccountSummary";
 import SecurityForm from "./SecurityForm";
-import NotificationSettings from "./NotificationSettings";
 
 export default function SettingsContent() {
   return (
@@ -15,10 +14,7 @@ export default function SettingsContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SecurityForm />
-        <NotificationSettings />
-      </div>
+      <SecurityForm />
     </div>
   );
 }

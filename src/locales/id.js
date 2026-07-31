@@ -1,0 +1,636 @@
+export const id = {
+  common: {
+    appName: "E-Absensi",
+    tagline: "Sistem Absensi Elektronik",
+    taglineInternal: "Sistem Absensi Elektronik Internal",
+    close: "Tutup",
+    cancel: "Batal",
+    login: "Masuk",
+    logout: "Keluar",
+    save: "Simpan Perubahan",
+    saving: "Menyimpan...",
+    status: "Status",
+    location: "Lokasi",
+    verification: "Verifikasi",
+    date: "Tanggal",
+    duration: "Durasi",
+    type: "Tipe",
+    months: [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ],
+    daysShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+    daysFull: [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ],
+  },
+
+  nav: {
+    home: "Beranda",
+    features: "Fitur",
+    roles: "Role",
+    flow: "Alur",
+    contact: "Kontak",
+    signIn: "Masuk",
+    tagline: "Sistem Absensi Elektronik",
+    toggleMenu: "Toggle menu",
+  },
+
+  hero: {
+    badge: "Platform HR Attendance System",
+    title:
+      "Kelola presensi, izin, cuti, lembur, dan payroll dalam satu sistem.",
+    desc: "E-Absensi membantu karyawan melakukan clock-in/out, supervisor memantau tim, dan HR mengelola rekap kehadiran secara cepat, rapi, dan transparan.",
+    tryDemo: "Coba Demo Sistem",
+    seeFeatures: "Lihat Fitur",
+    employees: "Karyawan",
+    attendance: "Kehadiran",
+    mainUsers: "User utama",
+  },
+
+  login: {
+    title: "Masuk Akun",
+    secure: "Secure Login",
+    desc: "Gunakan akun perusahaan untuk mengakses sistem E-Absensi.",
+    footer: "Sistem Absensi Elektronik Internal",
+    emailLabel: "Email / Nomor Induk Karyawan",
+    emailPlaceholder: "contoh: andi.pratama@company.co.id",
+    emailRequired: "Email / NIK wajib diisi",
+    emailInvalid: "Masukkan email yang valid (contoh: nama@perusahaan.com)",
+    passwordLabel: "Kata Sandi",
+    passwordRequired: "Kata sandi wajib diisi",
+    remember: "Ingat perangkat ini",
+    forgot: "Lupa kata sandi?",
+    submit: "Masuk ke Dashboard",
+    show: "Lihat",
+    hide: "Sembunyikan",
+    subtitle: "Sistem Absensi Elektronik",
+    heroTitle:
+      "Presensi digital untuk karyawan, supervisor, dan HR dalam satu platform.",
+    heroDesc:
+      "Kelola clock-in/out, persetujuan izin, jadwal tim, rekap presensi, dan laporan payroll secara aman dan terstruktur.",
+    statEmployees: "Karyawan",
+    statAttendance: "Kehadiran",
+    statMonitoring: "Monitoring",
+    faceLabel: "Face ID",
+    faceDesc: "Absensi Wajah",
+    locationLabel: "Lokasi Terkini",
+    locationDesc: "Google Maps",
+    roleEmployee: "Karyawan",
+    roleSupervisor: "Supervisor",
+    roleAdmin: "Admin HRM",
+  },
+
+  role: {
+    eyebrow: "Satu Sistem Untuk Semua Role",
+    title: "Dirancang untuk kebutuhan karyawan, atasan, dan HRD",
+    desc: "Setiap role mendapatkan tampilan dan fitur yang berbeda, sehingga proses kerja menjadi lebih fokus, ringkas, dan mudah dipantau.",
+    employee: {
+      title: "Karyawan",
+      desc: "Melakukan clock-in/out, melihat jam kerja, mengajukan izin, cuti, dan lembur.",
+      tags: ["Clock In / Clock Out", "Izin, Cuti & Lembur", "Riwayat Presensi"],
+    },
+    supervisor: {
+      title: "Atasan / Supervisor",
+      desc: "Memantau kehadiran tim, mengecek jadwal, dan menyetujui atau menolak pengajuan.",
+      tags: ["Dashboard Tim", "Approve Izin / Cuti", "Jadwal & Riwayat Tim"],
+    },
+    admin: {
+      title: "Admin / HRD",
+      desc: "Mengelola data SDM, shift kerja, pengaturan sistem, rekap presensi, dan payroll.",
+      tags: ["Data SDM", "Rekap Presensi", "Payroll & Sistem"],
+    },
+  },
+
+  features: {
+    eyebrow: "Fitur Utama",
+    title: "Semua kebutuhan presensi internal dalam satu dashboard.",
+    desc: "E-Absensi dibuat untuk mengurangi pekerjaan manual HR, mempercepat approval atasan, dan memberi transparansi data kepada karyawan.",
+    learnMore: "Pelajari Fitur",
+    clock: {
+      title: "Clock In / Out",
+      desc: "Presensi masuk dan pulang dengan validasi GPS dan perangkat.",
+    },
+    leave: {
+      title: "Izin, Cuti & Lembur",
+      desc: "Pengajuan terstruktur dengan status pending, disetujui, atau ditolak.",
+    },
+    approval: {
+      title: "Approval Supervisor",
+      desc: "Atasan dapat melihat pengajuan tim dan mengambil keputusan cepat.",
+    },
+    payroll: {
+      title: "Rekap & Payroll",
+      desc: "Data presensi siap dipakai untuk laporan bulanan dan penggajian.",
+    },
+  },
+
+  workflow: {
+    eyebrow: "Alur Kerja",
+    title: "Proses presensi dari login sampai laporan",
+    steps: [
+      { title: "Login", desc: "User masuk sesuai role akun." },
+      { title: "Presensi", desc: "Karyawan melakukan clock-in/out." },
+      { title: "Pengajuan", desc: "Izin, cuti, dan lembur diajukan." },
+      { title: "Approval", desc: "Supervisor memproses pengajuan." },
+      { title: "Rekap", desc: "HRD mengekspor data payroll." },
+    ],
+    portalTitle: "Portal Admin / HRM",
+    portalDesc: "Analitik presensi perusahaan",
+    kpiEmployee: "Karyawan",
+    kpiPresent: "Hadir",
+    kpiLeave: "Cuti",
+    kpiAbsent: "Alfa",
+    recapTitle: "Rekapitulasi Kehadiran",
+    export: "Export",
+    responsiveEyebrow: "Desain Responsif",
+    responsiveTitle: "Siap digunakan pada desktop dan mobile.",
+    responsiveDesc:
+      "Tampilan desktop memaksimalkan data tabel dan dashboard analitik, sedangkan tampilan mobile menyederhanakan fitur utama menjadi navigasi yang mudah dipakai.",
+    desktopTitle: "Desktop",
+    desktopDesc: "Cocok untuk admin HRD, payroll, dan manajemen data besar.",
+    mobileTitle: "Mobile",
+    mobileDesc: "Cocok untuk clock-in/out, approval, dan monitoring cepat.",
+    statusPresent: "Hadir",
+    statusSick: "Sakit",
+    statusLate: "Telat",
+  },
+
+  cta: {
+    eyebrow: "Mulai Digitalisasi Presensi",
+    title: "Gunakan E-Absensi untuk operasional HR yang lebih rapi.",
+    desc: "Cocok untuk perusahaan, sekolah, instansi, dan organisasi internal yang membutuhkan sistem presensi elektronik modern.",
+    scheduleDemo: "Jadwalkan Demo",
+    contactAdmin: "Hubungi Admin",
+  },
+
+  footer: {
+    desc: "Sistem Absensi Elektronik Internal",
+    navigation: "Navigasi",
+    application: "Aplikasi",
+    home: "Beranda",
+    features: "Fitur",
+    roles: "Role",
+    contact: "Kontak",
+    login: "Masuk",
+    dashboard: "Dashboard",
+    reports: "Laporan",
+  },
+
+  sidebar: {
+    tagline: "Sistem Absensi Elektronik",
+    dashboard: "Dashboard",
+    clockInOut: "Clock In/Out",
+    history: "Riwayat Presensi",
+    leave: "Izin & Cuti",
+    settings: "Pengaturan",
+    close: "Tutup sidebar",
+    open: "Buka sidebar",
+    logout: "Keluar",
+  },
+
+  dashboardHeader: {
+    changeLanguage: "Ganti Bahasa",
+    notifications: "Notifikasi",
+    user: "Pengguna",
+    timezone: "WIB",
+    greetings: ["Selamat Pagi", "Selamat Siang", "Selamat Sore", "Selamat Malam"],
+  },
+
+  overview: {
+    todayStatus: "Status Hari Ini",
+    notCheckedIn: "Belum Absen",
+    pendingTag: "Pending",
+    weekHours: "Jam Kerja Minggu Ini",
+    normalTag: "Normal",
+    leaveRemaining: "Sisa Cuti Tahunan",
+    daysUnit: "Hari",
+    activeTag: "Aktif",
+    lateThisMonth: "Terlambat Bulan Ini",
+    timesUnit: "Kali",
+    needsReviewTag: "Perlu Cek",
+  },
+
+  dashAttendance: {
+    title: "Absensi Hari Ini",
+    subtitle: "Status kehadiran",
+    notCheckedIn: "Belum Absen",
+    shift: "Shift Kerja: 09:00 - 18:00 · Kantor Pusat Jakarta",
+    checkIn: "Masuk Kerja",
+    checkOut: "Pulang Kerja",
+    location: "Lokasi",
+    headOffice: "Kantor Pusat",
+    verification: "Verifikasi",
+    gpsValid: "GPS Valid",
+  },
+
+  weeklyWork: {
+    title: "Jam Kerja Mingguan",
+    target: "Target mingguan: 40 jam kerja.",
+    progress: "Progress Minggu Ini",
+  },
+
+  agenda: {
+    title: "Agenda & Cuti",
+    subtitle: "Jadwal kerja dan informasi izin terbaru.",
+    shiftActive: "Shift Aktif",
+    leaveRemaining: "Sisa Cuti",
+    daysLeft: "12 hari",
+    reminder: "Reminder",
+    reminderText:
+      "Jangan lupa clock-in sebelum pukul 09:00 dan pastikan GPS aktif.",
+    submit: "Ajukan Izin / Cuti",
+  },
+
+  profileSummary: {
+    title: "Ringkasan Saya",
+    subtitle: "Informasi personal dan status terbaru.",
+    nik: "NIK",
+    division: "Divisi",
+    supervisor: "Atasan",
+    lastSubmission: "Pengajuan Terakhir",
+    lastSubmissionValue: "Cuti Tahunan · Disetujui",
+  },
+
+  attendanceHeader: {
+    title: "Jadwal Kerja",
+    morningShift: "Shift Pagi",
+  },
+
+  attendanceAction: {
+    title: "Aksi Presensi",
+    desc: "Klik salah satu tombol untuk memulai verifikasi kehadiran.",
+    outsideTitle: "Di Luar Jam Kerja",
+    outsideDesc:
+      "Fitur absensi hanya dapat digunakan pada pukul 07:00 - 17:00. Silakan kembali pada jam kerja.",
+  },
+
+  checkInButton: {
+    done: "Sudah Absen Masuk",
+    label: "Absen Masuk",
+  },
+
+  checkOutButton: {
+    done: "Sudah Absen Pulang",
+    label: "Absen Pulang",
+  },
+
+  attendanceHistory: {
+    title: "Log Absensi Minggu Ini",
+    subtitle: "Ringkasan pencatatan masuk dan pulang",
+    no: "No",
+    photo: "Foto",
+    date: "Tanggal",
+    checkIn: "Jam Masuk",
+    checkOut: "Jam Pulang",
+    location: "Lokasi",
+    status: "Status",
+    present: "Hadir",
+    late: "Terlambat",
+    notCheckedIn: "Belum Absen",
+    scheduled: "Terjadwal",
+    deletePhoto: "Hapus foto",
+  },
+
+  attendanceStatus: {
+    notCheckedIn: "Belum Absen",
+    present: "Hadir",
+    late: "Terlambat",
+  },
+
+  attendanceInfo: {
+    location: "Lokasi",
+    headOffice: "Kantor Pusat",
+    verification: "Verifikasi",
+    gpsValid: "GPS Valid",
+  },
+
+  attendanceSummary: {
+    checkedIn: "Sudah Absen",
+    notCheckedIn: "Belum Absen",
+    absent: "Tidak Absen",
+  },
+
+  todolist: {
+    title: "To-do List",
+    addPlaceholder: "Tambah tugas baru...",
+    empty: "Belum ada tugas hari ini.",
+    warningBanner: "Ada {count} tugas yang belum selesai hari ini!",
+    allDone: "Semua Selesai! 🎉",
+    allDoneDesc: "Semua tugas hari ini sudah beres. Kerja bagus!",
+    defaultTask1: "Review laporan bulanan",
+    defaultTask2: "Kirim dokumen ke HRD",
+    defaultTask3: "Meeting dengan tim",
+  },
+
+  gpsVerification: {
+    gpsSignal: "Sinyal GPS",
+    detecting: "Mendeteksi...",
+    active: "Aktif",
+    geofencing: "Geofencing",
+    gettingLocation: "Mendapatkan lokasi Anda...",
+    locationError: "Gagal mendapatkan lokasi. Periksa izin GPS.",
+    title: "Lokasi Pas!",
+    desc: "Area Anda terdeteksi. Silakan mulai pengambilan foto biometrik.",
+    start: "Mulai Verifikasi",
+    mapTitle: "Lokasi Anda",
+  },
+
+  selfieVerification: {
+    cameraError: "Kamera tidak tersedia. Periksa izin akses kamera browser.",
+    success: "Foto Berhasil!",
+    successDesc: "Pastikan wajah Anda terlihat jelas. Jika kurang jelas, ambil ulang.",
+    retake: "Ulangi",
+    continue: "Lanjutkan",
+    title: "Siap Selfie?",
+    desc: "Posisikan wajah Anda di dalam lingkaran. Pastikan cahaya cukup terang.",
+    takePhoto: "Ambil Foto Sekarang",
+  },
+
+  verificationStepper: {
+    checkIn: "Absen Masuk",
+    checkOut: "Absen Pulang",
+    subtitle: "Verifikasi Kehadiran Anda",
+  },
+
+  progressCircle: {
+    location: "Lokasi",
+    photo: "Foto",
+    done: "Selesai",
+  },
+
+  attendanceSuccess: {
+    checkIn: "Absen Masuk Berhasil!",
+    checkOut: "Absen Pulang Berhasil!",
+    desc: "Kehadiran Anda telah tercatat pada pukul",
+    backHome: "Kembali ke Beranda",
+  },
+
+  historyFilter: {
+    status: "Filter Status",
+    searchDate: "Cari Tanggal",
+    datePlaceholder: "Contoh: 12 Juni 2026",
+    location: "Lokasi",
+    action: "Aksi",
+    apply: "Terapkan Filter",
+    allStatuses: "Hadir, Sakit, Terlambat",
+    present: "Hadir",
+    late: "Terlambat",
+    sick: "Sakit",
+    allLocations: "Semua Lokasi",
+    jakartaOffice: "Kantor Pusat Jakarta",
+    bandungOffice: "Kantor Cabang Bandung",
+  },
+
+  historyHeader: {
+    title: "Riwayat Kehadiran Saya",
+    desc: "Pantau seluruh data absensi dan total jam kerja personal.",
+    dateRange: "Rentang Tanggal",
+  },
+
+  historySummary: {
+    presentDays: "Total Hari Hadir",
+    totalHours: "Total Jam Kerja",
+    late: "Terlambat",
+    permitSick: "Izin / Sakit",
+    daysUnit: "Hari",
+  },
+
+  historyTable: {
+    title: "Tabel Riwayat Presensi",
+    desc: "Data absensi personal berdasarkan tanggal dan lokasi pencatatan.",
+    date: "Tanggal",
+    checkIn: "Jam Masuk",
+    checkOut: "Jam Pulang",
+    location: "Lokasi",
+    status: "Status",
+    totalHours: "Total Jam Kerja",
+    present: "Hadir",
+    late: "Terlambat",
+    sick: "Sakit",
+    notAvailable: "Tidak tersedia",
+    jakartaOffice: "Kantor Pusat Jakarta",
+    bandungOffice: "Kantor Cabang Bandung",
+  },
+
+  leaveCard: {
+    type: "Tipe",
+    date: "Tanggal",
+    duration: "Durasi",
+  },
+
+  leaveForm: {
+    title: "Form Pengajuan Izin & Cuti",
+    badge: "Izin / Cuti",
+    desc: "Lengkapi detail pengajuan izin atau cuti berikut.",
+    typeLabel: "Jenis Izin",
+    typePlaceholder: "Sakit, Cuti, Keperluan Penting",
+    sick: "Sakit",
+    annualLeave: "Cuti Tahunan",
+    important: "Keperluan Penting",
+    startDate: "Tanggal Mulai",
+    endDate: "Tanggal Selesai",
+    reason: "Alasan / Keterangan",
+    reasonPlaceholder: "Tulis alasan pengajuan izin atau cuti secara jelas...",
+    fileTitle: "Upload surat dokter atau dokumen pendukung",
+    submit: "Kirim Pengajuan",
+  },
+
+  leaveHeader: {
+    title: "Pengajuan Izin, Cuti & Lembur Karyawan",
+    desc: "Ajukan izin, cuti, lembur, dan pantau status persetujuan secara transparan.",
+    history: "Riwayat Pengajuan",
+    newRequest: "Buat Pengajuan Baru",
+  },
+
+  leaveHistory: {
+    title: "Status Pengajuan",
+    desc: "Riwayat izin, cuti, dan lembur terbaru.",
+    dataLabel: "Data",
+    annualLeave: "Cuti Tahunan",
+    approved: "Disetujui",
+    sick: "Sakit",
+    pending: "Pending",
+    projectOvertime: "Lembur Project Closing",
+    operationalOvertime: "Lembur Operasional",
+    days2: "2 Hari",
+    days1: "1 Hari",
+    duration230: "2j 30m",
+    duration400: "4j 00m",
+  },
+
+  leaveSummary: {
+    leaveRemaining: "Sisa Cuti Tahunan",
+    leaveRemainingValue: "12 Hari",
+    stillAvailable: "Masih tersedia",
+    leaveUsed: "Cuti Terpakai",
+    leaveUsedValue: "2 Hari",
+    thisYear: "Tahun berjalan",
+    pendingRequests: "Pengajuan Pending",
+    pendingValue: "1",
+    waitingSupervisor: "Menunggu atasan",
+    rejectedRequests: "Pengajuan Ditolak",
+    rejectedValue: "1",
+    needsRevision: "Perlu revisi",
+    overtimeMonth: "Lembur Bulan Ini",
+    overtimeMonthValue: "6j 30m",
+    recorded: "Sudah tercatat",
+    overtimePending: "Lembur Pending",
+    overtimePendingValue: "2",
+    needsApproval: "Butuh approval",
+  },
+
+  overtimeForm: {
+    title: "Form Pengajuan Lembur",
+    badge: "Fitur Lembur",
+    desc: "Ajukan lembur untuk pekerjaan tambahan di luar jam kerja normal.",
+    date: "Tanggal Lembur",
+    startTime: "Jam Mulai",
+    endTime: "Jam Selesai",
+    estDuration: "Estimasi Durasi",
+    durationValue: "2j 30m",
+    category: "Kategori Lembur",
+    categoryPlaceholder: "Penyelesaian Project / Operasional",
+    project: "Penyelesaian Project",
+    operational: "Operasional",
+    others: "Lainnya",
+    approval: "Persetujuan Atasan",
+    supervisorOption: "Surya Prasetya · Supervisor Operasional",
+    reason: "Alasan Lembur",
+    reasonPlaceholder:
+      "Contoh: menyelesaikan laporan operasional akhir bulan dan validasi data presensi...",
+    submit: "Kirim Pengajuan Lembur",
+  },
+
+  statusBadge: {
+    approved: "Disetujui",
+    pending: "Pending",
+    rejected: "Ditolak",
+  },
+
+  accountSummary: {
+    title: "Ringkasan Akun",
+    role: "Role",
+    department: "Departemen",
+    device: "Device Terdaftar",
+    deviceValue: "iPhone 13 · Verified",
+  },
+
+  avatarUpload: {
+    cameraError: "Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.",
+    change: "Ganti Avatar",
+    upload: "Upload Avatar",
+    modalTitle: "Pilih Foto Profil",
+    fromFile: "Upload dari File",
+    takePhoto: "Ambil Foto Langsung",
+    cancel: "Batal",
+    cameraTitle: "Ambil Foto",
+    capture: "Jepret",
+    resultTitle: "Hasil Foto",
+    retake: "Ulang",
+    use: "Gunakan",
+  },
+
+  notificationSettings: {
+    title: "Notifikasi",
+    desc: "Atur preferensi pemberitahuan sistem.",
+    email: {
+      title: "Notifikasi Email untuk Pengingat Absen",
+      desc: "Kirim pengingat clock-in dan clock-out melalui email.",
+    },
+    whatsapp: {
+      title: "Notifikasi WhatsApp untuk Persetujuan Cuti",
+      desc: "Kirim status approval cuti melalui WhatsApp.",
+    },
+    device: {
+      title: "Notifikasi Device Login Baru",
+      desc: "Kirim peringatan saat akun login dari perangkat baru.",
+    },
+  },
+
+  notification: {
+    title: "Notifikasi",
+    subtitle: "Pemberitahuan terbaru",
+    markAllRead: "Tandai semua sudah dibaca",
+    items: {
+      reminder: {
+        title: "Pengingat Absen",
+        desc: "Jangan lupa clock-in pagi ini sebelum pukul 09:00",
+        time: "08:00 WIB",
+      },
+      approved: {
+        title: "Cuti Disetujui",
+        desc: "Pengajuan cuti kamu telah disetujui oleh atasan",
+        time: "Kemarin",
+      },
+      late: {
+        title: "Absen Terlambat",
+        desc: "Clock-in kamu tercatat terlambat hari ini",
+        time: "Senin lalu",
+      },
+      device: {
+        title: "Login Perangkat Baru",
+        desc: "Akun kamu login dari perangkat baru",
+        time: "12 Jul",
+      },
+    },
+  },
+
+  profileForm: {
+    title: "Profil Pengguna",
+    desc: "Informasi dasar karyawan yang digunakan dalam sistem absensi.",
+    fullName: "Nama Lengkap",
+    nik: "Nomor Induk Karyawan",
+    email: "Email",
+    position: "Jabatan",
+  },
+
+  securityForm: {
+    title: "Keamanan",
+    desc: "Perbarui kata sandi dan aktifkan perlindungan tambahan.",
+    oldPassword: "Kata Sandi Lama",
+    newPassword: "Kata Sandi Baru",
+    twoFA: "Aktifkan Autentikasi Dua Faktor (2FA)",
+    twoFADesc: "Tambahkan lapisan keamanan saat login ke sistem.",
+  },
+
+  settingsHeader: {
+    title: "Pengaturan Akun & Profil",
+    desc: "Kelola informasi profil, keamanan akun, dan preferensi notifikasi.",
+  },
+
+  cancelButton: {
+    label: "Batalkan",
+  },
+
+  saveButton: {
+    saving: "Menyimpan...",
+    label: "Simpan Perubahan",
+  },
+
+  admin: {
+    comingSoon: "Dashboard Admin - Segera Hadir",
+  },
+
+  atasan: {
+    comingSoon: "Dashboard Atasan - Segera Hadir",
+  },
+
+  accessDenied: "Akses ditolak. Mengalihkan ke halaman login...",
+};

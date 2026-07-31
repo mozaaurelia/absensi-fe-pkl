@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NotificationSettings() {
+  const { t } = useLanguage();
   const [prefs, setPrefs] = useState({
     emailAbsen: true,
     waCuti: false,
@@ -15,26 +17,26 @@ export default function NotificationSettings() {
   const items = [
     {
       key: "emailAbsen",
-      title: "Notifikasi Email untuk Pengingat Absen",
-      desc: "Kirim pengingat clock-in dan clock-out melalui email.",
+      title: t("notificationSettings.email.title"),
+      desc: t("notificationSettings.email.desc"),
     },
     {
       key: "waCuti",
-      title: "Notifikasi WhatsApp untuk Persetujuan Cuti",
-      desc: "Kirim status approval cuti melalui WhatsApp.",
+      title: t("notificationSettings.whatsapp.title"),
+      desc: t("notificationSettings.whatsapp.desc"),
     },
     {
       key: "deviceLogin",
-      title: "Notifikasi Device Login Baru",
-      desc: "Kirim peringatan saat akun login dari perangkat baru.",
+      title: t("notificationSettings.device.title"),
+      desc: t("notificationSettings.device.desc"),
     },
   ];
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 h-full">
-      <h3 className="font-bold text-gray-900 mb-1">Notifikasi</h3>
+      <h3 className="font-bold text-gray-900 mb-1">{t("notificationSettings.title")}</h3>
       <p className="text-xs text-gray-400 mb-6">
-        Atur preferensi pemberitahuan sistem.
+        {t("notificationSettings.desc")}
       </p>
 
       <div className="flex flex-col gap-3">

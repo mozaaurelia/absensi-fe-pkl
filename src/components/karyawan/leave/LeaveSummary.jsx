@@ -1,13 +1,17 @@
+"use client";
+
 import SummaryCard from "./SummaryCard";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function LeaveSummary() {
+  const { t } = useLanguage();
   const stats = [
-    { label: "Sisa Cuti Tahunan", value: "12 Hari", note: "Masih tersedia", noteColor: "text-green-600" },
-    { label: "Cuti Terpakai", value: "2 Hari", note: "Tahun berjalan", noteColor: "text-blue-600" },
-    { label: "Pengajuan Pending", value: "1", note: "Menunggu atasan", noteColor: "text-orange-500" },
-    { label: "Pengajuan Ditolak", value: "1", note: "Perlu revisi", noteColor: "text-red-600" },
-    { label: "Lembur Bulan Ini", value: "6j 30m", note: "Sudah tercatat", noteColor: "text-purple-600" },
-    { label: "Lembur Pending", value: "2", note: "Butuh approval", noteColor: "text-amber-600" },
+    { label: t("leaveSummary.leaveRemaining"), value: t("leaveSummary.leaveRemainingValue"), note: t("leaveSummary.stillAvailable"), noteColor: "text-green-600" },
+    { label: t("leaveSummary.leaveUsed"), value: t("leaveSummary.leaveUsedValue"), note: t("leaveSummary.thisYear"), noteColor: "text-blue-600" },
+    { label: t("leaveSummary.pendingRequests"), value: t("leaveSummary.pendingValue"), note: t("leaveSummary.waitingSupervisor"), noteColor: "text-orange-500" },
+    { label: t("leaveSummary.rejectedRequests"), value: t("leaveSummary.rejectedValue"), note: t("leaveSummary.needsRevision"), noteColor: "text-red-600" },
+    { label: t("leaveSummary.overtimeMonth"), value: t("leaveSummary.overtimeMonthValue"), note: t("leaveSummary.recorded"), noteColor: "text-purple-600" },
+    { label: t("leaveSummary.overtimePending"), value: t("leaveSummary.overtimePendingValue"), note: t("leaveSummary.needsApproval"), noteColor: "text-amber-600" },
   ];
 
   return (

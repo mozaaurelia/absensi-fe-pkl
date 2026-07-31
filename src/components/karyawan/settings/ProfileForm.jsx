@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import AvatarUpload from "./AvatarUpload";
 
 export default function ProfileForm() {
   const { user, updateProfile } = useAuth();
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     nama: "",
     nik: "",
@@ -39,9 +41,9 @@ export default function ProfileForm() {
   return (
     <form id="profile-form" onSubmit={handleSubmit}>
       <div className="bg-white rounded-2xl border border-gray-100 p-6 h-full">
-        <h3 className="font-bold text-gray-900 mb-1">Profil Pengguna</h3>
+        <h3 className="font-bold text-gray-900 mb-1">{t("profileForm.title")}</h3>
         <p className="text-xs text-gray-400 mb-6">
-          Informasi dasar karyawan yang digunakan dalam sistem absensi.
+          {t("profileForm.desc")}
         </p>
 
         <div className="flex justify-end mb-6">
@@ -51,7 +53,7 @@ export default function ProfileForm() {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Nama Lengkap
+              {t("profileForm.fullName")}
             </label>
             <input
               type="text"
@@ -62,7 +64,7 @@ export default function ProfileForm() {
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Nomor Induk Karyawan
+              {t("profileForm.nik")}
             </label>
             <input
               type="text"
@@ -76,7 +78,7 @@ export default function ProfileForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Email
+              {t("profileForm.email")}
             </label>
             <input
               type="email"
@@ -87,7 +89,7 @@ export default function ProfileForm() {
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Jabatan
+              {t("profileForm.position")}
             </label>
             <input
               type="text"

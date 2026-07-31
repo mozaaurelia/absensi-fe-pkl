@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import Sidebar from "@/components/karyawan/dashboard/Sidebar/Sidebar";
 import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader/DashboardHeader";
 import Overview from "@/components/karyawan/dashboard/Overview/Overview";
@@ -13,6 +14,7 @@ import Agenda from "@/components/karyawan/dashboard/Agenda/Agenda";
 
 export default function DashboardKaryawanPage() {
   const { user, isLoaded } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function DashboardKaryawanPage() {
   if (!user || user.role !== "karyawan") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <p className="text-gray-500 text-sm">Akses ditolak. Mengalihkan ke halaman login...</p>
+        <p className="text-gray-500 text-sm">{t("accessDenied")}</p>
       </div>
     );
   }
@@ -44,10 +46,9 @@ export default function DashboardKaryawanPage() {
           <Overview />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <Attendance />
           <WeeklyWork />
-
         </div>
 
         <Agenda />

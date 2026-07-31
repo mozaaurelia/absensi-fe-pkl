@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SecurityForm() {
+  const { t } = useLanguage();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [twoFA, setTwoFA] = useState(true);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 h-full">
-      <h3 className="font-bold text-gray-900 mb-1">Keamanan</h3>
+      <h3 className="font-bold text-gray-900 mb-1">{t("securityForm.title")}</h3>
       <p className="text-xs text-gray-400 mb-6">
-        Perbarui kata sandi dan aktifkan perlindungan tambahan.
+        {t("securityForm.desc")}
       </p>
 
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Kata Sandi Lama
+            {t("securityForm.oldPassword")}
           </label>
           <input
             type="password"
@@ -29,7 +31,7 @@ export default function SecurityForm() {
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Kata Sandi Baru
+            {t("securityForm.newPassword")}
           </label>
           <input
             type="password"
@@ -44,10 +46,10 @@ export default function SecurityForm() {
       <div className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-4">
         <div>
           <p className="text-sm font-semibold text-gray-800">
-            Aktifkan Autentikasi Dua Faktor (2FA)
+            {t("securityForm.twoFA")}
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Tambahkan lapisan keamanan saat login ke sistem.
+            {t("securityForm.twoFADesc")}
           </p>
         </div>
         <button

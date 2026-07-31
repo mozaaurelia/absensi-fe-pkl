@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function GPSVerification({ onNext }) {
+  const { locale, t } = useLanguage();
   const [location, setLocation] = useState(null);
   const [address, setAddress] = useState("");
   const [error, setError] = useState(false);
@@ -22,7 +24,7 @@ export default function GPSVerification({ onNext }) {
 
         try {
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=id`,
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=${locale}`,
             { headers: { "User-Agent": "MozaPresensi/1.0" } }
           );
           const data = await res.json();
@@ -60,9 +62,9 @@ export default function GPSVerification({ onNext }) {
             </svg>
           </span>
           <div className="text-left">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide">Sinyal GPS</p>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t("gpsVerification.gpsSignal")}</p>
             <p className={`text-sm font-bold ${loading ? "text-gray-400" : "text-green-700"}`}>
-              {loading ? "Mendeteksi..." : "Aktif"}
+              {loading ? t("gpsVerification.detecting") : t("gpsVerification.active")}
             </p>
           </div>
         </div>
@@ -74,9 +76,9 @@ export default function GPSVerification({ onNext }) {
             </svg>
           </span>
           <div className="text-left">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide">Geofencing</p>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t("gpsVerification.geofencing")}</p>
             <p className={`text-sm font-bold ${loading ? "text-gray-400" : "text-green-700"}`}>
-              {loading ? "..." : "Aktif"}
+              {loading ? "..." : t("gpsVerification.active")}
             </p>
           </div>
         </div>
@@ -86,19 +88,19 @@ export default function GPSVerification({ onNext }) {
         <div className="w-full h-56 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-6">
           <div className="flex flex-col items-center gap-3">
             <div className="w-8 h-8 border-3 border-[#1E3A5F] border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-400">Mendapatkan lokasi Anda...</p>
+            <p className="text-sm text-gray-400">{t("gpsVerification.gettingLocation")}...</p>
           </div>
         </div>
       ) : error ? (
         <div className="w-full h-56 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mb-6">
-          <p className="text-sm text-red-500">Gagal mendapatkan lokasi. Periksa izin GPS.</p>
+          <p className="text-sm text-red-500">{t("gpsVerification.locationError")}</p>
         </div>
       ) : location ? (
         <div className="w-full h-56 rounded-2xl overflow-hidden mb-4 border border-gray-100 shadow-sm relative">
           <iframe
             src={`https://www.openstreetmap.org/export/embed.html?bbox=${location.lng - 0.01},${location.lat - 0.01},${location.lng + 0.01},${location.lat + 0.01}&layer=mapnik&marker=${location.lat},${location.lng}`}
             className="w-full h-full border-0"
-            title="Lokasi Anda"
+            title={t("gpsVerification.mapTitle")}
           />
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur rounded-lg px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm flex items-center gap-1.5">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-[#1E3A5F]">
@@ -118,9 +120,9 @@ export default function GPSVerification({ onNext }) {
 
       {!loading && !error && (
         <>
-          <h3 className="font-bold text-gray-900 text-lg mb-2">Lokasi Pas!</h3>
+          <h3 className="font-bold text-gray-900 text-lg mb-2">{t("gpsVerification.title")}</h3>
           <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-            Area Anda terdeteksi. Silakan mulai pengambilan foto biometrik.
+            {t("gpsVerification.desc")}
           </p>
 
           <button
@@ -132,9 +134,8 @@ export default function GPSVerification({ onNext }) {
               <path d="M8 7l1.5-3h5L16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13.5" r="3" stroke="currentColor" strokeWidth="2" />
             </svg>
-            Mulai Verifikasi
-          </button>
-        </>
+            {t("gpsVerification.start")}
+          </button>        </>
       )}
     </div>
   );

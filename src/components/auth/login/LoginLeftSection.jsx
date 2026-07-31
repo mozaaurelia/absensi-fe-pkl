@@ -1,8 +1,14 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function LoginLeftSection() {
+  const { t } = useLanguage();
+
   const stats = [
-    { value: "150+", label: "Karyawan" },
-    { value: "94%", label: "Kehadiran" },
-    { value: "24/7", label: "Monitoring" },
+    { value: "150+", label: t("login.statEmployees") },
+    { value: "94%", label: t("login.statAttendance") },
+    { value: "24/7", label: t("login.statMonitoring") },
   ];
 
   return (
@@ -12,16 +18,14 @@ export default function LoginLeftSection() {
           <span className="text-white font-bold text-lg">EA</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-white mb-2">E-Absensi</h1>
-        <p className="text-blue-200/80 mb-10">Sistem Absensi Elektronik</p>
+        <h1 className="text-4xl font-bold text-white mb-2">{t("common.appName")}</h1>
+        <p className="text-blue-200/80 mb-10">{t("login.subtitle")}</p>
 
         <h2 className="text-2xl font-bold text-white leading-snug mb-4">
-          Presensi digital untuk karyawan, supervisor, dan HR dalam satu
-          platform.
+          {t("login.heroTitle")}
         </h2>
         <p className="text-blue-200/70 text-sm leading-relaxed mb-10">
-          Kelola clock-in/out, persetujuan izin, jadwal tim, rekap presensi,
-          dan laporan payroll secara aman dan terstruktur.
+          {t("login.heroDesc")}
         </p>
 
         <div className="grid grid-cols-3 gap-3 mb-10">
@@ -45,8 +49,8 @@ export default function LoginLeftSection() {
               <path d="M12 15v2" />
             </svg>
             <div>
-              <p className="text-white text-sm font-semibold">Face ID</p>
-              <p className="text-blue-200/70 text-xs">Absensi Wajah</p>
+              <p className="text-white text-sm font-semibold">{t("login.faceLabel")}</p>
+              <p className="text-blue-200/70 text-xs">{t("login.faceDesc")}</p>
             </div>
           </div>
           <div className="bg-white/10 rounded-xl px-5 py-4 flex items-center gap-4 flex-1">
@@ -55,8 +59,8 @@ export default function LoginLeftSection() {
               <circle cx="12" cy="10" r="3" />
             </svg>
             <div>
-              <p className="text-white text-sm font-semibold">Lokasi Terkini</p>
-              <p className="text-blue-200/70 text-xs">Google Maps</p>
+              <p className="text-white text-sm font-semibold">{t("login.locationLabel")}</p>
+              <p className="text-blue-200/70 text-xs">{t("login.locationDesc")}</p>
             </div>
           </div>
         </div>

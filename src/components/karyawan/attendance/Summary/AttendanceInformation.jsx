@@ -1,7 +1,13 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function AttendanceInformation() {
+  const { t } = useLanguage();
+
   const info = [
-    { label: "Lokasi", value: "Kantor Pusat" },
-    { label: "Verifikasi", value: "GPS Valid" },
+    { label: t("attendanceInfo.location"), value: t("attendanceInfo.headOffice") },
+    { label: t("attendanceInfo.verification"), value: t("attendanceInfo.gpsValid") },
   ];
 
   return (

@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata = {
   title: "E-Absensi",
@@ -10,7 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body suppressHydrationWarning>
-        <AuthProvider>{children}</AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

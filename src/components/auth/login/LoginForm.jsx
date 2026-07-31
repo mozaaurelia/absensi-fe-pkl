@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import LoginInput from "./LoginInput";
 import LoginRemember from "./LoginRemember";
 import LoginButton from "./LoginButton";
@@ -15,17 +16,18 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({});
 
   const { login } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
 
   const validate = () => {
     const errs = {};
     if (!email.trim()) {
-      errs.email = "Email / NIK wajib diisi";
+      errs.email = t("login.emailRequired");
     } else if (!email.includes("@")) {
-      errs.email = "Masukkan email yang valid (contoh: nama@perusahaan.com)";
+      errs.email = t("login.emailInvalid");
     }
     if (!password.trim()) {
-      errs.password = "Kata sandi wajib diisi";
+      errs.password = t("login.passwordRequired");
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -35,14 +37,14 @@ export default function LoginForm() {
     e.preventDefault();
     if (!validate()) return;
     login(email, "karyawan");
-    router.push("/karyawan/dashboard");
+    router.push("/karyawan");
   };
 
   return (
     <form onSubmit={handleSubmit} suppressHydrationWarning noValidate>
       <LoginInput
-        label="Email / Nomor Induk Karyawan"
-        placeholder="contoh: andi.pratama@company.co.id"
+        label={t("login.emailLabel")}
+        placeholder={t("login.emailPlaceholder")}
         value={email}
         onChange={(e) => {
           setEmail(e.target.value);
@@ -52,7 +54,7 @@ export default function LoginForm() {
       />
 
       <LoginInput
-        label="Kata Sandi"
+        label={t("login.passwordLabel")}
         placeholder="••••••••••"
         value={password}
         onChange={(e) => {
@@ -70,7 +72,7 @@ export default function LoginForm() {
         onChange={() => setRemember((v) => !v)}
       />
 
-      <LoginButton type="submit">Masuk ke Dashboard</LoginButton>
+      <LoginButton type="submit">{t("login.submit")}</LoginButton>
     </form>
   );
 }

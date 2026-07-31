@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FiClock } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 import CheckInButton from "./CheckInButton";
 import CheckOutButton from "./CheckOutButton";
 import VerificationStepper from "../Verification/VerificationStepper";
@@ -17,6 +18,7 @@ export default function AttendanceAction({
 }) {
   const [mode, setMode] = useState(null);
   const [showTimeWarning, setShowTimeWarning] = useState(false);
+  const { t } = useLanguage();
 
   const handleClick = (type) => {
     if (!isWithinHours()) {
@@ -29,9 +31,9 @@ export default function AttendanceAction({
   return (
     <>
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-bold text-gray-900 mb-1">Aksi Presensi</h3>
+        <h3 className="font-bold text-gray-900 mb-1">{t("attendanceAction.title")}</h3>
         <p className="text-xs text-gray-400 mb-8">
-          Klik salah satu tombol untuk memulai verifikasi kehadiran.
+          {t("attendanceAction.desc")}
         </p>
 
         <div className="flex items-center justify-center gap-14">
@@ -56,15 +58,15 @@ export default function AttendanceAction({
             <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-5">
               <FiClock size={30} className="text-amber-600" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Di Luar Jam Kerja</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">{t("attendanceAction.outsideTitle")}</h3>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
-              Fitur absensi hanya dapat digunakan pada pukul <strong>07:00 - 17:00</strong>. Silakan kembali pada jam kerja.
+              {t("attendanceAction.outsideDesc")}
             </p>
             <button
               onClick={() => setShowTimeWarning(false)}
               className="w-full bg-gradient-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md"
             >
-              Tutup
+              {t("common.close")}
             </button>
           </div>
         </div>

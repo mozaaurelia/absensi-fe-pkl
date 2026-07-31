@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function OvertimeForm() {
+  const { t } = useLanguage();
   const [tanggalLembur, setTanggalLembur] = useState("");
   const [jamMulai, setJamMulai] = useState("");
   const [jamSelesai, setJamSelesai] = useState("");
@@ -21,19 +23,19 @@ export default function OvertimeForm() {
       className="bg-white rounded-2xl border border-gray-100 p-6"
     >
       <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900">Form Pengajuan Lembur</h3>
+        <h3 className="font-bold text-gray-900">{t("overtimeForm.title")}</h3>
         <span className="bg-purple-50 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
-          Fitur Lembur
+          {t("overtimeForm.badge")}
         </span>
       </div>
       <p className="text-xs text-gray-400 mb-6">
-        Ajukan lembur untuk pekerjaan tambahan di luar jam kerja normal.
+        {t("overtimeForm.desc")}
       </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Tanggal Lembur
+            {t("overtimeForm.date")}
           </label>
           <input
             type="date"
@@ -44,7 +46,7 @@ export default function OvertimeForm() {
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Jam Mulai
+            {t("overtimeForm.startTime")}
           </label>
           <input
             type="time"
@@ -55,7 +57,7 @@ export default function OvertimeForm() {
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Jam Selesai
+            {t("overtimeForm.endTime")}
           </label>
           <input
             type="time"
@@ -66,10 +68,10 @@ export default function OvertimeForm() {
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Estimasi Durasi
+            {t("overtimeForm.estDuration")}
           </label>
           <div className="w-full rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700">
-            2j 30m
+            {t("overtimeForm.durationValue")}
           </div>
         </div>
       </div>
@@ -77,36 +79,36 @@ export default function OvertimeForm() {
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Kategori Lembur
+            {t("overtimeForm.category")}
           </label>
           <select
             value={kategori}
             onChange={(e) => setKategori(e.target.value)}
             className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#1E3A5F] focus:bg-white transition-colors"
           >
-            <option value="">Penyelesaian Project / Operasional</option>
-            <option value="project">Penyelesaian Project</option>
-            <option value="operasional">Operasional</option>
-            <option value="lainnya">Lainnya</option>
+            <option value="">{t("overtimeForm.categoryPlaceholder")}</option>
+            <option value="project">{t("overtimeForm.project")}</option>
+            <option value="operasional">{t("overtimeForm.operational")}</option>
+            <option value="lainnya">{t("overtimeForm.others")}</option>
           </select>
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-2">
-            Persetujuan Atasan
+            {t("overtimeForm.approval")}
           </label>
           <select className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#1E3A5F] focus:bg-white transition-colors">
-            <option>Surya Prasetya · Supervisor Operasional</option>
+            <option>{t("overtimeForm.supervisorOption")}</option>
           </select>
         </div>
       </div>
 
       <div className="mb-5">
         <label className="block text-sm font-semibold text-gray-800 mb-2">
-          Alasan Lembur
+          {t("overtimeForm.reason")}
         </label>
         <textarea
           rows={3}
-          placeholder="Contoh: menyelesaikan laporan operasional akhir bulan dan validasi data presensi..."
+          placeholder={t("overtimeForm.reasonPlaceholder")}
           value={alasan}
           onChange={(e) => setAlasan(e.target.value)}
           className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white transition-colors resize-none"
@@ -117,7 +119,7 @@ export default function OvertimeForm() {
         type="submit"
         className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-3 rounded-lg hover:bg-[#16304f] transition-colors"
       >
-        Kirim Pengajuan Lembur
+        {t("overtimeForm.submit")}
       </button>
     </form>
   );

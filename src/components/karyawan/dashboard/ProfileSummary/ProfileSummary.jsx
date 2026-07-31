@@ -1,15 +1,17 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { FiHash, FiGrid, FiUser, FiCheckCircle } from "react-icons/fi";
 
 export default function ProfileSummary() {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const rows = [
     { label: "NIK", value: user?.nik || "EMP-00124", icon: FiHash, color: "text-purple-600", bg: "bg-purple-50" },
-    { label: "Divisi", value: user?.divisi || "Operasional", icon: FiGrid, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "Atasan", value: user?.atasan || "Surya Prasetya", icon: FiUser, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: t("profileSummary.division"), value: user?.divisi || "Operasional", icon: FiGrid, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: t("profileSummary.supervisor"), value: user?.atasan || "Surya Prasetya", icon: FiUser, color: "text-emerald-600", bg: "bg-emerald-50" },
   ];
 
   return (
@@ -19,8 +21,8 @@ export default function ProfileSummary() {
           <FiUser size={20} />
         </div>
         <div>
-          <h3 className="font-bold text-gray-900">Ringkasan Saya</h3>
-          <p className="text-xs text-gray-400">Informasi personal dan status terbaru.</p>
+          <h3 className="font-bold text-gray-900">{t("profileSummary.title")}</h3>
+          <p className="text-xs text-gray-400">{t("profileSummary.subtitle")}</p>
         </div>
       </div>
 
@@ -49,8 +51,8 @@ export default function ProfileSummary() {
             <FiCheckCircle size={17} />
           </div>
           <div>
-            <p className="text-xs text-[#1E3A5F] font-semibold">Pengajuan Terakhir</p>
-            <p className="text-sm font-semibold text-[#1E3A5F]">Cuti Tahunan · Disetujui</p>
+            <p className="text-xs text-[#1E3A5F] font-semibold">{t("profileSummary.lastSubmission")}</p>
+            <p className="text-sm font-semibold text-[#1E3A5F]">{t("profileSummary.lastSubmissionValue")}</p>
           </div>
         </div>
       </div>

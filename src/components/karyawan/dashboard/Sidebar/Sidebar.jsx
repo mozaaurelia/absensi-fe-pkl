@@ -1,98 +1,113 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
+  const { t } = useLanguage();
+  const closeTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  const handleMouseEnter = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 250);
+  };
 
   const menus = [
-    { label: "Dashboard", href: "/karyawan/dashboard", icon: DashboardIcon },
-    { label: "Clock In/Out", href: "/karyawan/attendance", icon: ClockIcon },
-    { label: "Riwayat Presensi", href: "/karyawan/history", icon: HistoryIcon },
-    { label: "Izin & Cuti", href: "/karyawan/leave", icon: LeaveIcon },
-    { label: "Pengaturan", href: "/karyawan/settings", icon: SettingsIcon },
+    { label: t("sidebar.dashboard"), href: "/karyawan", icon: DashboardIcon },
+    { label: t("sidebar.clockInOut"), href: "/karyawan/attendance", icon: ClockIcon },
+    { label: t("sidebar.history"), href: "/karyawan/history", icon: HistoryIcon },
+    { label: t("sidebar.leave"), href: "/karyawan/leave", icon: LeaveIcon },
+    { label: t("sidebar.settings"), href: "/karyawan/settings", icon: SettingsIcon },
   ];
 
   return (
-    <>
-      <aside
-        className={`bg-[#1E3A5F] h-screen flex flex-col px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-all duration-300 ${
-          open ? "w-64" : "w-[68px]"
-        }`}
-      >
-        <div className={`flex items-center mb-8 ${open ? "px-2 justify-between" : "justify-center"}`}>
-          {open && (
-            <div>
-              <p className="text-white font-bold text-base">E-Absensi</p>
-              <p className="text-blue-200/70 text-xs mt-0.5">Sistem Absensi Elektronik</p>
-            </div>
-          )}
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="text-blue-200/80 hover:text-white transition-colors shrink-0"
-            aria-label={open ? "Tutup sidebar" : "Buka sidebar"}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {open ? (
-                <>
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="15" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </>
-              )}
-            </svg>
-          </button>
+    <aside
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`bg-[#1E3A5F] h-screen flex flex-col px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${
+        open ? "w-64" : "w-[68px]"
+      }`}
+    >
+      <div className={`flex items-center mb-8 ${open ? "px-2 justify-between" : "justify-center"}`}>
+        <div
+          className={`min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+            open ? "opacity-100 max-w-[180px]" : "opacity-0 max-w-0"
+          }`}
+        >
+          <p className="text-white font-bold text-base">E-Absensi</p>
+          <p className="text-blue-200/70 text-xs mt-0.5">{t("sidebar.tagline")}</p>
         </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-blue-200/80 shrink-0">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </div>
 
-        <nav className="flex flex-col gap-1 flex-1">
-          {menus.map((menu) => {
-            const active = pathname === menu.href;
-            const Icon = menu.icon;
-            return (
-              <Link
-                key={menu.label}
-                href={menu.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-white/10 text-white"
-                    : "text-blue-100/80 hover:bg-white/10"
-                } ${open ? "" : "justify-center"}`}
-                title={!open ? menu.label : undefined}
+      <nav className="flex flex-col gap-1 flex-1">
+        {menus.map((menu) => {
+          const active = pathname === menu.href;
+          const Icon = menu.icon;
+          return (
+            <Link
+              key={menu.label}
+              href={menu.href}
+              className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
+                active
+                  ? "bg-white/10 text-white"
+                  : "text-blue-100/80 hover:bg-white/10"
+              } ${open ? "px-3 gap-3" : "pl-[13px] gap-0"}`}
+              title={!open ? menu.label : undefined}
+            >
+              <Icon />
+              <span
+                className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+                  open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+                }`}
               >
-                <Icon />
-                {open && menu.label}
-              </Link>
-            );
-          })}
-        </nav>
+                {menu.label}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
 
-        <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
-          <button
-            onClick={() => {
-              logout();
-              router.push("/auth/login");
-            }}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors ${open ? "" : "justify-center"}`}
-            title={!open ? "Keluar" : undefined}
+      <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
+        <button
+          onClick={() => {
+            logout();
+            router.push("/auth/login");
+          }}
+          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
+            open ? "px-3 gap-3" : "pl-[13px] gap-0"
+          }`}
+          title={!open ? t("sidebar.logout") : undefined}
+        >
+          <LogoutIcon />
+          <span
+            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+              open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+            }`}
           >
-            <LogoutIcon />
-            {open && "Keluar"}
-          </button>
-        </div>
-      </aside>
-    </>
+            {t("sidebar.logout")}
+          </span>
+        </button>
+      </div>
+    </aside>
   );
 }
 

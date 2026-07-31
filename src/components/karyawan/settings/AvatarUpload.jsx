@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AvatarUpload({ initials = "AP", onImageChange }) {
+  const { t } = useLanguage();
   const [preview, setPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [mode, setMode] = useState(null);
@@ -25,9 +27,9 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
       setStream(s);
       setMode("camera");
     } catch {
-      alert("Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.");
+      alert(t("avatarUpload.cameraError"));
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (mode === "camera" && videoRef.current && stream) {
@@ -118,7 +120,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
           onClick={openModal}
           className="border border-gray-200 rounded-lg px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          {preview ? "Ganti Avatar" : "Upload Avatar"}
+          {preview ? t("avatarUpload.change") : t("avatarUpload.upload")}
         </button>
       </div>
 
@@ -142,7 +144,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
             {!mode && (
               <>
                 <h3 className="font-bold text-gray-900 mb-4 text-center">
-                  Pilih Foto Profil
+                  {t("avatarUpload.modalTitle")}
                 </h3>
                 <div className="flex flex-col gap-3">
                   <button
@@ -153,7 +155,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
                     <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16l4-4 4 4m0 0l4-4 4 4M7 16V4m0 0L3 8m4-4l4 4" />
                     </svg>
-                    Upload dari File
+                    {t("avatarUpload.fromFile")}
                   </button>
                   <button
                     type="button"
@@ -163,7 +165,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
                     <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4-4m0 0l-4-4m4 4H9a5 5 0 00-5 5v4a5 5 0 005 5h6a5 5 0 005-5v-4" />
                     </svg>
-                    Ambil Foto Langsung
+                    {t("avatarUpload.takePhoto")}
                   </button>
                 </div>
                 <button
@@ -171,7 +173,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
                   onClick={closeModal}
                   className="w-full mt-4 text-center text-sm text-gray-400 hover:text-gray-600 transition-colors py-2"
                 >
-                  Batal
+                  {t("avatarUpload.cancel")}
                 </button>
               </>
             )}
@@ -179,7 +181,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
             {mode === "camera" && !captured && (
               <>
                 <h3 className="font-bold text-gray-900 mb-3 text-center">
-                  Ambil Foto
+                  {t("avatarUpload.cameraTitle")}
                 </h3>
                 <div className="relative bg-black rounded-xl overflow-hidden mb-4">
                   <video
@@ -195,14 +197,14 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
                     onClick={closeModal}
                     className="flex-1 border border-gray-200 rounded-lg py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Batal
+                    {t("avatarUpload.cancel")}
                   </button>
                   <button
                     type="button"
                     onClick={capturePhoto}
                     className="flex-1 bg-[#1E3A5F] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#162d4a] transition-colors"
                   >
-                    Jepret
+                    {t("avatarUpload.capture")}
                   </button>
                 </div>
               </>
@@ -211,7 +213,7 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
             {mode === "camera" && captured && (
               <>
                 <h3 className="font-bold text-gray-900 mb-3 text-center">
-                  Hasil Foto
+                  {t("avatarUpload.resultTitle")}
                 </h3>
                 <div className="relative bg-gray-100 rounded-xl overflow-hidden mb-4">
                   <img src={captured} alt="Hasil jepretan" className="w-full h-64 object-cover" />
@@ -222,14 +224,14 @@ export default function AvatarUpload({ initials = "AP", onImageChange }) {
                     onClick={retakePhoto}
                     className="flex-1 border border-gray-200 rounded-lg py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Ulang
+                    {t("avatarUpload.retake")}
                   </button>
                   <button
                     type="button"
                     onClick={confirmPhoto}
                     className="flex-1 bg-[#1E3A5F] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#162d4a] transition-colors"
                   >
-                    Gunakan
+                    {t("avatarUpload.use")}
                   </button>
                 </div>
               </>

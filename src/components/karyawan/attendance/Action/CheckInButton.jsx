@@ -1,4 +1,10 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function CheckInButton({ onClick, disabled = false }) {
+  const { t } = useLanguage();
+
   return (
     <button
       onClick={onClick}
@@ -20,7 +26,7 @@ export default function CheckInButton({ onClick, disabled = false }) {
         </svg>
       </span>
       <span className="text-sm font-semibold text-gray-800">
-        {disabled ? "Sudah Absen Masuk" : "Absen Masuk"}
+        {disabled ? t("checkInButton.done") : t("checkInButton.label")}
       </span>
     </button>
   );

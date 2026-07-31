@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 function getMonday(date) {
   const d = new Date(date);
@@ -12,6 +13,7 @@ function getMonday(date) {
 }
 
 export default function AttendanceSummary({ selectedDate }) {
+  const { t } = useLanguage();
   const stats = useMemo(() => {
     const monday = getMonday(selectedDate);
     const today = new Date();
@@ -52,7 +54,7 @@ export default function AttendanceSummary({ selectedDate }) {
     <div className="grid grid-cols-3 gap-4">
       <div className="rounded-2xl bg-green-50 border border-green-200 p-5 text-center">
         <p className="text-3xl font-bold text-green-600">{stats.hadir}</p>
-        <p className="text-sm font-medium text-green-700 mt-1">Sudah Absen</p>
+        <p className="text-sm font-medium text-green-700 mt-1">{t("attendanceSummary.checkedIn")}</p>
       </div>
       <div className={`rounded-2xl border p-5 text-center ${
         stats.todayBelum
@@ -64,11 +66,11 @@ export default function AttendanceSummary({ selectedDate }) {
         }`}>{stats.belum}</p>
         <p className={`text-sm font-medium mt-1 ${
           stats.todayBelum ? "text-red-700" : "text-gray-700"
-        }`}>Belum Absen</p>
+        }`}>{t("attendanceSummary.notCheckedIn")}</p>
       </div>
       <div className="rounded-2xl bg-red-50 border border-red-200 p-5 text-center">
         <p className="text-3xl font-bold text-red-600">{stats.tidak}</p>
-        <p className="text-sm font-medium text-red-700 mt-1">Tidak Absen</p>
+        <p className="text-sm font-medium text-red-700 mt-1">{t("attendanceSummary.absent")}</p>
       </div>
     </div>
   );

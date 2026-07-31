@@ -1,9 +1,15 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function Footer() {
+  const { t } = useLanguage();
+
   const links = [
-    { label: "Beranda", href: "#beranda" },
-    { label: "Fitur", href: "#fitur" },
-    { label: "Role", href: "#role" },
-    { label: "Kontak", href: "#kontak" },
+    { label: t("footer.home"), href: "#beranda" },
+    { label: t("footer.features"), href: "#fitur" },
+    { label: t("footer.roles"), href: "#role" },
+    { label: t("footer.contact"), href: "#kontak" },
   ];
 
   return (
@@ -15,14 +21,14 @@ export default function Footer() {
               E-Absensi
             </p>
             <p className="text-slate-400 text-sm mt-2 leading-relaxed">
-              Sistem Absensi Elektronik Internal
+              {t("footer.desc")}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-8 sm:gap-16">
             <div>
               <p className="text-white text-xs font-semibold uppercase tracking-wider mb-3">
-                Navigasi
+                {t("footer.navigation")}
               </p>
               <div className="flex flex-col gap-2">
                 {links.map((link) => (
@@ -39,22 +45,22 @@ export default function Footer() {
 
             <div>
               <p className="text-white text-xs font-semibold uppercase tracking-wider mb-3">
-                Aplikasi
+                {t("footer.application")}
               </p>
               <div className="flex flex-col gap-2">
                 <a
                   href="/auth/login"
                   className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
                 >
-                  Masuk
+                  {t("footer.login")}
                 </a>
                 <a
-                  href="/karyawan/dashboard"
+                  href="/karyawan"
                   className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
                 >
-                  Dashboard
+                  {t("footer.dashboard")}
                 </a>
-                <span className="text-sm text-slate-500">Laporan</span>
+                <span className="text-sm text-slate-500">{t("footer.reports")}</span>
               </div>
             </div>
           </div>

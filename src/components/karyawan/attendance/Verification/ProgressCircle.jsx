@@ -1,8 +1,13 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function ProgressCircle({ step = 1 }) {
+  const { t } = useLanguage();
   const steps = [
-    { id: 1, label: "Lokasi" },
-    { id: 2, label: "Foto" },
-    { id: 3, label: "Selesai" },
+    { id: 1, label: t("progressCircle.location") },
+    { id: 2, label: t("progressCircle.photo") },
+    { id: 3, label: t("progressCircle.done") },
   ];
 
   return (

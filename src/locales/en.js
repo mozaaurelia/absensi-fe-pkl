@@ -1,0 +1,636 @@
+export const en = {
+  common: {
+    appName: "E-Absensi",
+    tagline: "Electronic Attendance System",
+    taglineInternal: "Internal Electronic Attendance System",
+    close: "Close",
+    cancel: "Cancel",
+    login: "Sign In",
+    logout: "Logout",
+    save: "Save Changes",
+    saving: "Saving...",
+    status: "Status",
+    location: "Location",
+    verification: "Verification",
+    date: "Date",
+    duration: "Duration",
+    type: "Type",
+    months: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+    daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    daysFull: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+  },
+
+  nav: {
+    home: "Home",
+    features: "Features",
+    roles: "Roles",
+    flow: "Flow",
+    contact: "Contact",
+    signIn: "Sign In",
+    tagline: "Electronic Attendance System",
+    toggleMenu: "Toggle menu",
+  },
+
+  hero: {
+    badge: "Platform HR Attendance System",
+    title:
+      "Manage attendance, permits, leave, overtime, and payroll in one system.",
+    desc: "E-Absensi helps employees clock in/out, supervisors monitor their teams, and HR manage attendance recaps quickly, neatly, and transparently.",
+    tryDemo: "Try System Demo",
+    seeFeatures: "See Features",
+    employees: "Employees",
+    attendance: "Attendance",
+    mainUsers: "Main users",
+  },
+
+  login: {
+    title: "Sign In",
+    secure: "Secure Login",
+    desc: "Use your company account to access the E-Absensi system.",
+    footer: "Internal Electronic Attendance System",
+    emailLabel: "Email / Employee ID",
+    emailPlaceholder: "e.g. andi.pratama@company.co.id",
+    emailRequired: "Email / NIK is required",
+    emailInvalid: "Enter a valid email (e.g. name@company.com)",
+    passwordLabel: "Password",
+    passwordRequired: "Password is required",
+    remember: "Remember this device",
+    forgot: "Forgot password?",
+    submit: "Go to Dashboard",
+    show: "Show",
+    hide: "Hide",
+    subtitle: "Electronic Attendance System",
+    heroTitle:
+      "Digital attendance for employees, supervisors, and HR in one platform.",
+    heroDesc:
+      "Manage clock-in/out, leave approvals, team schedules, attendance recaps, and payroll reports securely and in an organized manner.",
+    statEmployees: "Employees",
+    statAttendance: "Attendance",
+    statMonitoring: "Monitoring",
+    faceLabel: "Face ID",
+    faceDesc: "Face Attendance",
+    locationLabel: "Current Location",
+    locationDesc: "Google Maps",
+    roleEmployee: "Employee",
+    roleSupervisor: "Supervisor",
+    roleAdmin: "Admin HRM",
+  },
+
+  role: {
+    eyebrow: "One System for All Roles",
+    title: "Designed for the needs of employees, supervisors, and HRD",
+    desc: "Each role gets a different view and feature set, making work processes more focused, concise, and easy to monitor.",
+    employee: {
+      title: "Employee",
+      desc: "Clock in/out, view working hours, submit permits, leave, and overtime.",
+      tags: ["Clock In / Clock Out", "Permit, Leave & Overtime", "Attendance History"],
+    },
+    supervisor: {
+      title: "Supervisor",
+      desc: "Monitor team attendance, check schedules, and approve or reject requests.",
+      tags: ["Team Dashboard", "Approve Permit / Leave", "Team Schedule & History"],
+    },
+    admin: {
+      title: "HRD Admin",
+      desc: "Manage HR data, work shifts, system settings, attendance recaps, and payroll.",
+      tags: ["HR Data", "Attendance Recap", "Payroll & System"],
+    },
+  },
+
+  features: {
+    eyebrow: "Key Features",
+    title: "All internal attendance needs in one dashboard.",
+    desc: "E-Absensi is built to reduce manual HR work, speed up supervisor approvals, and provide data transparency to employees.",
+    learnMore: "Learn More",
+    clock: {
+      title: "Clock In / Out",
+      desc: "Check in and out with GPS and device validation.",
+    },
+    leave: {
+      title: "Permit, Leave & Overtime",
+      desc: "Structured submissions with pending, approved, or rejected status.",
+    },
+    approval: {
+      title: "Supervisor Approval",
+      desc: "Supervisors can view team requests and make quick decisions.",
+    },
+    payroll: {
+      title: "Recap & Payroll",
+      desc: "Attendance data ready for monthly reports and payroll.",
+    },
+  },
+
+  workflow: {
+    eyebrow: "Workflow",
+    title: "Attendance process from login to reports",
+    steps: [
+      { title: "Login", desc: "Users log in according to their account role." },
+      { title: "Attendance", desc: "Employees clock in and out." },
+      { title: "Submission", desc: "Permits, leave, and overtime are submitted." },
+      { title: "Approval", desc: "Supervisors process submissions." },
+      { title: "Recap", desc: "HRD exports payroll data." },
+    ],
+    portalTitle: "Admin / HRM Portal",
+    portalDesc: "Company attendance analytics",
+    kpiEmployee: "Employees",
+    kpiPresent: "Present",
+    kpiLeave: "Leave",
+    kpiAbsent: "Absent",
+    recapTitle: "Attendance Recap",
+    export: "Export",
+    responsiveEyebrow: "Responsive Design",
+    responsiveTitle: "Ready for desktop and mobile.",
+    responsiveDesc:
+      "The desktop view maximizes data tables and analytics dashboards, while the mobile view simplifies key features into easy-to-use navigation.",
+    desktopTitle: "Desktop",
+    desktopDesc: "Best for HRD admins, payroll, and large data management.",
+    mobileTitle: "Mobile",
+    mobileDesc: "Best for clock-in/out, approvals, and quick monitoring.",
+    statusPresent: "Present",
+    statusSick: "Sick",
+    statusLate: "Late",
+  },
+
+  cta: {
+    eyebrow: "Start Attendance Digitalization",
+    title: "Use E-Absensi for more organized HR operations.",
+    desc: "Suitable for companies, schools, institutions, and internal organizations that need a modern electronic attendance system.",
+    scheduleDemo: "Schedule a Demo",
+    contactAdmin: "Contact Admin",
+  },
+
+  footer: {
+    desc: "Internal Electronic Attendance System",
+    navigation: "Navigation",
+    application: "Application",
+    home: "Home",
+    features: "Features",
+    roles: "Roles",
+    contact: "Contact",
+    login: "Sign In",
+    dashboard: "Dashboard",
+    reports: "Reports",
+  },
+
+  sidebar: {
+    tagline: "Electronic Attendance System",
+    dashboard: "Dashboard",
+    clockInOut: "Clock In/Out",
+    history: "Attendance History",
+    leave: "Permit & Leave",
+    settings: "Settings",
+    close: "Close sidebar",
+    open: "Open sidebar",
+    logout: "Logout",
+  },
+
+  dashboardHeader: {
+    changeLanguage: "Change Language",
+    notifications: "Notifications",
+    user: "User",
+    timezone: "WIB",
+    greetings: ["Good Morning", "Good Afternoon", "Good Evening", "Good Night"],
+  },
+
+  overview: {
+    todayStatus: "Today's Status",
+    notCheckedIn: "Not Checked In",
+    pendingTag: "Pending",
+    weekHours: "Hours This Week",
+    normalTag: "Normal",
+    leaveRemaining: "Annual Leave Remaining",
+    daysUnit: "Days",
+    activeTag: "Active",
+    lateThisMonth: "Late This Month",
+    timesUnit: "Times",
+    needsReviewTag: "Needs Review",
+  },
+
+  dashAttendance: {
+    title: "Today's Attendance",
+    subtitle: "Attendance status",
+    notCheckedIn: "Not Checked In",
+    shift: "Work Shift: 09:00 - 18:00 · Jakarta Head Office",
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    location: "Location",
+    headOffice: "Head Office",
+    verification: "Verification",
+    gpsValid: "GPS Valid",
+  },
+
+  weeklyWork: {
+    title: "Weekly Working Hours",
+    target: "Weekly target: 40 working hours.",
+    progress: "This Week's Progress",
+  },
+
+  agenda: {
+    title: "Agenda & Leave",
+    subtitle: "Work schedule and latest leave information.",
+    shiftActive: "Active Shift",
+    leaveRemaining: "Leave Remaining",
+    daysLeft: "12 days",
+    reminder: "Reminder",
+    reminderText:
+      "Don't forget to clock in before 09:00 and make sure GPS is enabled.",
+    submit: "Submit Permit / Leave",
+  },
+
+  profileSummary: {
+    title: "My Summary",
+    subtitle: "Personal information and latest status.",
+    nik: "NIK",
+    division: "Division",
+    supervisor: "Supervisor",
+    lastSubmission: "Last Submission",
+    lastSubmissionValue: "Annual Leave · Approved",
+  },
+
+  attendanceHeader: {
+    title: "Work Schedule",
+    morningShift: "Morning Shift",
+  },
+
+  attendanceAction: {
+    title: "Attendance Actions",
+    desc: "Click one of the buttons to start attendance verification.",
+    outsideTitle: "Outside Working Hours",
+    outsideDesc:
+      "Attendance features can only be used from 07:00 - 17:00. Please return during working hours.",
+  },
+
+  checkInButton: {
+    done: "Already Checked In",
+    label: "Check In",
+  },
+
+  checkOutButton: {
+    done: "Already Checked Out",
+    label: "Check Out",
+  },
+
+  attendanceHistory: {
+    title: "This Week's Attendance Log",
+    subtitle: "Summary of check-in and check-out records",
+    no: "No",
+    photo: "Photo",
+    date: "Date",
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    location: "Location",
+    status: "Status",
+    present: "Present",
+    late: "Late",
+    notCheckedIn: "Not Checked In",
+    scheduled: "Scheduled",
+    deletePhoto: "Delete photo",
+  },
+
+  attendanceStatus: {
+    notCheckedIn: "Not Checked In",
+    present: "Present",
+    late: "Late",
+  },
+
+  attendanceInfo: {
+    location: "Location",
+    headOffice: "Head Office",
+    verification: "Verification",
+    gpsValid: "GPS Valid",
+  },
+
+  attendanceSummary: {
+    checkedIn: "Checked In",
+    notCheckedIn: "Not Checked In",
+    absent: "Absent",
+  },
+
+  todolist: {
+    title: "To-do List",
+    addPlaceholder: "Add a new task...",
+    empty: "No tasks today.",
+    warningBanner: "There are {count} unfinished tasks today!",
+    allDone: "All Done! 🎉",
+    allDoneDesc: "All of today's tasks are done. Great job!",
+    defaultTask1: "Review monthly report",
+    defaultTask2: "Send documents to HRD",
+    defaultTask3: "Team meeting",
+  },
+
+  gpsVerification: {
+    gpsSignal: "GPS Signal",
+    detecting: "Detecting...",
+    active: "Active",
+    geofencing: "Geofencing",
+    gettingLocation: "Getting your location...",
+    locationError: "Failed to get location. Check GPS permission.",
+    title: "Location Matched!",
+    desc: "Your area is detected. Please start the biometric photo capture.",
+    start: "Start Verification",
+    mapTitle: "Your Location",
+  },
+
+  selfieVerification: {
+    cameraError: "Camera is not available. Check browser camera permission.",
+    success: "Photo Captured!",
+    successDesc: "Make sure your face is clearly visible. If not, retake it.",
+    retake: "Retake",
+    continue: "Continue",
+    title: "Ready for a Selfie?",
+    desc: "Position your face inside the circle. Make sure the lighting is bright enough.",
+    takePhoto: "Take Photo Now",
+  },
+
+  verificationStepper: {
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    subtitle: "Verify Your Attendance",
+  },
+
+  progressCircle: {
+    location: "Location",
+    photo: "Photo",
+    done: "Done",
+  },
+
+  attendanceSuccess: {
+    checkIn: "Check In Successful!",
+    checkOut: "Check Out Successful!",
+    desc: "Your attendance has been recorded at",
+    backHome: "Back to Home",
+  },
+
+  historyFilter: {
+    status: "Filter Status",
+    searchDate: "Search Date",
+    datePlaceholder: "e.g. 12 June 2026",
+    location: "Location",
+    action: "Action",
+    apply: "Apply Filter",
+    allStatuses: "Present, Sick, Late",
+    present: "Present",
+    late: "Late",
+    sick: "Sick",
+    allLocations: "All Locations",
+    jakartaOffice: "Jakarta Head Office",
+    bandungOffice: "Bandung Branch Office",
+  },
+
+  historyHeader: {
+    title: "My Attendance History",
+    desc: "Monitor all attendance data and personal total working hours.",
+    dateRange: "Date Range",
+  },
+
+  historySummary: {
+    presentDays: "Total Present Days",
+    totalHours: "Total Working Hours",
+    late: "Late",
+    permitSick: "Permit / Sick",
+    daysUnit: "Days",
+  },
+
+  historyTable: {
+    title: "Attendance History Table",
+    desc: "Personal attendance data based on date and recording location.",
+    date: "Date",
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    location: "Location",
+    status: "Status",
+    totalHours: "Total Working Hours",
+    present: "Present",
+    late: "Late",
+    sick: "Sick",
+    notAvailable: "Not available",
+    jakartaOffice: "Jakarta Head Office",
+    bandungOffice: "Bandung Branch Office",
+  },
+
+  leaveCard: {
+    type: "Type",
+    date: "Date",
+    duration: "Duration",
+  },
+
+  leaveForm: {
+    title: "Permit & Leave Request Form",
+    badge: "Permit / Leave",
+    desc: "Complete the following permit or leave request details.",
+    typeLabel: "Type of Permit",
+    typePlaceholder: "Sick, Leave, Important Matters",
+    sick: "Sick",
+    annualLeave: "Annual Leave",
+    important: "Important Matters",
+    startDate: "Start Date",
+    endDate: "End Date",
+    reason: "Reason / Description",
+    reasonPlaceholder: "Write your permit or leave request reason clearly...",
+    fileTitle: "Upload doctor's certificate or supporting documents",
+    submit: "Submit Request",
+  },
+
+  leaveHeader: {
+    title: "Employee Permit, Leave & Overtime Requests",
+    desc: "Submit permits, leave, overtime, and monitor approval status transparently.",
+    history: "Request History",
+    newRequest: "New Request",
+  },
+
+  leaveHistory: {
+    title: "Request Status",
+    desc: "Latest permit, leave, and overtime history.",
+    dataLabel: "Records",
+    annualLeave: "Annual Leave",
+    approved: "Approved",
+    sick: "Sick",
+    pending: "Pending",
+    projectOvertime: "Project Closing Overtime",
+    operationalOvertime: "Operational Overtime",
+    days2: "2 Days",
+    days1: "1 Day",
+    duration230: "2h 30m",
+    duration400: "4h 00m",
+  },
+
+  leaveSummary: {
+    leaveRemaining: "Annual Leave Remaining",
+    leaveRemainingValue: "12 Days",
+    stillAvailable: "Still available",
+    leaveUsed: "Leave Used",
+    leaveUsedValue: "2 Days",
+    thisYear: "This year",
+    pendingRequests: "Pending Requests",
+    pendingValue: "1",
+    waitingSupervisor: "Waiting for supervisor",
+    rejectedRequests: "Rejected Requests",
+    rejectedValue: "1",
+    needsRevision: "Needs revision",
+    overtimeMonth: "Overtime This Month",
+    overtimeMonthValue: "6h 30m",
+    recorded: "Recorded",
+    overtimePending: "Pending Overtime",
+    overtimePendingValue: "2",
+    needsApproval: "Needs approval",
+  },
+
+  overtimeForm: {
+    title: "Overtime Request Form",
+    badge: "Overtime Feature",
+    desc: "Submit overtime for additional work beyond normal working hours.",
+    date: "Overtime Date",
+    startTime: "Start Time",
+    endTime: "End Time",
+    estDuration: "Estimated Duration",
+    durationValue: "2h 30m",
+    category: "Overtime Category",
+    categoryPlaceholder: "Project Completion / Operational",
+    project: "Project Completion",
+    operational: "Operational",
+    others: "Others",
+    approval: "Supervisor Approval",
+    supervisorOption: "Surya Prasetya · Operations Supervisor",
+    reason: "Overtime Reason",
+    reasonPlaceholder:
+      "e.g. finishing the end-of-month operational report and validating attendance data...",
+    submit: "Submit Overtime Request",
+  },
+
+  statusBadge: {
+    approved: "Approved",
+    pending: "Pending",
+    rejected: "Rejected",
+  },
+
+  accountSummary: {
+    title: "Account Summary",
+    role: "Role",
+    department: "Department",
+    device: "Registered Device",
+    deviceValue: "iPhone 13 · Verified",
+  },
+
+  avatarUpload: {
+    cameraError: "Cannot access camera. Make sure camera permission is granted.",
+    change: "Change Avatar",
+    upload: "Upload Avatar",
+    modalTitle: "Choose Profile Photo",
+    fromFile: "Upload from File",
+    takePhoto: "Take Photo",
+    cancel: "Cancel",
+    cameraTitle: "Take Photo",
+    capture: "Capture",
+    resultTitle: "Photo Result",
+    retake: "Retake",
+    use: "Use",
+  },
+
+  notificationSettings: {
+    title: "Notifications",
+    desc: "Manage system notification preferences.",
+    email: {
+      title: "Email Notifications for Attendance Reminders",
+      desc: "Send clock-in and clock-out reminders via email.",
+    },
+    whatsapp: {
+      title: "WhatsApp Notifications for Leave Approvals",
+      desc: "Send leave approval status via WhatsApp.",
+    },
+    device: {
+      title: "New Device Login Notifications",
+      desc: "Send alerts when your account logs in from a new device.",
+    },
+  },
+
+  notification: {
+    title: "Notifications",
+    subtitle: "Latest updates",
+    markAllRead: "Mark all as read",
+    items: {
+      reminder: {
+        title: "Attendance Reminder",
+        desc: "Don't forget to clock in this morning before 09:00",
+        time: "08:00 WIB",
+      },
+      approved: {
+        title: "Leave Approved",
+        desc: "Your leave request has been approved by your supervisor",
+        time: "Yesterday",
+      },
+      late: {
+        title: "Late Check-in",
+        desc: "Your check-in was recorded late today",
+        time: "Last Monday",
+      },
+      device: {
+        title: "New Device Login",
+        desc: "Your account was logged in from a new device",
+        time: "Jul 12",
+      },
+    },
+  },
+
+  profileForm: {
+    title: "User Profile",
+    desc: "Basic employee information used in the attendance system.",
+    fullName: "Full Name",
+    nik: "Employee ID",
+    email: "Email",
+    position: "Position",
+  },
+
+  securityForm: {
+    title: "Security",
+    desc: "Update your password and enable additional protection.",
+    oldPassword: "Old Password",
+    newPassword: "New Password",
+    twoFA: "Enable Two-Factor Authentication (2FA)",
+    twoFADesc: "Add an extra layer of security when logging into the system.",
+  },
+
+  settingsHeader: {
+    title: "Account & Profile Settings",
+    desc: "Manage profile information, account security, and notification preferences.",
+  },
+
+  cancelButton: {
+    label: "Cancel",
+  },
+
+  saveButton: {
+    saving: "Saving...",
+    label: "Save Changes",
+  },
+
+  admin: {
+    comingSoon: "Admin Dashboard - Coming Soon",
+  },
+
+  atasan: {
+    comingSoon: "Supervisor Dashboard - Coming Soon",
+  },
+
+  accessDenied: "Access denied. Redirecting to login page...",
+};

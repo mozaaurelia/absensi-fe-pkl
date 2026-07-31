@@ -1,6 +1,11 @@
-import StatusBadge from "./StatusBadge";
+"use client";
 
-export default function LeaveCard({ tipe, status, tanggal, durasi, highlight }) {
+import StatusBadge from "./StatusBadge";
+import { useLanguage } from "@/context/LanguageContext";
+
+export default function LeaveCard({ tipe, statusKey, tanggal, durasi, highlight }) {
+  const { t } = useLanguage();
+
   return (
     <div
       className={`rounded-xl border p-4 ${
@@ -11,7 +16,7 @@ export default function LeaveCard({ tipe, status, tanggal, durasi, highlight }) 
     >
       <div className="flex items-start justify-between mb-3">
         <div>
-          <p className="text-xs text-gray-400 mb-1">Tipe</p>
+          <p className="text-xs text-gray-400 mb-1">{t("leaveCard.type")}</p>
           <p
             className={`text-sm font-bold ${
               highlight ? "text-purple-700" : "text-gray-900"
@@ -20,12 +25,12 @@ export default function LeaveCard({ tipe, status, tanggal, durasi, highlight }) 
             {tipe}
           </p>
         </div>
-        <StatusBadge status={status} />
+        <StatusBadge statusKey={statusKey} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <p className="text-xs text-gray-400 mb-1">Tanggal</p>
+          <p className="text-xs text-gray-400 mb-1">{t("leaveCard.date")}</p>
           <p
             className={`text-sm font-semibold ${
               highlight ? "text-purple-700" : "text-gray-800"
@@ -35,7 +40,7 @@ export default function LeaveCard({ tipe, status, tanggal, durasi, highlight }) 
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-400 mb-1">Durasi</p>
+          <p className="text-xs text-gray-400 mb-1">{t("leaveCard.duration")}</p>
           <p
             className={`text-sm font-semibold ${
               highlight ? "text-purple-700" : "text-gray-800"

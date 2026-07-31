@@ -1,13 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-import { FiBell, FiUser } from "react-icons/fi";
-
-const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-const monthNames = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-];
+import { useEffect, useMemo, useState } from "react";
+import { FiUser } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
+import Notification from "@/components/karyawan/notification/Notification";
 
 function getMonday(date) {
   const d = new Date(date);
@@ -19,6 +15,16 @@ function getMonday(date) {
 }
 
 export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay }) {
+  const { daysShort, months, locale, t } = useLanguage();
+  const [now, setNow] = useState(null);
+
+  useEffect(() => {
+    const tick = () => setNow(new Date());
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const weekDays = useMemo(() => {
     const monday = getMonday(selectedDate);
     const today = new Date();
@@ -30,25 +36,25 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
       d.setDate(monday.getDate() + i);
       const isToday = d.getTime() === today.getTime();
       days.push({
-        name: dayNames[d.getDay()],
+        name: daysShort[d.getDay()],
         date: d.getDate().toString(),
         active: isToday,
         full: d,
       });
     }
     return days;
-  }, [selectedDate]);
+  }, [selectedDate, daysShort]);
 
   const start = weekDays[0];
   const end = weekDays[6];
   const year = start.full.getFullYear();
   const rangeText =
     start.full.getMonth() === end.full.getMonth()
-      ? `${start.date} - ${end.date} ${monthNames[start.full.getMonth()]} ${year}`
-      : `${start.date} ${monthNames[start.full.getMonth()]} - ${end.date} ${monthNames[end.full.getMonth()]} ${year}`;
+      ? `${start.date} - ${end.date} ${months[start.full.getMonth()]} ${year}`
+      : `${start.date} ${months[start.full.getMonth()]} - ${end.date} ${months[end.full.getMonth()]} ${year}`;
 
   const dateStr = selectedDate
-    ? selectedDate.toLocaleDateString("id-ID", {
+    ? selectedDate.toLocaleDateString(locale, {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -56,20 +62,22 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
       })
     : "";
 
+  const timeStr = now
+    ? now.toLocaleTimeString(locale, { hour12: false })
+    : "--:--:--";
+
   return (
     <div className="rounded-2xl bg-gradient-to-r from-[#1E3A5F] to-[#2a4f7a] p-6 shadow-lg">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-semibold text-white">Jadwal Kerja</h3>
+          <h3 className="text-lg font-semibold text-white">{t("attendanceHeader.title")}</h3>
           <p className="mt-1 text-sm text-blue-200/80">{rangeText}</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-blue-200">
-            Shift Pagi
+            {t("attendanceHeader.morningShift")}
           </span>
-          <button className="text-white/70 hover:text-white transition">
-            <FiBell size={20} />
-          </button>
+          <Notification />
           <button className="text-white/70 hover:text-white transition">
             <FiUser size={20} />
           </button>
@@ -84,6 +92,28 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
           &lt;
         </button>
         <p className="text-xl font-semibold text-white">{dateStr}</p>
+        <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-blue-200/80"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 3" />
+          </svg>
+          <span className="text-base font-semibold tabular-nums tracking-wider text-white">
+            {timeStr}
+          </span>
+          <span className="text-blue-200/60 text-[11px]">
+            {t("dashboardHeader.timezone")}
+          </span>
+        </div>
         <button
           onClick={onNextDay}
           className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition"

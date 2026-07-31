@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import ProgressCircle from "./ProgressCircle";
 import GPSVerification from "./GPSVerification";
 import SelfieVerification from "./SelfieVerification";
@@ -8,8 +9,9 @@ import AttendanceSuccess from "./AttendanceSuccess";
 
 export default function VerificationStepper({ mode = "in", onClose }) {
   const [step, setStep] = useState(1);
+  const { t } = useLanguage();
 
-  const title = mode === "in" ? "Absen Masuk" : "Absen Pulang";
+  const title = mode === "in" ? t("verificationStepper.checkIn") : t("verificationStepper.checkOut");
 
   return (
     <div className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6">
@@ -26,7 +28,7 @@ export default function VerificationStepper({ mode = "in", onClose }) {
             </button>
             <div>
               <h3 className="font-bold text-gray-900 text-sm">{title}</h3>
-              <p className="text-xs text-gray-400">Verifikasi Kehadiran Anda</p>
+              <p className="text-xs text-gray-400">{t("verificationStepper.subtitle")}</p>
             </div>
           </div>
           <span className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">

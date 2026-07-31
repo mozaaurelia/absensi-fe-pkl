@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FiClock, FiMapPin, FiShield } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Attendance() {
   const router = useRouter();
+  const { locale, t } = useLanguage();
   const [time, setTime] = useState(null);
   const [hasPulang, setHasPulang] = useState(false);
 
@@ -23,7 +25,7 @@ export default function Attendance() {
   }, [time]);
 
   const formatted = time
-    ? time.toLocaleTimeString("id-ID", { hour12: false })
+    ? time.toLocaleTimeString(locale, { hour12: false })
     : "--:--:--";
 
   const hour = time ? time.getHours() : 0;
@@ -43,19 +45,19 @@ export default function Attendance() {
             <FiClock size={20} />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Absensi Hari Ini</h3>
-            <p className="text-xs text-gray-400">Status kehadiran</p>
+            <h3 className="font-bold text-gray-900">{t("dashAttendance.title")}</h3>
+            <p className="text-xs text-gray-400">{t("dashAttendance.subtitle")}</p>
           </div>
         </div>
         <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full animate-pulse-ring">
-          Belum Absen
+          {t("dashAttendance.notCheckedIn")}
         </span>
       </div>
 
       <div className="text-center mb-6">
         <p className="text-xs text-gray-400 mt-2 flex items-center justify-center gap-1">
           <FiClock size={12} />
-          Shift Kerja: 09:00 - 18:00 · Kantor Pusat Jakarta
+          {t("dashAttendance.shift")}
         </p>
       </div>
 
@@ -65,7 +67,7 @@ export default function Attendance() {
           className="bg-green-600 text-white font-semibold text-sm py-3 rounded-lg hover:bg-green-700 transition-all active:scale-95 flex items-center justify-center gap-2"
         >
           <FiClock size={15} />
-          Masuk Kerja
+          {t("dashAttendance.checkIn")}
         </button>
         <button
           onClick={handlePulang}
@@ -77,7 +79,7 @@ export default function Attendance() {
           }`}
         >
           <FiClock size={15} />
-          Pulang Kerja
+          {t("dashAttendance.checkOut")}
         </button>
       </div>
 
@@ -85,15 +87,15 @@ export default function Attendance() {
         <div className="bg-gray-50 rounded-lg px-4 py-3 flex items-center gap-3">
           <FiMapPin size={16} className="text-gray-400 shrink-0" />
           <div>
-            <p className="text-xs text-gray-400 mb-0.5">Lokasi</p>
-            <p className="text-sm font-semibold text-gray-800">Kantor Pusat</p>
+            <p className="text-xs text-gray-400 mb-0.5">{t("dashAttendance.location")}</p>
+            <p className="text-sm font-semibold text-gray-800">{t("dashAttendance.headOffice")}</p>
           </div>
         </div>
         <div className="bg-gray-50 rounded-lg px-4 py-3 flex items-center gap-3">
           <FiShield size={16} className="text-gray-400 shrink-0" />
           <div>
-            <p className="text-xs text-gray-400 mb-0.5">Verifikasi</p>
-            <p className="text-sm font-semibold text-gray-800">GPS Valid</p>
+            <p className="text-xs text-gray-400 mb-0.5">{t("dashAttendance.verification")}</p>
+            <p className="text-sm font-semibold text-gray-800">{t("dashAttendance.gpsValid")}</p>
           </div>
         </div>
       </div>

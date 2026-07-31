@@ -1,21 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FiCheckSquare, FiPlus, FiTrash2, FiAlertTriangle } from "react-icons/fi";
-
-const monthNames = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-];
-const dayNamesFull = [
-  "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu",
-];
+import { FiCheckSquare, FiPlus, FiAlertTriangle } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
 
 function getDateKey(d) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
 export default function Todolist() {
+  const { daysFull, months, t } = useLanguage();
   const today = new Date();
   const dateKey = getDateKey(today);
   const [items, setItems] = useState([]);
@@ -40,9 +34,9 @@ export default function Todolist() {
         localStorage.setItem("todolist_" + dateKey, JSON.stringify(reset));
       } else {
         const defaults = [
-          { id: Date.now() + 1, text: "Review laporan bulanan", done: false },
-          { id: Date.now() + 2, text: "Kirim dokumen ke HRD", done: false },
-          { id: Date.now() + 3, text: "Meeting dengan tim", done: false },
+          { id: Date.now() + 1, text: t("todolist.defaultTask1"), done: false },
+          { id: Date.now() + 2, text: t("todolist.defaultTask2"), done: false },
+          { id: Date.now() + 3, text: t("todolist.defaultTask3"), done: false },
         ];
         setItems(defaults);
         localStorage.setItem("todolist_" + dateKey, JSON.stringify(defaults));
@@ -105,31 +99,32 @@ export default function Todolist() {
   const pendingCount = items.filter((item) => !item.done).length;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 card-hover h-full flex flex-col">
-      <div className="flex items-start justify-between mb-4">
+    <div className="bg-white/80 rounded-[28px] border border-slate-200/80 p-5 shadow-[0_12px_28px_rgba(15,23,42,0.06)] h-full flex flex-col backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-2xl bg-[#EAF1FF] text-[#1E3A5F] flex items-center justify-center shadow-sm">
             <FiCheckSquare size={20} />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">To-do List</h3>
-            <p className="text-xs text-gray-400">
-              {dayNamesFull[today.getDay()]}, {today.getDate()} {monthNames[today.getMonth()]} {today.getFullYear()}
+            <h3 className="font-bold text-[1.05rem] text-slate-900 leading-none">{t("todolist.title")}</h3>
+            <p className="text-[11px] text-slate-500 mt-1.5">
+              {daysFull[today.getDay()]}, {today.getDate()} {months[today.getMonth()]} {today.getFullYear()}
             </p>
           </div>
         </div>
+
         {warning && pendingCount > 0 && (
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600 bg-red-50 px-3 py-1.5 rounded-full whitespace-nowrap">
-            <FiAlertTriangle size={14} />
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-red-600 bg-red-50 px-2.5 py-1.5 rounded-full whitespace-nowrap border border-red-100">
+            <FiAlertTriangle size={12} />
             {pendingCount} pending
           </div>
         )}
       </div>
 
       {showWarningBanner && (
-        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 flex items-center gap-2">
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl px-4 py-3 flex items-center gap-2 shadow-sm">
           <FiAlertTriangle size={16} className="shrink-0" />
-          <span>Ada {pendingCount} tugas yang belum selesai hari ini!</span>
+          <span>{t("todolist.warningBanner", { count: pendingCount })}</span>
           <button
             onClick={() => setShowWarningBanner(false)}
             className="ml-auto text-red-400 hover:text-red-600 font-bold text-lg leading-none"
@@ -145,56 +140,72 @@ export default function Todolist() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addItem()}
-          placeholder="Tambah tugas baru..."
-          className="flex-1 text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F]"
+          placeholder={t("todolist.addPlaceholder")}
+          className="flex-1 text-sm border border-slate-200 rounded-2xl px-4 py-2.5 bg-slate-50 text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/15 focus:border-[#1E3A5F]"
         />
         <button
           onClick={addItem}
-          className="w-9 h-9 rounded-lg bg-[#1E3A5F] text-white flex items-center justify-center hover:brightness-110 transition-colors shrink-0"
+          className="w-10 h-10 rounded-2xl bg-[#1E3A5F] text-white flex items-center justify-center hover:brightness-110 transition-colors shadow-sm shrink-0"
+          aria-label={t("todolist.addPlaceholder")}
         >
           <FiPlus size={16} />
         </button>
       </div>
 
-      <div className="space-y-2 flex-1 overflow-y-auto max-h-64">
+      <div className="space-y-3 flex-1 overflow-y-auto max-h-[320px] pr-1">
         {items.length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-6">Belum ada tugas hari ini.</p>
-        )}
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
-          >
-            <button
-              onClick={() => toggleItem(item.id)}
-              className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors ${
-                item.done
-                  ? "bg-green-500 border-green-500 text-white"
-                  : "border-gray-300 hover:border-[#1E3A5F]"
-              }`}
-            >
-              {item.done && (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
-            </button>
-            <span
-              className={`text-sm flex-1 ${
-                item.done ? "line-through text-gray-400" : "text-gray-700"
-              }`}
-            >
-              {item.text}
-            </span>
-            <button
-              onClick={() => deleteItem(item.id)}
-              className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-            >
-              <FiTrash2 size={14} />
-            </button>
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center">
+            <p className="text-sm text-slate-400">{t("todolist.empty")}</p>
           </div>
-        ))}
+        )}
+
+        {items.map((item) => {
+          const isDone = item.done;
+          const tone = isDone
+            ? "bg-emerald-100/80 border-emerald-200/80"
+            : warning
+              ? "bg-amber-100/80 border-amber-200/80"
+              : "bg-slate-100/80 border-slate-200/80";
+
+          return (
+            <div
+              key={item.id}
+              className={`group flex items-center gap-3 px-3 py-3 rounded-[22px] border transition-all duration-200 ${tone}`}
+            >
+              <button
+                onClick={() => toggleItem(item.id)}
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                  isDone
+                    ? "bg-[#12B76A] border-[#12B76A] text-white shadow-sm"
+                    : "border-slate-300 bg-white hover:border-[#1E3A5F]"
+                }`}
+                aria-label={isDone ? "Mark as incomplete" : "Mark as complete"}
+              >
+                {isDone && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-medium ${isDone ? "line-through text-slate-500" : "text-slate-800"}`}>
+                  {item.text}
+                </p>
+              </div>
+
+              <button
+                onClick={() => deleteItem(item.id)}
+                className="text-slate-400 hover:text-red-500 transition-colors text-2xl leading-none font-light w-7 h-7 rounded-full flex items-center justify-center"
+                aria-label="Delete task"
+              >
+                &times;
+              </button>
+            </div>
+          );
+        })}
       </div>
+
       {showCelebration && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-3xl shadow-2xl p-10 text-center max-w-sm mx-4 animate-bounce-in relative overflow-hidden">
@@ -216,13 +227,13 @@ export default function Todolist() {
             </div>
             <div className="relative">
               <div className="text-7xl mb-4">👍</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Semua Selesai! 🎉</h3>
-              <p className="text-sm text-gray-500 mb-6">Semua tugas hari ini sudah beres. Kerja bagus!</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">{t("todolist.allDone")}</h3>
+              <p className="text-sm text-gray-500 mb-6">{t("todolist.allDoneDesc")}</p>
               <button
                 onClick={() => setShowCelebration(false)}
                 className="bg-gradient-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm px-8 py-3 rounded-xl hover:brightness-110 transition-all shadow-md"
               >
-                Tutup
+                {t("common.close")}
               </button>
             </div>
           </div>

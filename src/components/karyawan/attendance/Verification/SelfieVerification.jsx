@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SelfieVerification({ onNext }) {
+  const { t } = useLanguage();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -89,26 +91,24 @@ export default function SelfieVerification({ onNext }) {
           )
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs px-6 text-center">
-            Kamera tidak tersedia. Periksa izin akses kamera browser.
-          </div>
-        )}
+            {t("selfieVerification.cameraError")}
+          </div>        )}
         <canvas ref={canvasRef} className="hidden" />
       </div>
 
       {captured ? (
         <>
-          <h3 className="font-bold text-green-600 text-lg mb-2">Foto Berhasil!</h3>
+          <h3 className="font-bold text-green-600 text-lg mb-2">{t("selfieVerification.success")}</h3>
           <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-            Pastikan wajah Anda terlihat jelas. Jika kurang jelas, ambil ulang.
+            {t("selfieVerification.successDesc")}
           </p>
           <div className="flex gap-3 w-full">
             <button
               onClick={handleRetake}
               className="flex-1 bg-gray-100 text-gray-700 font-semibold text-sm py-3.5 rounded-xl hover:bg-gray-200 transition-all"
             >
-              Ulangi
-            </button>
-            <button
+              {t("selfieVerification.retake")}
+            </button>            <button
               onClick={() => {
                 if (imageData) {
                   const d = new Date();
@@ -119,15 +119,15 @@ export default function SelfieVerification({ onNext }) {
               }}
               className="flex-1 bg-gradient-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md shadow-blue-900/20"
             >
-              Lanjutkan
+              {t("selfieVerification.continue")}
             </button>
           </div>
         </>
       ) : (
         <>
-          <h3 className="font-bold text-gray-900 text-lg mb-2">Siap Selfie?</h3>
+          <h3 className="font-bold text-gray-900 text-lg mb-2">{t("selfieVerification.title")}</h3>
           <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-            Posisikan wajah Anda di dalam lingkaran. Pastikan cahaya cukup terang.
+            {t("selfieVerification.desc")}
           </p>
           <button
             onClick={handleCapture}
@@ -138,7 +138,7 @@ export default function SelfieVerification({ onNext }) {
               <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="2" />
               <path d="M4 8a2 2 0 0 1 2-2h1l1-1.5h8L17 6h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
             </svg>
-            Ambil Foto Sekarang
+            {t("selfieVerification.takePhoto")}
           </button>
         </>
       )}

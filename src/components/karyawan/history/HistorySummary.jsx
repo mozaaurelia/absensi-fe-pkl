@@ -1,9 +1,14 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 export default function HistorySummary() {
+  const { t } = useLanguage();
   const stats = [
-    { label: "Total Hari Hadir", value: "21" },
-    { label: "Total Jam Kerja", value: "168j 30m" },
-    { label: "Terlambat", value: "3 Hari" },
-    { label: "Izin / Sakit", value: "2 Hari" },
+    { label: t("historySummary.presentDays"), value: "21" },
+    { label: t("historySummary.totalHours"), value: "168j 30m" },
+    { label: t("historySummary.late"), value: `3 ${t("historySummary.daysUnit")}` },
+    { label: t("historySummary.permitSick"), value: `2 ${t("historySummary.daysUnit")}` },
   ];
 
   return (
