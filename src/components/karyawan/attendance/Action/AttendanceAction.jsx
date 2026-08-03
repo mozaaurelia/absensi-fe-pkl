@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiClock } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import CheckInButton from "./CheckInButton";
@@ -12,13 +12,41 @@ function isWithinHours() {
   return h >= 7 && h < 17;
 }
 
+function getTodayKey() {
+  const d = new Date();
+  return `lokasi_${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+function getTodayStatus() {
+  if (typeof window === "undefined") return { hasCheckedIn: false, hasCheckedOut: false };
+  try {
+    const raw = localStorage.getItem(getTodayKey());
+    const data = raw ? JSON.parse(raw) : null;
+    const mode = data?.mode;
+    return {
+      hasCheckedIn: mode === "in" || mode === "out",
+      hasCheckedOut: mode === "out",
+    };
+  } catch {
+    return { hasCheckedIn: false, hasCheckedOut: false };
+  }
+}
+
 export default function AttendanceAction({
-  hasCheckedIn = false,
-  hasCheckedOut = false,
+  hasCheckedIn: hasCheckedInProp = false,
+  hasCheckedOut: hasCheckedOutProp = false,
 }) {
   const [mode, setMode] = useState(null);
   const [showTimeWarning, setShowTimeWarning] = useState(false);
+  const [status, setStatus] = useState(getTodayStatus);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    setStatus(getTodayStatus());
+  }, []);
+
+  const hasCheckedIn = hasCheckedInProp || status.hasCheckedIn;
+  const hasCheckedOut = hasCheckedOutProp || status.hasCheckedOut;
 
   const handleClick = (type) => {
     if (!isWithinHours()) {
@@ -26,6 +54,11 @@ export default function AttendanceAction({
       return;
     }
     setMode(type);
+  };
+
+  const handleClose = () => {
+    setMode(null);
+    setStatus(getTodayStatus());
   };
 
   return (
@@ -49,7 +82,7 @@ export default function AttendanceAction({
       </div>
 
       {mode && (
-        <VerificationStepper mode={mode} onClose={() => setMode(null)} />
+        <VerificationStepper mode={mode} onClose={handleClose} />
       )}
 
       {showTimeWarning && (

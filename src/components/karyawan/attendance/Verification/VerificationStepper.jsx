@@ -43,7 +43,7 @@ export default function VerificationStepper({ mode = "in", onClose }) {
         </div>
 
         <div className="px-6 pb-6 pt-2">
-          {step === 1 && <GPSVerification onNext={() => setStep(2)} />}
+          {step === 1 && <GPSVerification mode={mode} onNext={() => setStep(2)} />}
           {step === 2 && <SelfieVerification onNext={() => setStep(3)} />}
           {step === 3 && (
             <AttendanceSuccess mode={mode} onFinish={onClose} />

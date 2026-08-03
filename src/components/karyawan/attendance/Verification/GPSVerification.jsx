@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function GPSVerification({ onNext }) {
+export default function GPSVerification({ onNext, mode }) {
   const { locale, t } = useLanguage();
   const [location, setLocation] = useState(null);
   const [address, setAddress] = useState("");
+  const [shortAddress, setShortAddress] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -28,9 +29,17 @@ export default function GPSVerification({ onNext }) {
             { headers: { "User-Agent": "MozaPresensi/1.0" } }
           );
           const data = await res.json();
-          setAddress(data.display_name || `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+          const fallback = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+          setAddress(data.display_name || fallback);
+
+          const a = data.address || {};
+          const street = a.road || a.pedestrian || a.footway || a.residential || a.path || "";
+          const city = a.city || a.town || a.village || a.municipality || a.county || "";
+          setShortAddress([street, city].filter(Boolean).join(", ") || fallback);
         } catch {
-          setAddress(`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+          const fallback = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+          setAddress(fallback);
+          setShortAddress(fallback);
         }
 
         setLoading(false);
@@ -47,7 +56,7 @@ export default function GPSVerification({ onNext }) {
     if (location) {
       const d = new Date();
       const key = `lokasi_${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-      localStorage.setItem(key, JSON.stringify({ ...location, address }));
+      localStorage.setItem(key, JSON.stringify({ ...location, address, shortAddress, mode }));
     }
     onNext();
   };
@@ -107,7 +116,7 @@ export default function GPSVerification({ onNext }) {
               <path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
               <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="2" />
             </svg>
-            {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+            {shortAddress}
           </div>
         </div>
       ) : null}
