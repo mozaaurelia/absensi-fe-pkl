@@ -19,14 +19,14 @@ export default function Agenda() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-3">
-        <div className="bg-gradient-to-br from-green-50 to-green-100/60 rounded-xl px-4 py-4 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.2s" }}>
+        <div className="bg-linear-to-br from-green-50 to-green-100/60 rounded-xl px-4 py-4 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.2s" }}>
           <div className="w-8 h-8 rounded-lg bg-green-200 text-green-700 flex items-center justify-center mb-2">
             <FiSun size={16} />
           </div>
           <p className="text-xs text-green-700 font-semibold mb-0.5">{t("agenda.shiftActive")}</p>
           <p className="text-sm font-bold text-green-800">09:00 - 18:00</p>
         </div>
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100/60 rounded-xl px-4 py-4 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.25s" }}>
+        <div className="bg-linear-to-br from-blue-50 to-blue-100/60 rounded-xl px-4 py-4 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.25s" }}>
           <div className="w-8 h-8 rounded-lg bg-blue-200 text-blue-700 flex items-center justify-center mb-2">
             <FiCalendar size={16} />
           </div>
@@ -35,7 +35,7 @@ export default function Agenda() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-amber-50 to-amber-100/60 rounded-xl px-4 py-4 mb-5 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.3s" }}>
+      <div className="bg-linear-to-br from-amber-50 to-amber-100/60 rounded-xl px-4 py-4 mb-5 opacity-0 animate-fade-slide-in" style={{ animationDelay: "0.3s" }}>
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded-lg bg-amber-200 text-amber-700 flex items-center justify-center shrink-0">
             <FiBell size={16} />

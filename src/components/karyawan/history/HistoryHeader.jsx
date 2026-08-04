@@ -10,18 +10,18 @@ export default function HistoryHeader() {
   return (
     <div className="flex items-center justify-between mb-8">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
           {t("historyHeader.title")}
         </h1>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
           {t("historyHeader.desc")}
         </p>
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="bg-white border border-gray-200 rounded-lg px-4 py-2 text-right">
-          <p className="text-xs text-gray-400">{t("historyHeader.dateRange")}</p>
-          <p className="text-sm font-semibold text-gray-800">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-right">
+          <p className="text-xs text-gray-400 dark:text-gray-500">{t("historyHeader.dateRange")}</p>
+          <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             1 {months[5]} 2026 - 30 {months[5]} 2026
           </p>
         </div>

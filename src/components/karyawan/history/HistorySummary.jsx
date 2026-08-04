@@ -16,10 +16,10 @@ export default function HistorySummary() {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="bg-white rounded-2xl border border-gray-100 p-5"
+          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5"
         >
-          <p className="text-xs text-gray-400 mb-2">{stat.label}</p>
-          <p className="font-bold text-gray-900 text-lg">{stat.value}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">{stat.label}</p>
+          <p className="font-bold text-gray-900 dark:text-gray-100 text-lg">{stat.value}</p>
         </div>
       ))}
     </div>

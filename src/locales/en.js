@@ -7,6 +7,8 @@ export const en = {
     cancel: "Cancel",
     login: "Sign In",
     logout: "Logout",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
     save: "Save Changes",
     saving: "Saving...",
     status: "Status",
@@ -225,6 +227,8 @@ export const en = {
     lateThisMonth: "Late This Month",
     timesUnit: "Times",
     needsReviewTag: "Needs Review",
+    completeTag: "Complete",
+    inProgressTag: "In Progress",
   },
 
   dashAttendance: {
@@ -271,6 +275,7 @@ export const en = {
   attendanceHeader: {
     title: "Work Schedule",
     morningShift: "Morning Shift",
+    dayOff: "Sunday - Day Off",
   },
 
   attendanceAction: {
@@ -566,28 +571,22 @@ export const en = {
 
   notification: {
     title: "Notifications",
-    subtitle: "Latest updates",
+    subtitle: "Today's summary",
+    today: "Today",
+    empty: "No notifications today",
     markAllRead: "Mark all as read",
     items: {
       reminder: {
         title: "Attendance Reminder",
         desc: "Don't forget to clock in this morning before 09:00",
-        time: "08:00 WIB",
-      },
-      approved: {
-        title: "Leave Approved",
-        desc: "Your leave request has been approved by your supervisor",
-        time: "Yesterday",
       },
       late: {
         title: "Late Check-in",
         desc: "Your check-in was recorded late today",
-        time: "Last Monday",
       },
-      device: {
-        title: "New Device Login",
-        desc: "Your account was logged in from a new device",
-        time: "Jul 12",
+      todo: {
+        title: "To-do Reminder",
+        desc: "You still have {count} unfinished tasks",
       },
     },
   },

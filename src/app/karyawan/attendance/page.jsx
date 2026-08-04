@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/karyawan/dashboard/Sidebar/Sidebar";
-import AttendanceHeader from "@/components/karyawan/attendance/Header/AttendanceHeader";
+import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import AttendanceHeader from "@/components/karyawan/attendance/AttendanceHeader";
 import AttendanceContent from "@/components/karyawan/attendance/AttendanceContent";
 
 
@@ -12,7 +12,7 @@ export default function AttendancePage() {
   const handlePrevDay = () => {
     setSelectedDate((prev) => {
       const d = new Date(prev);
-      d.setDate(d.getDate() - 1);
+      d.setDate(d.getDate() - 7);
       return d;
     });
   };
@@ -20,13 +20,13 @@ export default function AttendancePage() {
   const handleNextDay = () => {
     setSelectedDate((prev) => {
       const d = new Date(prev);
-      d.setDate(d.getDate() + 1);
+      d.setDate(d.getDate() + 7);
       return d;
     });
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
       <Sidebar />
 
       <main className="flex-1 p-8 space-y-6">

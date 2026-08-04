@@ -33,8 +33,8 @@ export default function NotificationSettings() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 h-full">
-      <h3 className="font-bold text-gray-900 mb-1">{t("notificationSettings.title")}</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 h-full">
+      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{t("notificationSettings.title")}</h3>
       <p className="text-xs text-gray-400 mb-6">
         {t("notificationSettings.desc")}
       </p>
@@ -43,16 +43,16 @@ export default function NotificationSettings() {
         {items.map((item) => (
           <label
             key={item.key}
-            className="flex items-start gap-3 bg-gray-50 rounded-lg px-4 py-4 cursor-pointer"
+            className="flex items-start gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-4 py-4 cursor-pointer"
           >
             <input
               type="checkbox"
               checked={prefs[item.key]}
               onChange={() => toggle(item.key)}
-              className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#1E3A5F]"
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-gray-500 accent-[#1E3A5F]"
             />
             <div>
-              <p className="text-sm font-semibold text-gray-800">
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
                 {item.title}
               </p>
               <p className="text-xs text-gray-400 mt-1">{item.desc}</p>

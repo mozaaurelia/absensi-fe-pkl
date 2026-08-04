@@ -4,13 +4,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import Sidebar from "@/components/karyawan/dashboard/Sidebar/Sidebar";
-import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader/DashboardHeader";
-import Overview from "@/components/karyawan/dashboard/Overview/Overview";
-import Attendance from "@/components/karyawan/dashboard/Attendance/Attendance";
-import WeeklyWork from "@/components/karyawan/dashboard/WeeklyWork/WeeklyWork";
-
-import Agenda from "@/components/karyawan/dashboard/Agenda/Agenda";
+import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader";
+import Overview from "@/components/karyawan/dashboard/Overview";
+import Attendance from "@/components/karyawan/dashboard/Attendance";
+import WeeklyWork from "@/components/karyawan/dashboard/WeeklyWork";
+import Agenda from "@/components/karyawan/dashboard/Agenda";
 
 export default function DashboardKaryawanPage() {
   const { user, isLoaded } = useAuth();
@@ -36,7 +35,7 @@ export default function DashboardKaryawanPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
       <Sidebar />
 
       <main className="flex-1 p-8">

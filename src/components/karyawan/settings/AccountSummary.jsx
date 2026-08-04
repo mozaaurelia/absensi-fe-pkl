@@ -14,14 +14,14 @@ export default function AccountSummary() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 h-full">
-      <h3 className="font-bold text-gray-900 mb-5">{t("accountSummary.title")}</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 h-full">
+      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-5">{t("accountSummary.title")}</h3>
 
       <div className="flex flex-col gap-3">
         {rows.map((row) => (
-          <div key={row.label} className="bg-gray-50 rounded-lg px-4 py-3">
+          <div key={row.label} className="bg-gray-50 dark:bg-gray-700/50 rounded-lg px-4 py-3">
             <p className="text-xs text-gray-400 mb-1">{row.label}</p>
-            <p className="text-sm font-semibold text-gray-800">{row.value}</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{row.value}</p>
           </div>
         ))}
       </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import AttendanceAction from "./Action/AttendanceAction";
-import AttendanceHistory from "./History/AttendanceHistory";
-import Todolist from "./Todolist/Todolist";
+import AttendanceAction from "./AttendanceAction";
+import AttendanceHistory from "./AttendanceHistory";
+import Todolist from "./Todolist";
 
 export default function AttendanceContent({ selectedDate }) {
   return (

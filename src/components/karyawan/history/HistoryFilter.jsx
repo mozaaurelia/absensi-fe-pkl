@@ -10,16 +10,16 @@ export default function HistoryFilter() {
   const [lokasi, setLokasi] = useState(t("historyFilter.allLocations"));
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
             {t("historyFilter.status")}
           </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
+            className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
           >
             <option>{t("historyFilter.allStatuses")}</option>
             <option>{t("historyFilter.present")}</option>
@@ -29,7 +29,7 @@ export default function HistoryFilter() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
             {t("historyFilter.searchDate")}
           </label>
           <input
@@ -37,18 +37,18 @@ export default function HistoryFilter() {
             placeholder={t("historyFilter.datePlaceholder")}
             value={tanggal}
             onChange={(e) => setTanggal(e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F]"
+            className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
             {t("historyFilter.location")}
           </label>
           <select
             value={lokasi}
             onChange={(e) => setLokasi(e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
+            className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
           >
             <option>{t("historyFilter.allLocations")}</option>
             <option>{t("historyFilter.jakartaOffice")}</option>
@@ -57,7 +57,7 @@ export default function HistoryFilter() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">
+          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
             {t("historyFilter.action")}
           </label>
           <button className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#16304f] transition-colors">

@@ -14,10 +14,10 @@ export default function LeaveHistory() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
       <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900">{t("leaveHistory.title")}</h3>
-        <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("leaveHistory.title")}</h3>
+        <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">
           {data.length} {t("leaveHistory.dataLabel")}
         </span>
       </div>

@@ -7,6 +7,8 @@ export const id = {
     cancel: "Batal",
     login: "Masuk",
     logout: "Keluar",
+    darkMode: "Mode Gelap",
+    lightMode: "Mode Terang",
     save: "Simpan Perubahan",
     saving: "Menyimpan...",
     status: "Status",
@@ -225,6 +227,8 @@ export const id = {
     lateThisMonth: "Terlambat Bulan Ini",
     timesUnit: "Kali",
     needsReviewTag: "Perlu Cek",
+    completeTag: "Tercapai",
+    inProgressTag: "Berjalan",
   },
 
   dashAttendance: {
@@ -271,6 +275,7 @@ export const id = {
   attendanceHeader: {
     title: "Jadwal Kerja",
     morningShift: "Shift Pagi",
+    dayOff: "Hari Minggu - Libur",
   },
 
   attendanceAction: {
@@ -566,28 +571,22 @@ export const id = {
 
   notification: {
     title: "Notifikasi",
-    subtitle: "Pemberitahuan terbaru",
+    subtitle: "Ringkasan hari ini",
+    today: "Hari ini",
+    empty: "Tidak ada notifikasi hari ini",
     markAllRead: "Tandai semua sudah dibaca",
     items: {
       reminder: {
         title: "Pengingat Absen",
         desc: "Jangan lupa clock-in pagi ini sebelum pukul 09:00",
-        time: "08:00 WIB",
-      },
-      approved: {
-        title: "Cuti Disetujui",
-        desc: "Pengajuan cuti kamu telah disetujui oleh atasan",
-        time: "Kemarin",
       },
       late: {
         title: "Absen Terlambat",
         desc: "Clock-in kamu tercatat terlambat hari ini",
-        time: "Senin lalu",
       },
-      device: {
-        title: "Login Perangkat Baru",
-        desc: "Akun kamu login dari perangkat baru",
-        time: "12 Jul",
+      todo: {
+        title: "Pengingat Todolist",
+        desc: "Kamu masih punya {count} tugas yang belum selesai",
       },
     },
   },

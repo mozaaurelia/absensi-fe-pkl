@@ -1,6 +1,6 @@
 import LoginLeftSection from "@/components/auth/login/LoginLeftSection";
 import LoginCard from "@/components/auth/login/LoginCard";
-import LanguageToggle from "@/components/LanguageToggle/LanguageToggle";
+import LanguageToggle from "@/components/common/LanguageToggle";
 
 export default function LoginPage() {
   return (

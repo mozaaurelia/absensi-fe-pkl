@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import LanguageToggle from "@/components/LanguageToggle/LanguageToggle";
+import LanguageToggle from "@/components/common/LanguageToggle";
 
 export default function DashboardAdminPage() {
   const { t } = useLanguage();
