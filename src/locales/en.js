@@ -367,13 +367,24 @@ export const en = {
       reminderText:
         "Don't forget to clock in before 09:00 and make sure GPS is enabled.",
     },
-    tasks: {
+    chats: {
       title: "Message",
       subtitle: "Let's chit-chat with your partner!",
       searchPlaceholder: "Search messages...",
-      task1: { title: "Working on Asla Project", time: "08.00 - 10.00 AM" },
-      task2: { title: "Team Meeting", time: "11.00 - 12.00 AM" },
-      task3: { title: "Doing Research", time: "01.00 - 04.00 PM" },
+      chat1: { name: "Rina Amelia", message: "Good morning! The task has been sent.", time: "09:41", unread: 2 },
+      chat2: { name: "Budi Santoso", message: "OK, I'll review it later.", time: "08:15", unread: 0 },
+      chat3: { name: "Marketing Team", message: "Meeting continues at 01:00 PM.", time: "Yesterday", unread: 5 },
+      chatRoom: {
+        back: "Back",
+        online: "online",
+        typeMessage: "Type a message...",
+        messages: [
+          { text: "Good morning! Ready to work today?", time: "09:00", mine: false },
+          { text: "Yes, I've received the task.", time: "09:02", mine: true },
+          { text: "Great, send it once you're done.", time: "09:05", mine: false },
+          { text: "Sure, I'll get to it now.", time: "09:07", mine: true },
+        ],
+      },
     },
   },
 

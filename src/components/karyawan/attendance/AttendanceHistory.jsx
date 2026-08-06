@@ -117,8 +117,8 @@ export default function AttendanceHistory({ selectedDate }) {
               >
                 <td className="py-3 px-3 text-gray-400 text-xs font-medium">{log.no}</td>
                 <td className="py-3 px-3">
-                  <div className="group relative w-12 h-12">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                  <div className="group relative w-16 h-16">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                       {log.selfie ? (
                         <img
                           src={log.selfie}
@@ -126,7 +126,7 @@ export default function AttendanceHistory({ selectedDate }) {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gray-400">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-gray-400">
                           <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
                           <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                         </svg>

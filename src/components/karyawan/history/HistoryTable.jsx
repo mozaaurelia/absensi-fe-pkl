@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 const attendanceLogs = [
   {
     day: "Jumat",
@@ -165,9 +167,18 @@ function AttendanceCard({ item }) {
 }
 
 export default function HistoryTable() {
+  const { t } = useLanguage();
+
   return (
-    <div className="mt-6">
-      <div className="grid gap-5 xl:grid-cols-2">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden card-hover mt-6">
+      <div className="bg-[#1E3A5F] text-white px-5 py-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold">{t("historyTable.title")}</h3>
+        </div>
+        <p className="text-xs text-blue-100/80 mt-0.5">{t("historyTable.desc")}</p>
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-2 p-6">
         {attendanceLogs.map((item) => (
           <AttendanceCard key={`${item.day}-${item.date}`} item={item} />
         ))}
