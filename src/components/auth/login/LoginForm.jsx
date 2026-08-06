@@ -14,6 +14,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState({});
+  const [generalError, setGeneralError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
   const { t } = useLanguage();
@@ -33,11 +35,27 @@ export default function LoginForm() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setGeneralError("");
     if (!validate()) return;
-    login(email, "karyawan");
-    router.push("/karyawan");
+
+    setIsLoading(true);
+    try {
+      const userData = await login(email, password);
+
+      if (userData.role === "admin") {
+        router.push("/admin");
+      } else if (userData.role === "supervisor") {
+        router.push("/atasan");
+      } else {
+        router.push("/karyawan");
+      }
+    } catch (err) {
+      setGeneralError(err.message || t("login.invalidCredentials"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,8 +89,13 @@ export default function LoginForm() {
         checked={remember}
         onChange={() => setRemember((v) => !v)}
       />
+      {generalError && (
+        <p style={{ color: "red", fontSize: 14 }}>{generalError}</p>
+      )}
 
-      <LoginButton type="submit">{t("login.submit")}</LoginButton>
+      <LoginButton type="submit" disabled={isLoading}>
+        {isLoading ? "..." : t("login.submit")}
+      </LoginButton>
     </form>
   );
 }
