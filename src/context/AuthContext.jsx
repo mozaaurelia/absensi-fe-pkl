@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
+import { apiFetch } from "@/lib/api";
 
 function getInitials(name) {
   if (!name) return "U";
@@ -12,30 +20,13 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
-const STORAGE_KEY = "absensi_user";
-
-function loadUser() {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveUser(data) {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-}
+const TOKEN_KEY = "sams_token";
 
 const defaultAuthValue = {
   user: null,
   isLoaded: false,
   login: () => {},
   logout: () => {},
-  updateProfile: () => {},
   isAuthenticated: false,
 };
 
@@ -46,53 +37,38 @@ export function AuthProvider({ children }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setUser(loadUser());
-    setIsLoaded(true);
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null;
+    if (!token) {
+      setIsLoaded(true);
+      return;
+    }
+    apiFetch("/auth/me")
+      .then((data) => setUser({ ...data, initials: getInitials(data.name) }))
+      .catch(() => localStorage.removeItem(TOKEN_KEY))
+      .finally(() => setIsLoaded(true));
   }, []);
 
-  const login = useCallback((email, role) => {
-    const userData = {
-      email,
-      role,
-      nama: role === "karyawan" ? "Andi Pratama" : role === "supervisor" ? "Budi Santoso" : "Citra Dewi",
-      nik: role === "karyawan" ? "EMP-00124" : role === "supervisor" ? "SPV-001" : "ADM-001",
-      jabatan: role === "karyawan" ? "Staff Operasional" : role === "supervisor" ? "Supervisor" : "HRD Manager",
-      divisi: "Operasional",
-      atasan: "Surya Prasetya",
-      avatar: null,
-    };
-    userData.initials = getInitials(userData.nama);
+  const login = useCallback(async (email, password) => {
+    const result = await apiFetch("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    localStorage.setItem(TOKEN_KEY, result.token);
+    const me = await apiFetch("/auth/me");
+    const userData = { ...me, initials: getInitials(me.name) };
     setUser(userData);
-    saveUser(userData);
+    return userData; // biar LoginForm bisa tau role-nya buat redirect ke halaman yang benar
   }, []);
 
   const logout = useCallback(() => {
     setUser(null);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, []);
-
-  const updateProfile = useCallback((data) => {
-    setUser((prev) => {
-      if (!prev) return prev;
-      const updated = { ...prev, ...data };
-      if (data.nama) updated.initials = getInitials(data.nama);
-      saveUser(updated);
-      return updated;
-    });
+    localStorage.removeItem(TOKEN_KEY);
   }, []);
 
   const value = useMemo(
-    () => ({
-      user,
-      isLoaded,
-      login,
-      logout,
-      updateProfile,
-      isAuthenticated: Boolean(user),
-    }),
-    [user, isLoaded, login, logout, updateProfile]
+    () => ({ user, isLoaded, login, logout, isAuthenticated: Boolean(user) }),
+    [user, isLoaded, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
