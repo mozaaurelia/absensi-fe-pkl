@@ -1,10 +1,40 @@
 "use client";
 
-import { FiArrowRight, FiBell, FiPlus } from "react-icons/fi";
+import { useState } from "react";
+import { FiBell, FiCalendar, FiChevronLeft, FiChevronRight, FiSearch, FiSun } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function DashboardRightPanel() {
   const { t } = useLanguage();
+  const [index, setIndex] = useState(0);
+
+  const slides = [
+    {
+      icon: <FiSun size={18} />,
+      iconBox: "bg-green-200 text-green-700",
+      label: t("dashboardPanel.notification.shiftActive"),
+      labelColor: "text-green-300",
+      value: t("dashboardPanel.notification.shiftTime"),
+    },
+    {
+      icon: <FiCalendar size={18} />,
+      iconBox: "bg-blue-200 text-[#1E3A5F]",
+      label: t("dashboardPanel.notification.leaveRemaining"),
+      labelColor: "text-blue-200",
+      value: t("dashboardPanel.notification.daysLeft"),
+    },
+    {
+      icon: <FiBell size={18} />,
+      iconBox: "bg-amber-200 text-amber-700",
+      label: t("dashboardPanel.notification.reminder"),
+      labelColor: "text-amber-300",
+      value: t("dashboardPanel.notification.reminderText"),
+    },
+  ];
+
+  const slide = slides[index];
+  const prev = () => setIndex((i) => (i - 1 + slides.length) % slides.length);
+  const next = () => setIndex((i) => (i + 1) % slides.length);
 
   return (
     <div className="space-y-6">
@@ -14,26 +44,40 @@ export default function DashboardRightPanel() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
               {t("dashboardPanel.notification.title")}
             </p>
-            <h3 className="mt-3 text-xl font-bold leading-tight">
-              {t("dashboardPanel.notification.heading")}
-            </h3>
           </div>
-          <button className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200 hover:text-white transition">
-            {t("dashboardPanel.notification.viewAll")}
-          </button>
         </div>
 
-        <div className="rounded-[30px] bg-white/10 p-5 border border-white/15">
-          <p className="text-sm font-semibold text-white mb-2">{t("dashboardPanel.notification.itemTitle")}</p>
-          <p className="text-xs text-blue-100/90 leading-relaxed mb-4">
-            {t("dashboardPanel.notification.itemDesc")}
-          </p>
-          <div className="flex items-center justify-between text-[11px] uppercase text-blue-100/80 font-semibold">
-            <span>{t("dashboardPanel.notification.itemTime")}</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
-              <FiArrowRight size={14} /> {t("dashboardPanel.notification.open")}
-            </span>
+        <div className="relative px-2">
+          <button
+            onClick={prev}
+            aria-label="Previous"
+            className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white text-[#1E3A5F] shadow-md hover:bg-gray-100 transition flex items-center justify-center"
+          >
+            <FiChevronLeft size={18} />
+          </button>
+
+          <div
+            key={index}
+            className="rounded-[30px] bg-white/10 p-6 border border-white/15 min-h-[110px] flex items-center animate-fade-slide-in"
+          >
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${slide.iconBox}`}>
+                {slide.icon}
+              </div>
+              <div>
+                <p className={`text-sm font-semibold mb-1 ${slide.labelColor}`}>{slide.label}</p>
+                <p className="text-base font-bold text-white leading-snug">{slide.value}</p>
+              </div>
+            </div>
           </div>
+
+          <button
+            onClick={next}
+            aria-label="Next"
+            className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white text-[#1E3A5F] shadow-md hover:bg-gray-100 transition flex items-center justify-center"
+          >
+            <FiChevronRight size={18} />
+          </button>
         </div>
       </div>
 
@@ -47,9 +91,14 @@ export default function DashboardRightPanel() {
               {t("dashboardPanel.tasks.subtitle")}
             </p>
           </div>
-          <button className="flex items-center gap-2 rounded-full bg-[#1E3A5F] text-white px-4 py-2 text-xs font-semibold hover:bg-[#162f50] transition">
-            <FiPlus size={14} /> {t("dashboardPanel.tasks.add")}
-          </button>
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+            <input
+              type="text"
+              placeholder={t("dashboardPanel.tasks.searchPlaceholder")}
+              className="w-44 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 pl-8 pr-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:border-cyan-500 transition"
+            />
+          </div>
         </div>
 
         <div className="space-y-3">

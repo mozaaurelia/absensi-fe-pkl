@@ -358,18 +358,19 @@ export const en = {
 
   dashboardPanel: {
     notification: {
-      title: "Notification",
-      heading: "Emily just sent you task to assign",
-      viewAll: "View all",
-      itemTitle: "New task assignment",
-      itemDesc: "18 Aug 2020 · 10:00 AM",
-      itemTime: "Today",
-      open: "Assign Now",
+      title: "Agenda and Leave",
+      shiftActive: "Active Shift",
+      shiftTime: "09:00 - 18:00",
+      leaveRemaining: "Leave Remaining",
+      daysLeft: "12 days",
+      reminder: "Reminder",
+      reminderText:
+        "Don't forget to clock in before 09:00 and make sure GPS is enabled.",
     },
     tasks: {
-      title: "Today Task",
-      subtitle: "Your top priorities for today.",
-      add: "Add Task",
+      title: "Message",
+      subtitle: "Let's chit-chat with your partner!",
+      searchPlaceholder: "Search messages...",
       task1: { title: "Working on Asla Project", time: "08.00 - 10.00 AM" },
       task2: { title: "Team Meeting", time: "11.00 - 12.00 AM" },
       task3: { title: "Doing Research", time: "01.00 - 04.00 PM" },

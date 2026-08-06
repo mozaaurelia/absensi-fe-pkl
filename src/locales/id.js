@@ -358,18 +358,19 @@ export const id = {
 
   dashboardPanel: {
     notification: {
-      title: "Notifikasi",
-      heading: "Emily baru saja mengirim tugas untuk ditugaskan",
-      viewAll: "Lihat semua",
-      itemTitle: "Tugas baru ditugaskan",
-      itemDesc: "18 Agu 2020 · 10:00 AM",
-      itemTime: "Hari ini",
-      open: "Tugaskan",
+      title: "Agenda dan Cuti",
+      shiftActive: "Shift Aktif",
+      shiftTime: "09:00 - 18:00",
+      leaveRemaining: "Sisa Cuti",
+      daysLeft: "12 hari",
+      reminder: "Reminder",
+      reminderText:
+        "Jangan lupa clock-in sebelum pukul 09:00 dan pastikan GPS aktif.",
     },
     tasks: {
-      title: "Tugas Hari Ini",
-      subtitle: "Prioritas utama kamu hari ini.",
-      add: "Tambah Tugas",
+      title: "Message",
+      subtitle: "Let's chit-chat with your partner!",
+      searchPlaceholder: "Cari pesan...",
       task1: { title: "Mengerjakan Proyek Asla", time: "08.00 - 10.00 AM" },
       task2: { title: "Rapat Tim", time: "11.00 - 12.00 AM" },
       task3: { title: "Melakukan Riset", time: "01.00 - 04.00 PM" },
