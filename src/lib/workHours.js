@@ -1,4 +1,5 @@
 const TARGET_WEEKLY_HOURS = 40;
+const DAILY_TARGET_MINUTES = 8 * 60;
 
 function getDateKey(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -24,17 +25,25 @@ function getWeekDays() {
 function getDayMinutes(date) {
   const key = getDateKey(date);
   const checkinStr = localStorage.getItem(`checkin_${key}`);
-  const checkoutStr = localStorage.getItem(`checkout_${key}`);
-
   if (!checkinStr) return 0;
 
   const checkin = parseInt(checkinStr, 10);
-  const checkout = checkoutStr ? parseInt(checkoutStr, 10) : Date.now();
+  const checkoutStr = localStorage.getItem(`checkout_${key}`);
 
-  const diffMs = checkout - checkin;
+  let end;
+  if (checkoutStr) {
+    end = parseInt(checkoutStr, 10);
+  } else {
+    const now = new Date();
+    const dayEnd = new Date(date);
+    dayEnd.setHours(17, 0, 0, 0);
+    end = Math.min(now.getTime(), dayEnd.getTime());
+  }
+
+  const diffMs = end - checkin;
   if (diffMs < 0) return 0;
 
-  return diffMs / 60000;
+  return Math.min(diffMs / 60000, DAILY_TARGET_MINUTES);
 }
 
 function formatHours(minutes) {
@@ -62,10 +71,8 @@ function getWeeklyStats() {
   const totalHours = totalMinutes / 60;
   const progress = Math.min(Math.round((totalMinutes / targetMinutes) * 100), 100);
 
-  const maxMinutes = Math.max(...dailyMinutes, 1);
-
   const dailyPercentages = dailyMinutes.map((m) =>
-    Math.round((m / maxMinutes) * 100)
+    Math.min(Math.round((m / DAILY_TARGET_MINUTES) * 100), 100)
   );
 
   return {
@@ -85,5 +92,4 @@ export {
   formatHoursEn,
   TARGET_WEEKLY_HOURS,
   getWeekDays,
-  getDateKey,
 };

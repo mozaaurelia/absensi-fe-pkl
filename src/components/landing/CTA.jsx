@@ -23,13 +23,13 @@ export default function CTA() {
 
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <a
-              href="#kontak"
+              href="/auth/login"
               className="bg-white text-[#1E3A5F] font-semibold text-sm px-6 py-3 rounded-lg text-center hover:bg-blue-50 transition-colors"
             >
               {t("cta.scheduleDemo")}
             </a>
             <a
-              href="#kontak"
+              href="/auth/login"
               className="border border-white/30 text-white font-semibold text-sm px-6 py-3 rounded-lg text-center hover:bg-white/10 transition-colors"
             >
               {t("cta.contactAdmin")}

@@ -110,11 +110,7 @@ body {
 
 .step-card {
   opacity: 0;
-  transform: scale(0.5) translateY(30px);
-}
-
-.step-card.visible {
-  animation: cardPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: cardPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .step-card:hover {

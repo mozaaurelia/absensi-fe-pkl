@@ -39,7 +39,7 @@ export default function Hero() {
             {t("hero.tryDemo")}
           </a>
           <a
-            href="#fitur"
+            href="/auth/login"
             className="border border-white/30 text-white font-semibold text-sm px-6 py-3.5 rounded-lg hover:bg-white/10 transition-colors"
           >
             {t("hero.seeFeatures")}

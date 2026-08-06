@@ -18,13 +18,7 @@ export default function ClientLayout({ children }) {
     <>
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
 
-      <main
-        className={`transition-all duration-700 ${
-          showSplash ? "opacity-0 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        {children}
-      </main>
+      <main className={showSplash ? "pointer-events-none" : ""}>{children}</main>
     </>
   );
 }

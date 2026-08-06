@@ -7,9 +7,18 @@ import CheckInButton from "./CheckInButton";
 import CheckOutButton from "./CheckOutButton";
 import VerificationStepper from "./VerificationStepper";
 
-function isWithinHours() {
+const CLOCK_IN_START_HOUR = 9;
+const CLOCK_IN_END_HOUR = 17;
+const CLOCK_OUT_START_HOUR = 17;
+
+function isCheckInTime() {
   const h = new Date().getHours();
-  return h >= 7 && h < 17;
+  return h >= CLOCK_IN_START_HOUR && h < CLOCK_IN_END_HOUR;
+}
+
+function isCheckOutTime() {
+  const h = new Date().getHours();
+  return h >= CLOCK_OUT_START_HOUR;
 }
 
 function getTodayKey() {
@@ -37,23 +46,45 @@ export default function AttendanceAction({
   hasCheckedOut: hasCheckedOutProp = false,
 }) {
   const [mode, setMode] = useState(null);
-  const [showTimeWarning, setShowTimeWarning] = useState(false);
+  const [warning, setWarning] = useState(null);
+  const [showCheckOutDone, setShowCheckOutDone] = useState(false);
   const [status, setStatus] = useState(getTodayStatus);
+  const [now, setNow] = useState(() => new Date());
   const { t } = useLanguage();
 
   useEffect(() => {
     setStatus(getTodayStatus());
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
   }, []);
 
   const hasCheckedIn = hasCheckedInProp || status.hasCheckedIn;
   const hasCheckedOut = hasCheckedOutProp || status.hasCheckedOut;
 
+  const clockOpen =
+    now.getHours() >= CLOCK_IN_START_HOUR &&
+    now.getHours() < CLOCK_IN_END_HOUR;
+
+  const checkOutOpen = now.getHours() >= CLOCK_OUT_START_HOUR;
+
   const handleClick = (type) => {
-    if (!isWithinHours()) {
-      setShowTimeWarning(true);
+    if (type === "out") {
+      if (hasCheckedOut) {
+        setShowCheckOutDone(true);
+        return;
+      }
+      if (!isCheckOutTime()) {
+        setWarning("out");
+        return;
+      }
+      setMode("out");
       return;
     }
-    setMode(type);
+    if (!isCheckInTime()) {
+      setWarning("in");
+      return;
+    }
+    setMode("in");
   };
 
   const handleClose = () => {
@@ -72,10 +103,12 @@ export default function AttendanceAction({
         <div className="flex items-center justify-center gap-14">
           <CheckInButton
             disabled={hasCheckedIn}
+            clockOpen={clockOpen}
             onClick={() => handleClick("in")}
           />
           <CheckOutButton
-            disabled={!hasCheckedIn || hasCheckedOut}
+            checkedOut={hasCheckedOut}
+            clockOpen={checkOutOpen}
             onClick={() => handleClick("out")}
           />
         </div>
@@ -85,18 +118,46 @@ export default function AttendanceAction({
         <VerificationStepper mode={mode} onClose={handleClose} />
       )}
 
-      {showTimeWarning && (
+      {warning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center max-w-sm mx-4 animate-bounce-in">
             <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-5">
               <FiClock size={30} className="text-amber-600" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{t("attendanceAction.outsideTitle")}</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
+              {warning === "out"
+                ? t("attendanceAction.outsideOutTitle")
+                : t("attendanceAction.outsideTitle")}
+            </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-              {t("attendanceAction.outsideDesc")}
+              {warning === "out"
+                ? t("attendanceAction.outsideOutDesc")
+                : t("attendanceAction.outsideDesc")}
             </p>
             <button
-              onClick={() => setShowTimeWarning(false)}
+              onClick={() => setWarning(null)}
+              className="w-full bg-linear-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md"
+            >
+              {t("common.close")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showCheckOutDone && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center max-w-sm mx-4 animate-bounce-in">
+            <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-5">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{t("attendanceAction.doneTitle")}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+              {t("attendanceAction.doneDesc")}
+            </p>
+            <button
+              onClick={() => setShowCheckOutDone(false)}
               className="w-full bg-linear-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md"
             >
               {t("common.close")}

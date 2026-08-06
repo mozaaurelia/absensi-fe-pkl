@@ -68,7 +68,7 @@ export default function Features() {
             {t("features.desc")}
           </p>
           <a
-            href="#alur"
+            href="/auth/login"
             className="inline-block bg-[#1E3A5F] text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-[#16304f] transition-colors"
           >
             {t("features.learnMore")}

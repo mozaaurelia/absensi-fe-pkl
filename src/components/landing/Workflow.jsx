@@ -6,7 +6,6 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function Workflow() {
   const { t } = useLanguage();
   const stepsRef = useRef(null);
-  const cardsRef = useRef([]);
 
   useEffect(() => {
     const el = stepsRef.current;
@@ -25,29 +24,6 @@ export default function Workflow() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.index);
-            setTimeout(() => {
-              entry.target.classList.add("visible");
-            }, idx * 120);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    cardsRef.current.forEach((card) => {
-      if (card) observer.observe(card);
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   const steps = t("workflow.steps");
@@ -78,9 +54,8 @@ export default function Workflow() {
           {steps.map((step, i) => (
             <div
               key={step.title}
-              ref={(el) => (cardsRef.current[i] = el)}
-              data-index={i}
               className="step-card bg-white rounded-2xl border border-gray-100 p-5 cursor-pointer"
+              style={{ animationDelay: `${i * 120}ms` }}
             >
               <div className="step-number w-8 h-8 rounded-full bg-[#1E3A5F] text-white text-xs font-bold flex items-center justify-center mb-4">
                 {i + 1}

@@ -10,6 +10,8 @@ import Overview from "@/components/karyawan/dashboard/Overview";
 import Attendance from "@/components/karyawan/dashboard/Attendance";
 import WeeklyWork from "@/components/karyawan/dashboard/WeeklyWork";
 import Agenda from "@/components/karyawan/dashboard/Agenda";
+import CalendarCard from "@/components/karyawan/dashboard/CalendarCard";
+import DashboardRightPanel from "@/components/karyawan/dashboard/DashboardRightPanel";
 
 export default function DashboardKaryawanPage() {
   const { user, isLoaded } = useAuth();
@@ -50,7 +52,14 @@ export default function DashboardKaryawanPage() {
           <WeeklyWork />
         </div>
 
-        <Agenda />
+        <div className="grid grid-cols-1 xl:grid-cols-[360px_minmax(0,1fr)] gap-6 mb-6">
+          <CalendarCard />
+          <DashboardRightPanel />
+        </div>
+
+        <div className="mb-6">
+          <Agenda />
+        </div>
       </main>
     </div>
   );

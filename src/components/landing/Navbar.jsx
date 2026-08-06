@@ -9,11 +9,11 @@ export default function Navbar() {
   const { t } = useLanguage();
 
   const links = [
-    { label: t("nav.home"), href: "#beranda" },
-    { label: t("nav.features"), href: "#fitur" },
-    { label: t("nav.roles"), href: "#role" },
-    { label: t("nav.flow"), href: "#alur" },
-    { label: t("nav.contact"), href: "#kontak" },
+    { label: t("nav.home"), href: "/auth/login" },
+    { label: t("nav.features"), href: "/auth/login" },
+    { label: t("nav.roles"), href: "/auth/login" },
+    { label: t("nav.flow"), href: "/auth/login" },
+    { label: t("nav.contact"), href: "/auth/login" },
   ];
 
   return (

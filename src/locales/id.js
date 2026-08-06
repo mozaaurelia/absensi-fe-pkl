@@ -262,6 +262,13 @@ export const id = {
     submit: "Ajukan Izin / Cuti",
   },
 
+  calendarCard: {
+    title: "Kalender",
+    subtitle: "Lihat bulan berjalan secara ringkas.",
+    todayLabel: "Hari Ini",
+    note: "Ketuk tanggal untuk merencanakan cuti atau absensi.",
+  },
+
   profileSummary: {
     title: "Ringkasan Saya",
     subtitle: "Informasi personal dan status terbaru.",
@@ -283,7 +290,12 @@ export const id = {
     desc: "Klik salah satu tombol untuk memulai verifikasi kehadiran.",
     outsideTitle: "Di Luar Jam Kerja",
     outsideDesc:
-      "Fitur absensi hanya dapat digunakan pada pukul 07:00 - 17:00. Silakan kembali pada jam kerja.",
+      "Fitur absensi hanya dapat digunakan pada pukul 09:00 - 17:00. Silakan kembali pada jam kerja.",
+    outsideOutTitle: "Di Luar Jam Pulang Kerja",
+    outsideOutDesc:
+      "Fitur absensi pulang hanya dapat digunakan pada pukul 09:00 - 17:00. Silakan kembali pada jam kerja.",
+    doneTitle: "Sudah Absen Pulang",
+    doneDesc: "Anda telah melakukan absen pulang hari ini.",
   },
 
   checkInButton: {
@@ -342,6 +354,26 @@ export const id = {
     defaultTask1: "Review laporan bulanan",
     defaultTask2: "Kirim dokumen ke HRD",
     defaultTask3: "Meeting dengan tim",
+  },
+
+  dashboardPanel: {
+    notification: {
+      title: "Notifikasi",
+      heading: "Emily baru saja mengirim tugas untuk ditugaskan",
+      viewAll: "Lihat semua",
+      itemTitle: "Tugas baru ditugaskan",
+      itemDesc: "18 Agu 2020 · 10:00 AM",
+      itemTime: "Hari ini",
+      open: "Tugaskan",
+    },
+    tasks: {
+      title: "Tugas Hari Ini",
+      subtitle: "Prioritas utama kamu hari ini.",
+      add: "Tambah Tugas",
+      task1: { title: "Mengerjakan Proyek Asla", time: "08.00 - 10.00 AM" },
+      task2: { title: "Rapat Tim", time: "11.00 - 12.00 AM" },
+      task3: { title: "Melakukan Riset", time: "01.00 - 04.00 PM" },
+    },
   },
 
   gpsVerification: {

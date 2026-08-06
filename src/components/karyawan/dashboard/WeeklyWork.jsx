@@ -65,7 +65,7 @@ export default function WeeklyWork() {
           >
             <div className="w-full bg-gray-50 dark:bg-gray-700/50 rounded-lg flex items-end h-24 overflow-hidden">
               <div
-                className="w-full rounded-lg animate-bar-grow opacity-0"
+                className="w-full rounded-lg animate-bar-grow transition-[height] duration-700"
                 style={{
                   height: `${pct}%`,
                   animationDelay: `${0.3 + i * 0.1}s`,

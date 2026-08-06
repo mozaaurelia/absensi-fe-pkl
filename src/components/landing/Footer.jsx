@@ -6,10 +6,10 @@ export default function Footer() {
   const { t } = useLanguage();
 
   const links = [
-    { label: t("footer.home"), href: "#beranda" },
-    { label: t("footer.features"), href: "#fitur" },
-    { label: t("footer.roles"), href: "#role" },
-    { label: t("footer.contact"), href: "#kontak" },
+    { label: t("footer.home"), href: "/auth/login" },
+    { label: t("footer.features"), href: "/auth/login" },
+    { label: t("footer.roles"), href: "/auth/login" },
+    { label: t("footer.contact"), href: "/auth/login" },
   ];
 
   return (
@@ -55,7 +55,7 @@ export default function Footer() {
                   {t("footer.login")}
                 </a>
                 <a
-                  href="/karyawan"
+                  href="/auth/login"
                   className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
                 >
                   {t("footer.dashboard")}

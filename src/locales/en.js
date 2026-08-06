@@ -262,6 +262,13 @@ export const en = {
     submit: "Submit Permit / Leave",
   },
 
+  calendarCard: {
+    title: "Calendar",
+    subtitle: "View your current month at a glance.",
+    todayLabel: "Today",
+    note: "Tap any date to plan your leave or attendance.",
+  },
+
   profileSummary: {
     title: "My Summary",
     subtitle: "Personal information and latest status.",
@@ -283,7 +290,12 @@ export const en = {
     desc: "Click one of the buttons to start attendance verification.",
     outsideTitle: "Outside Working Hours",
     outsideDesc:
-      "Attendance features can only be used from 07:00 - 17:00. Please return during working hours.",
+      "Attendance features can only be used from 09:00 - 17:00. Please return during working hours.",
+    outsideOutTitle: "Outside Check-Out Hours",
+    outsideOutDesc:
+      "Check-out can only be used from 09:00 - 17:00. Please return during working hours.",
+    doneTitle: "Already Checked Out",
+    doneDesc: "You have already checked out today.",
   },
 
   checkInButton: {
@@ -342,6 +354,26 @@ export const en = {
     defaultTask1: "Review monthly report",
     defaultTask2: "Send documents to HRD",
     defaultTask3: "Team meeting",
+  },
+
+  dashboardPanel: {
+    notification: {
+      title: "Notification",
+      heading: "Emily just sent you task to assign",
+      viewAll: "View all",
+      itemTitle: "New task assignment",
+      itemDesc: "18 Aug 2020 · 10:00 AM",
+      itemTime: "Today",
+      open: "Assign Now",
+    },
+    tasks: {
+      title: "Today Task",
+      subtitle: "Your top priorities for today.",
+      add: "Add Task",
+      task1: { title: "Working on Asla Project", time: "08.00 - 10.00 AM" },
+      task2: { title: "Team Meeting", time: "11.00 - 12.00 AM" },
+      task3: { title: "Doing Research", time: "01.00 - 04.00 PM" },
+    },
   },
 
   gpsVerification: {
