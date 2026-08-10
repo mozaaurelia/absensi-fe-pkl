@@ -148,7 +148,7 @@ export default function AttendanceHistory({ selectedDate }) {
                 <td className="py-3 px-3 text-gray-800 dark:text-gray-100 font-medium whitespace-nowrap">{log.date}</td>
                 <td className="py-3 px-3 text-gray-500">{log.masuk}</td>
                 <td className="py-3 px-3 text-gray-500">{log.pulang}</td>
-                <td className="py-3 px-3 max-w-[140px]">
+                <td className="py-3 px-3 max-w-35">
                   {log.lokasi ? (
                     <span className="text-xs text-gray-500 truncate block" title={log.lokasi.address || `${log.lokasi.lat}, ${log.lokasi.lng}`}>
                       {log.lokasi.address

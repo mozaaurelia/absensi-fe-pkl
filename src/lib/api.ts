@@ -15,6 +15,16 @@ interface ApiResponse<T> {
   };
 }
 
+export class ApiError extends Error {
+  code: string;
+
+  constructor(code: string, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.code = code;
+  }
+}
+
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -39,7 +49,10 @@ export async function apiFetch<T>(
   const json: ApiResponse<T> = await response.json();
 
   if (!response.ok || !json.success) {
-    throw new Error(json.error?.message || "Terjadi kesalahan pada server");
+    throw new ApiError(
+      json.error?.code || "UNKNOWN_ERROR",
+      json.error?.message || "Terjadi kesalahan pada server",
+    );
   }
 
   return json.data;
