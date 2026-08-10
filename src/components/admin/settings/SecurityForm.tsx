@@ -30,12 +30,12 @@ export default function SecurityForm() {
               placeholder="••••••••••"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 pr-12 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 pr-12 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowOldPassword((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-600 hover:opacity-80 transition-opacity"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 hover:opacity-80 transition-opacity"
               aria-label={showOldPassword ? "Hide old password" : "Show old password"}
             >
               {showOldPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
@@ -52,12 +52,12 @@ export default function SecurityForm() {
               placeholder="••••••••••"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 pr-12 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 pr-12 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowNewPassword((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-600 hover:opacity-80 transition-opacity"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 hover:opacity-80 transition-opacity"
               aria-label={showNewPassword ? "Hide new password" : "Show new password"}
             >
               {showNewPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
@@ -79,7 +79,7 @@ export default function SecurityForm() {
           type="button"
           onClick={() => setTwoFA((v) => !v)}
           className={`w-12 h-7 rounded-full flex items-center px-1 transition-colors shrink-0 ${
-            twoFA ? "bg-orange-600 justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
+            twoFA ? "bg-[#1E3A5F] justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
           }`}
         >
           <span className="w-5 h-5 rounded-full bg-white block" />

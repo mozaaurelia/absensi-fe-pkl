@@ -27,24 +27,9 @@ export default function Hero() {
           {t("hero.title")}
         </h1>
 
-        <p className="text-blue-200/80 text-base leading-relaxed mb-10 max-w-2xl mx-auto">
+        <p className="text-blue-200/80 text-base leading-relaxed mb-14 max-w-2xl mx-auto">
           {t("hero.desc")}
         </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
-          <a
-            href="/auth/login"
-            className="bg-white text-[#1E3A5F] font-semibold text-sm px-6 py-3.5 rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            {t("hero.tryDemo")}
-          </a>
-          <a
-            href="/auth/login"
-            className="border border-white/30 text-white font-semibold text-sm px-6 py-3.5 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            {t("hero.seeFeatures")}
-          </a>
-        </div>
 
         <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto">
           {stats.map((stat) => (

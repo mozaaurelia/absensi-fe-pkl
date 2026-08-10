@@ -64,7 +64,7 @@ export default function ProfileForm() {
               type="text"
               value={form.nama}
               onChange={handleChange("nama")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
           </div>
           <div>
@@ -75,7 +75,7 @@ export default function ProfileForm() {
               type="text"
               value={form.nik}
               onChange={handleChange("nik")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function ProfileForm() {
               type="email"
               value={form.email}
               onChange={handleChange("email")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
           </div>
           <div>
@@ -100,7 +100,7 @@ export default function ProfileForm() {
               type="text"
               value={form.jabatan}
               onChange={handleChange("jabatan")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
             />
           </div>
         </div>

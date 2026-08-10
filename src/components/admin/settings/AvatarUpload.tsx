@@ -107,7 +107,7 @@ export default function AvatarUpload({ initials = "AD", onImageChange }) {
       <div className="flex flex-col items-center gap-3">
         <div
           onClick={openModal}
-          className="w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 font-bold text-xl flex items-center justify-center overflow-hidden cursor-pointer hover:ring-2 hover:ring-orange-300 transition-all"
+          className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 font-bold text-xl flex items-center justify-center overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all"
         >
           {preview ? (
             <img src={preview} alt="Avatar" className="w-full h-full object-cover" />
@@ -202,7 +202,7 @@ export default function AvatarUpload({ initials = "AD", onImageChange }) {
                   <button
                     type="button"
                     onClick={capturePhoto}
-                    className="flex-1 bg-orange-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-orange-700 transition-colors"
+                    className="flex-1 bg-[#1E3A5F] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#16304f] transition-colors"
                   >
                     {t("avatarUpload.capture")}
                   </button>
@@ -229,7 +229,7 @@ export default function AvatarUpload({ initials = "AD", onImageChange }) {
                   <button
                     type="button"
                     onClick={confirmPhoto}
-                    className="flex-1 bg-orange-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-orange-700 transition-colors"
+                    className="flex-1 bg-[#1E3A5F] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#16304f] transition-colors"
                   >
                     {t("avatarUpload.use")}
                   </button>

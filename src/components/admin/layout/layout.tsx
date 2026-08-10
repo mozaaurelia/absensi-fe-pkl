@@ -5,10 +5,19 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 const MENUS = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: DashboardIcon },
+  { label: "Dashboard", href: "/admin", icon: DashboardIcon },
   { label: "Karyawan", href: "/admin/karyawan", icon: EmployeeIcon },
   { label: "Departemen", href: "/admin/departemen", icon: DeptIcon },
-  { label: "Perizinan", href: "/admin/perizinan", icon: LeaveIcon },
+  { label: "Jabatan", href: "/admin/jabatan", icon: PositionIcon },
+  { label: "Jadwal Kerja", href: "/admin/jadwal-kerja", icon: ScheduleIcon },
+  { label: "Lokasi", href: "/admin/lokasi", icon: LocationIcon },
+  { label: "Perizinan", href: "/admin/perizinan", icon: PermitIcon },
+  { label: "Kalender", href: "/admin/kalender", icon: CalendarIcon },
+  { label: "Lembur", href: "/admin/lembur", icon: OvertimeIcon },
+  { label: "Laporan", href: "/admin/laporan", icon: ReportIcon },
+  { label: "Reimburse", href: "/admin/reimburse", icon: ReimburseIcon },
+  { label: "Kehadiran", href: "/admin/kehadiran", icon: AttendanceIcon },
+  { label: "Pengumuman", href: "/admin/pengumuman", icon: AnnouncementIcon },
   { label: "Pengaturan", href: "/admin/settings", icon: SettingsIcon },
 ];
 
@@ -24,7 +33,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         }`}
       >
         <div className="flex items-center gap-3 px-5 py-6">
-          <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-[#1E3A5F] flex items-center justify-center text-white font-bold text-xs shrink-0">
             EA
           </div>
           {!collapsed && (
@@ -46,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 title={collapsed ? menu.label : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   active
-                    ? "bg-orange-50 text-orange-600"
+                    ? "bg-blue-50 text-blue-600"
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
                 }`}
               >
@@ -96,7 +105,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <input
               type="text"
               placeholder="Cari karyawan, laporan..."
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-orange-400 focus:bg-white transition-colors"
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-blue-400 focus:bg-white transition-colors"
             />
           </div>
 
@@ -106,13 +115,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 bg-[#1E3A5F] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 3
               </span>
             </button>
 
             <div className="flex items-center gap-2.5 pl-3 border-l border-gray-100">
-              <div className="w-9 h-9 rounded-lg bg-orange-100 text-orange-700 font-bold text-sm flex items-center justify-center">
+              <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">
                 A
               </div>
               <div className="text-right">
@@ -159,11 +168,89 @@ function DeptIcon() {
     </svg>
   );
 }
-function LeaveIcon() {
+function PermitIcon() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
       <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" strokeWidth="2" />
       <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+function PositionIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
+      <circle cx="8" cy="12" r="2.5" stroke="currentColor" strokeWidth="2" />
+      <path d="M13 10h6M13 14h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ScheduleIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function LocationIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+function CalendarIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M8 14h1M12 14h1M16 14h1M8 17h1M12 17h1M16 17h1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+function OvertimeIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <circle cx="11" cy="12" r="8" stroke="currentColor" strokeWidth="2" />
+      <path d="M11 8v4l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19.5 3.5v4M17.5 5.5h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ReportIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <path d="M6 2h9l5 5v15H6z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M14 2v6h6" stroke="currentColor" strokeWidth="2" />
+      <path d="M8.5 17l2.5-3 2 2 3-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function ReimburseIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="M2 10h20" stroke="currentColor" strokeWidth="2" />
+      <circle cx="16" cy="15" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+function AttendanceIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="M9 3v3h6V3" stroke="currentColor" strokeWidth="2" />
+      <path d="M9 13l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function AnnouncementIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <path d="M3 10v4a1 1 0 0 0 1 1h3l8 5V4L7 9H4a1 1 0 0 0-1 1z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M18 8a3.5 3.5 0 0 1 0 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
