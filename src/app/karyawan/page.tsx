@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
-import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import KaryawanLayout from "@/components/karyawan/layout/KaryawanLayout";
 import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader";
 import Overview from "@/components/karyawan/dashboard/Overview";
 import Attendance from "@/components/karyawan/dashboard/Attendance";
@@ -37,26 +37,22 @@ export default function DashboardKaryawanPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
+    <KaryawanLayout>
+      <DashboardHeader user={user} />
 
-      <main className="flex-1 p-8">
-        <DashboardHeader user={user} />
+      <div className="mb-6">
+        <Overview />
+      </div>
 
-        <div className="mb-6">
-          <Overview />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <Attendance />
+        <WeeklyWork />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <Attendance />
-          <WeeklyWork />
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-[360px_minmax(0,1fr)] gap-6 mb-6">
-          <CalendarCard />
-          <DashboardRightPanel />
-        </div>
-      </main>
-    </div>
+      <div className="grid grid-cols-1 xl:grid-cols-[360px_minmax(0,1fr)] gap-6 mb-6">
+        <CalendarCard />
+        <DashboardRightPanel />
+      </div>
+    </KaryawanLayout>
   );
 }

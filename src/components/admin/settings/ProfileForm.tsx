@@ -11,7 +11,7 @@ export default function ProfileForm() {
   const user = session?.user;
   const { t } = useLanguage();
   const [form, setForm] = useState({
-    nama: "Admin Koperasi",
+    nama: "Admin E-Absensi",
     nik: "ADM-001",
     email: "admin@eabsensi.com",
     jabatan: "HRD Manager",
@@ -21,7 +21,7 @@ export default function ProfileForm() {
   useEffect(() => {
     if (user) {
       setForm({
-        nama: user.name || "Admin Koperasi",
+        nama: user.name || "Admin E-Absensi",
         nik: "ADM-001",
         email: user.email || "admin@eabsensi.com",
         jabatan: "HRD Manager",

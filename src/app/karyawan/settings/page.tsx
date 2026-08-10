@@ -1,16 +1,12 @@
-import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import KaryawanLayout from "@/components/karyawan/layout/KaryawanLayout";
 import SettingsHeader from "@/components/karyawan/settings/SettingsHeader";
 import SettingsContent from "@/components/karyawan/settings/SettingsContent";
 
 export default function SettingsPage() {
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
-
-      <main className="flex-1 p-8">
-        <SettingsHeader />
-        <SettingsContent />
-      </main>
-    </div>
+    <KaryawanLayout>
+      <SettingsHeader />
+      <SettingsContent />
+    </KaryawanLayout>
   );
 }

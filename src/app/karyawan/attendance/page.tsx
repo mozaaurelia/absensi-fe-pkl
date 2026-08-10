@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import KaryawanLayout from "@/components/karyawan/layout/KaryawanLayout";
 import AttendanceHeader from "@/components/karyawan/attendance/AttendanceHeader";
 import AttendanceContent from "@/components/karyawan/attendance/AttendanceContent";
 
@@ -26,18 +26,14 @@ export default function AttendancePage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
+    <KaryawanLayout contentClassName="flex-1 p-8 space-y-6">
+      <AttendanceHeader
+        selectedDate={selectedDate}
+        onPrevDay={handlePrevDay}
+        onNextDay={handleNextDay}
+      />
 
-      <main className="flex-1 p-8 space-y-6">
-        <AttendanceHeader
-          selectedDate={selectedDate}
-          onPrevDay={handlePrevDay}
-          onNextDay={handleNextDay}
-        />
-
-        <AttendanceContent selectedDate={selectedDate} />
-      </main>
-    </div>
+      <AttendanceContent selectedDate={selectedDate} />
+    </KaryawanLayout>
   );
 }

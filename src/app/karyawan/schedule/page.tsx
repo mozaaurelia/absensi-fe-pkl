@@ -1,16 +1,12 @@
-import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
+import KaryawanLayout from "@/components/karyawan/layout/KaryawanLayout";
 import ScheduleHeader from "@/components/karyawan/schedule/ScheduleHeader";
 import ScheduleContent from "@/components/karyawan/schedule/ScheduleContent";
 
 export default function SchedulePage() {
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
-
-      <main className="flex-1 p-8">
-        <ScheduleHeader />
-        <ScheduleContent />
-      </main>
-    </div>
+    <KaryawanLayout>
+      <ScheduleHeader />
+      <ScheduleContent />
+    </KaryawanLayout>
   );
 }

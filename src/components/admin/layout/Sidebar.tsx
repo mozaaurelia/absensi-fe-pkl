@@ -2,15 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
-import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
-  // const { status } = useSession();
   const { t } = useLanguage();
   const pathname = usePathname();
-  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -42,10 +40,6 @@ export default function Sidebar() {
     { label: t("adminSidebar.announcements"), href: "/admin/pengumuman", icon: AnnouncementIcon },
     { label: t("adminSidebar.settings"), href: "/admin/settings", icon: SettingsIcon },
   ];
-
-  function logout() {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <aside
@@ -93,7 +87,7 @@ export default function Sidebar() {
               title={collapsed ? menu.label : undefined}
               className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
                 active
-                  ? "bg-blue-50 text-blue-600"
+                  ? "bg-blue-50 text-[#1E3A5F]"
                   : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
               } ${collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"}`}
             >
@@ -137,10 +131,7 @@ export default function Sidebar() {
         </button>
 
         <button
-          onClick={() => {
-            logout();
-            router.push("/auth/login");
-          }}
+          onClick={() => signOut({ callbackUrl: "/auth/login" })}
           title={collapsed ? t("adminSidebar.logout") : undefined}
           className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-all duration-300 ease-in-out ${
             collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"
