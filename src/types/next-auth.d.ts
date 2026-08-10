@@ -6,6 +6,9 @@ declare module "next-auth" {
     id: string;
     role: "employee" | "supervisor" | "admin" | "superadmin";
     accessToken: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
   }
 
   interface Session {
