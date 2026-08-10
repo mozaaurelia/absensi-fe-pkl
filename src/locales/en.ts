@@ -545,6 +545,7 @@ export const en = {
 
   scheduleHeader: {
     title: "My Agenda",
+    heading: "Schedule",
     desc: "Manage your daily work schedule and agenda.",
     add: "Add Agenda",
     badge: "This Week",

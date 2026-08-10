@@ -7,10 +7,10 @@ export default function AgendaSummary() {
   const { t } = useLanguage();
 
   const stats = [
-    { label: t("agendaSummary.shiftActive"), value: t("agendaSummary.shiftValue"), note: t("agendaSummary.today"), noteColor: "text-green-600" },
-    { label: t("agendaSummary.todayAgenda"), value: t("agendaSummary.todayValue"), note: t("agendaList.today"), noteColor: "text-blue-600" },
-    { label: t("agendaSummary.leaveRemaining"), value: t("agendaSummary.leaveValue"), note: t("agendaSummary.thisYear"), noteColor: "text-amber-600" },
-    { label: t("agendaSummary.monthAgenda"), value: t("agendaSummary.monthValue"), note: t("agendaSummary.thisMonth"), noteColor: "text-purple-600" },
+    { label: t("agendaSummary.shiftActive"), value: t("agendaSummary.shiftValue"), note: t("agendaSummary.today"), noteColor: "text-green-300" },
+    { label: t("agendaSummary.todayAgenda"), value: t("agendaSummary.todayValue"), note: t("agendaList.today"), noteColor: "text-blue-200" },
+    { label: t("agendaSummary.leaveRemaining"), value: t("agendaSummary.leaveValue"), note: t("agendaSummary.thisYear"), noteColor: "text-amber-300" },
+    { label: t("agendaSummary.monthAgenda"), value: t("agendaSummary.monthValue"), note: t("agendaSummary.thisMonth"), noteColor: "text-purple-300" },
   ];
 
   return (

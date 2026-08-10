@@ -545,6 +545,7 @@ export const id = {
 
   scheduleHeader: {
     title: "Agenda Saya",
+    heading: "Jadwal",
     desc: "Kelola jadwal dan agenda kerja harianmu.",
     add: "Tambah Agenda",
     badge: "Minggu Ini",

@@ -7,10 +7,10 @@ interface Props {
 
 export default function AgendaSummaryCard({ label, value, note, noteColor }: Props) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5">
-      <p className="text-xs text-gray-400 mb-2">{label}</p>
-      <p className="font-bold text-gray-900 dark:text-gray-100 text-lg mb-2">{value}</p>
-      {note && <p className={`text-xs font-semibold ${noteColor || "text-gray-400"}`}>{note}</p>}
+    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl border border-white/10 p-5 shadow-lg">
+      <p className="text-xs text-blue-200/80 mb-2">{label}</p>
+      <p className="font-bold text-white text-lg mb-2">{value}</p>
+      {note && <p className={`text-xs font-semibold ${noteColor || "text-blue-200/80"}`}>{note}</p>}
     </div>
   );
 }

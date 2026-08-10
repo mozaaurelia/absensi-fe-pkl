@@ -68,7 +68,7 @@ export default function Sidebar() {
               className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
                 active
                   ? "bg-white/10 text-white"
-                  : "text-blue-100/80 hover:bg-white/10"
+                  : "text-blue-100/80 hover:bg-white/10 hover:text-white"
               } ${open ? "px-3 gap-3" : "pl-3.25 gap-0"}`}
               title={!open ? menu.label : undefined}
             >

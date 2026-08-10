@@ -53,7 +53,7 @@ export default function Sidebar() {
         className={`flex items-center mb-8 ${collapsed ? "justify-center" : "px-2 justify-between"}`}
       >
         <div
-          className={`min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+          className={`min-w-0 overflow-hidden whitespace-nowraptransition-all duration-300 ease-in-out ${
             collapsed ? "opacity-0 max-w-0" : "opacity-100 max-w-45"
           }`}
         >
