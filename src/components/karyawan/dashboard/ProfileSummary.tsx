@@ -1,17 +1,18 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { FiHash, FiGrid, FiUser, FiCheckCircle } from "react-icons/fi";
 
 export default function ProfileSummary() {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
 
   const rows = [
-    { label: "NIK", value: user?.nik || "EMP-00124", icon: FiHash, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-500/15" },
-    { label: t("profileSummary.division"), value: user?.divisi || "Operasional", icon: FiGrid, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-500/15" },
-    { label: t("profileSummary.supervisor"), value: user?.atasan || "Surya Prasetya", icon: FiUser, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/15" },
+    { label: "NIK", value: "EMP-00124", icon: FiHash, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-500/15" },
+    { label: t("profileSummary.division"), value: "Operasional", icon: FiGrid, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-500/15" },
+    { label: t("profileSummary.supervisor"), value: "Surya Prasetya", icon: FiUser, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/15" },
   ];
 
   return (

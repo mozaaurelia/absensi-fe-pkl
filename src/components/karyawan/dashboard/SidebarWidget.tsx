@@ -2,16 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
   const pathname = usePathname();
-  const router = useRouter();
-  const { logout } = useAuth();
   const { t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -107,10 +105,7 @@ export default function Sidebar() {
         </button>
 
         <button
-          onClick={() => {
-            logout();
-            router.push("/auth/login");
-          }}
+          onClick={() => signOut({ callbackUrl: "/auth/login" })}
           className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
             open ? "px-3 gap-3" : "pl-3.25 gap-0"
           }`}

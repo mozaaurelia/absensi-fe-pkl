@@ -1,36 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
-import { useAuth } from "@/context/AuthContext";
-import type { AuthUser } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import AvatarUpload from "./AvatarUpload";
 
 export default function ProfileForm() {
-  const { user, updateProfile } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
   const [form, setForm] = useState({
-    nama: user?.nama || "Admin Koperasi",
-    nik: user?.nik || "ADM-001",
-    email: user?.email || "admin@eabsensi.com",
-    jabatan: user?.jabatan || "HRD Manager",
+    nama: "Admin Koperasi",
+    nik: "ADM-001",
+    email: "admin@eabsensi.com",
+    jabatan: "HRD Manager",
   });
-  const [avatar, setAvatar] = useState(user?.avatar || null);
-  const [prevUser, setPrevUser] = useState(user);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
-  if (user !== prevUser) {
-    setPrevUser(user);
+  useEffect(() => {
     if (user) {
       setForm({
-        nama: user.nama || "",
-        nik: user.nik || "",
-        email: user.email || "",
-        jabatan: user.jabatan || "",
+        nama: user.name || "Admin Koperasi",
+        nik: "ADM-001",
+        email: user.email || "admin@eabsensi.com",
+        jabatan: "HRD Manager",
       });
-      setAvatar(user.avatar || null);
     }
-  }
+  }, [user]);
 
   const handleChange =
     (field: keyof typeof form) => (e: ChangeEvent<HTMLInputElement>) =>
@@ -38,9 +35,6 @@ export default function ProfileForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const payload: Partial<AuthUser> = { ...form };
-    if (avatar) payload.avatar = avatar;
-    updateProfile(payload);
   };
 
   return (
@@ -52,7 +46,7 @@ export default function ProfileForm() {
         </p>
 
         <div className="flex justify-end mb-6">
-          <AvatarUpload initials={user?.initials || "AD"} onImageChange={setAvatar} />
+          <AvatarUpload initials={user?.name ? user.name.slice(0, 2).toUpperCase() : "AD"} onImageChange={setAvatar} />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-4">
