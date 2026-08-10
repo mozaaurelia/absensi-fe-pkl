@@ -77,9 +77,6 @@ export default function CalendarCard() {
         })}
       </div>
 
-      <div className="mt-5 text-xs text-gray-500 dark:text-gray-400">
-        {t("calendarCard.note")}
-      </div>
     </div>
   );
 }

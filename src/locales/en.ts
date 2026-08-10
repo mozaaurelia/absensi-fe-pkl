@@ -285,7 +285,6 @@ export const en = {
     title: "Calendar",
     subtitle: "View your current month at a glance.",
     todayLabel: "Today",
-    note: "Tap any date to plan your leave or attendance.",
   },
 
   profileSummary: {
@@ -467,7 +466,7 @@ export const en = {
   },
 
   historyHeader: {
-    title: "My Attendance History",
+    title: "Attendance History",
     desc: "Monitor all attendance data and personal total working hours.",
     dateRange: "Date Range",
   },
@@ -521,10 +520,11 @@ export const en = {
   },
 
   leaveHeader: {
-    title: "Employee Permit, Leave & Overtime Requests",
-    desc: "Submit permits, leave, overtime, and monitor approval status transparently.",
-    history: "Request History",
-    newRequest: "New Request",
+    title: "Employee Permit, Leave & Overtime Submission",
+    desc: "Submit permits, leave, overtime, and track approval status transparently.",
+    heading: "Leave Request",
+    history: "Submission History",
+    newRequest: "Create New Submission",
   },
 
   leaveHistory: {

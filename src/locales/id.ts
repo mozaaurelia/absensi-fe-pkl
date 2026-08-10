@@ -285,7 +285,6 @@ export const id = {
     title: "Kalender",
     subtitle: "Lihat bulan berjalan secara ringkas.",
     todayLabel: "Hari Ini",
-    note: "Ketuk tanggal untuk merencanakan cuti atau absensi.",
   },
 
   profileSummary: {
@@ -467,7 +466,7 @@ export const id = {
   },
 
   historyHeader: {
-    title: "Riwayat Kehadiran Saya",
+    title: "Riwayat Kehadiran",
     desc: "Pantau seluruh data absensi dan total jam kerja personal.",
     dateRange: "Rentang Tanggal",
   },
@@ -523,6 +522,7 @@ export const id = {
   leaveHeader: {
     title: "Pengajuan Izin, Cuti & Lembur Karyawan",
     desc: "Ajukan izin, cuti, lembur, dan pantau status persetujuan secara transparan.",
+    heading: "Pengajuan Izin",
     history: "Riwayat Pengajuan",
     newRequest: "Buat Pengajuan Baru",
   },
