@@ -6,12 +6,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getWeeklyStats, formatHours, formatHoursEn } from "@/lib/workHours";
 
 const iconMap = [FiClock, FiBriefcase, FiCalendar, FiAlertTriangle];
-const colorMap = [
-  { bg: "bg-amber-50", ic: "text-amber-600" },
-  { bg: "bg-green-50", ic: "text-green-600" },
-  { bg: "bg-blue-50", ic: "text-blue-600" },
-  { bg: "bg-red-50", ic: "text-red-600" },
-];
 
 function getTodayStatusTag(totalMinutes: number, t: (key: string, params?: Record<string, string | number>) => any) {
   if (totalMinutes === 0) return { text: t("overview.pendingTag"), color: "bg-amber-100 text-amber-700" };
@@ -80,15 +74,14 @@ export default function Overview() {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((stat, i) => {
         const Icon = iconMap[i];
-        const colors = colorMap[i];
         return (
           <div
             key={stat.label}
-            className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 card-hover opacity-0 animate-fade-slide-up"
+            className="bg-[#1E3A5F] text-white rounded-2xl p-5 card-hover opacity-0 animate-fade-slide-up"
             style={{ animationDelay: `${i * 0.1}s` }}
           >
             <div className="flex items-start justify-between mb-4">
-              <div className={`w-10 h-10 rounded-xl ${colors.bg} flex items-center justify-center ${colors.ic}`}>
+              <div className="w-10 h-10 rounded-xl bg-white/15 text-blue-100 flex items-center justify-center">
                 <Icon size={20} />
               </div>
               <span
@@ -97,8 +90,8 @@ export default function Overview() {
                 {stat.tag}
               </span>
             </div>
-            <p className="font-bold text-gray-900 dark:text-gray-100 text-lg">{stat.value}</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{stat.label}</p>
+            <p className="font-bold text-white text-lg">{stat.value}</p>
+            <p className="text-xs text-blue-200/80 mt-0.5">{stat.label}</p>
           </div>
         );
       })}
