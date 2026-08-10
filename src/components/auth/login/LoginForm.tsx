@@ -42,7 +42,7 @@ export default function LoginForm() {
 
     setIsLoading(true);
     try {
-      const userData = await login(email, password);
+      const userData = await login(email, password, remember);
 
       if (userData.role === "admin") {
         router.push("/admin");

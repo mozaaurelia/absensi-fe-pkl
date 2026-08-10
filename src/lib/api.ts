@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getToken, removeToken } from "@/lib/tokenStorage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -12,8 +13,7 @@ export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("sams_token") : null;
+  const token = getToken();
 
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
@@ -31,7 +31,7 @@ export async function apiFetch<T>(
       json.error?.code === "NO_TOKEN" ||
       json.error?.code === "INVALID_TOKEN"
     ) {
-      localStorage.removeItem("sams_token");
+      removeToken();
       const authError = new Error(json.error.message);
       (authError as any).code = "AUTH_EXPIRED";
       throw authError;

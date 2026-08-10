@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 import { apiFetch } from "@/lib/api";
+import { getToken, setToken, removeToken } from "@/lib/tokenStorage";
 
 export interface AuthUser {
   name?: string;
@@ -32,7 +33,7 @@ type AuthContextValue = {
   user: AuthUser | null;
   isLoaded: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (email: string, password: string, remember?: boolean) => Promise<AuthUser>;
   logout: () => void;
   updateProfile?: (data: Partial<AuthUser>) => void;
 };
@@ -47,7 +48,15 @@ function getInitials(name?: string) {
     .slice(0, 2);
 }
 
-const TOKEN_KEY = "sams_token";
+function normalizeUser(data: Partial<AuthUser> & { role_name?: string }): AuthUser {
+  const name = data.name ?? data.nama ?? "";
+  return {
+    ...data,
+    name,
+    role: data.role ?? data.role_name,
+    initials: getInitials(name),
+  };
+}
 
 const defaultAuthValue: AuthContextValue = {
   user: null,
@@ -56,7 +65,6 @@ const defaultAuthValue: AuthContextValue = {
   logout: () => {},
   isAuthenticated: false,
 };
-
 const AuthContext = createContext(defaultAuthValue);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -64,33 +72,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null;
+    const token = getToken();
     if (!token) {
       setIsLoaded(true);
       return;
     }
     apiFetch<AuthUser>("/auth/me")
-      .then((data) => setUser({ ...data, initials: getInitials(data.name) }))
-      .catch(() => localStorage.removeItem(TOKEN_KEY))
+      .then((data) => {
+        if (getToken() === token) {
+          setUser(normalizeUser(data));
+        }
+      })
+      .catch(() => removeToken())
       .finally(() => setIsLoaded(true));
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const result = await apiFetch<LoginResponse>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    localStorage.setItem(TOKEN_KEY, result.token);
-    const me = await apiFetch<AuthUser>("/auth/me");
-    const userData = { ...me, initials: getInitials(me.name) };
-    setUser(userData);
-    return userData; // biar LoginForm bisa tau role-nya buat redirect ke halaman yang benar
-  }, []);
+  const login = useCallback(
+    async (email: string, password: string, remember = true) => {
+      const result = await apiFetch<LoginResponse>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      setToken(result.token, remember);
+      const me = await apiFetch<AuthUser>("/auth/me");
+      const userData = normalizeUser(me);
+      setUser(userData);
+      return userData; // biar LoginForm bisa tau role-nya buat redirect ke halaman yang benar
+    },
+    [],
+  );
 
   const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem(TOKEN_KEY);
+    removeToken();
   }, []);
 
   const value = useMemo(
