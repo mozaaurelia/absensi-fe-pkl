@@ -1,28 +1,90 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
+import type { EmployeeProfile } from "@/lib/services/employee";
 
-export default function AccountSummary() {
-  const { data: session } = useSession();
-  const user = session?.user;
+interface Props {
+  profile: EmployeeProfile | null;
+  isLoading: boolean;
+}
+
+function formatDate(value?: string | null): string {
+  if (!value) return "-";
+  const date = value.slice(0, 10);
+  return date || "-";
+}
+
+function statusLabel(t: (key: string) => string, status?: string | null): string {
+  switch (status) {
+    case "active":
+      return t("accountSummary.statusActive");
+    case "inactive":
+      return t("accountSummary.statusInactive");
+    case "resigned":
+      return t("accountSummary.statusResigned");
+    default:
+      return "-";
+  }
+}
+
+export default function AccountSummary({ profile, isLoading }: Props) {
   const { t } = useLanguage();
 
   const rows = [
-    { label: t("accountSummary.role"), value: user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : t("login.roleEmployee") },
-    { label: t("accountSummary.department"), value: "Operasional" },
-    { label: t("accountSummary.device"), value: t("accountSummary.deviceValue") },
+    {
+      id: "role",
+      label: t("accountSummary.role"),
+      value: profile?.role_name ?? "-",
+    },
+    {
+      id: "department",
+      label: t("accountSummary.department"),
+      value: profile?.department_name ?? "-",
+    },
+    {
+      id: "position",
+      label: t("accountSummary.position"),
+      value: profile?.position_name ?? "-",
+    },
+    {
+      id: "supervisor",
+      label: t("accountSummary.supervisor"),
+      value: profile?.supervisor_name ?? "-",
+    },
+    {
+      id: "company",
+      label: t("accountSummary.company"),
+      value: profile?.company_name ?? "-",
+    },
+    {
+      id: "join-date",
+      label: t("accountSummary.joinDate"),
+      value: formatDate(profile?.join_date),
+    },
+    {
+      id: "status",
+      label: t("accountSummary.status"),
+      value: statusLabel(t, profile?.status),
+    },
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 h-full">
-      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-5">{t("accountSummary.title")}</h3>
+    <div>
+      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">
+        {t("accountSummary.title")}
+      </h2>
 
       <div className="flex flex-col gap-3">
         {rows.map((row) => (
-          <div key={row.label} className="bg-gray-50 dark:bg-gray-700/50 rounded-lg px-4 py-3">
+          <div
+            key={row.id}
+            className="bg-gray-50 dark:bg-gray-700/50 rounded-lg px-4 py-3"
+          >
             <p className="text-xs text-gray-400 mb-1">{row.label}</p>
-            <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{row.value}</p>
+
+            <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+              {isLoading && !profile ? "Loading..." : row.value}
+            </p>
           </div>
         ))}
       </div>

@@ -2,10 +2,10 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function AttendanceSuccess({ mode = "in", onFinish }) {
+export default function AttendanceSuccess({ mode = "in", onFinish, serverTime }) {
   const { locale, t } = useLanguage();
   const isCheckIn = mode === "in";
-  const now = new Date().toLocaleTimeString(locale, {
+  const displayTime = new Date(serverTime ?? Date.now()).toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -18,7 +18,6 @@ export default function AttendanceSuccess({ mode = "in", onFinish }) {
           <path d="M5 13l4 4L19 7" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-
       <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg mb-2">
         {isCheckIn ? t("attendanceSuccess.checkIn") : t("attendanceSuccess.checkOut")}
       </h3>
@@ -26,9 +25,8 @@ export default function AttendanceSuccess({ mode = "in", onFinish }) {
         {t("attendanceSuccess.desc")}
       </p>
       <p className="text-2xl font-bold text-[#1E3A5F] dark:text-blue-300 mb-6 tabular-nums">
-        {now}
+        {displayTime}
       </p>
-
       <button
         onClick={onFinish}
         className="w-full bg-linear-to-r from-[#1E3A5F] to-[#4F46E5] text-white font-semibold text-sm py-3.5 rounded-xl hover:brightness-110 transition-all shadow-md shadow-blue-900/20"
