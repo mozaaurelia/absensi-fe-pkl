@@ -1,10 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function LeaveHeader() {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
 
   return (
@@ -26,10 +27,10 @@ export default function LeaveHeader() {
           {t("leaveHeader.newRequest")}
         </button>
         <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 text-[#1E3A5F] dark:text-blue-300 font-bold text-sm flex items-center justify-center overflow-hidden">
-          {user?.avatar ? (
-            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+          {user?.image ? (
+            <img src={user.image} alt="" className="w-full h-full object-cover" />
           ) : (
-            user?.initials || "AP"
+            user?.name ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "AP"
           )}
         </div>
       </div>

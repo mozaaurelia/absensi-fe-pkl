@@ -1,10 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function HistoryHeader() {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { months, t } = useLanguage();
 
   return (
@@ -26,10 +27,10 @@ export default function HistoryHeader() {
           </p>
         </div>
         <div className="w-10 h-10 rounded-full bg-blue-100 text-[#1E3A5F] font-bold text-sm flex items-center justify-center overflow-hidden">
-          {user?.avatar ? (
-            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+          {user?.image ? (
+            <img src={user.image} alt="" className="w-full h-full object-cover" />
           ) : (
-            user?.initials || "AP"
+            user?.name ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "AP"
           )}
         </div>
       </div>

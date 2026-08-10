@@ -1,15 +1,16 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function AccountSummary() {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
 
   const rows = [
     { label: t("accountSummary.role"), value: user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : t("login.roleEmployee") },
-    { label: t("accountSummary.department"), value: user?.divisi || "Operasional" },
+    { label: t("accountSummary.department"), value: "Operasional" },
     { label: t("accountSummary.device"), value: t("accountSummary.deviceValue") },
   ];
 

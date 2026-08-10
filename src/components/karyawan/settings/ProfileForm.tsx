@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import AvatarUpload from "./AvatarUpload";
 
 export default function ProfileForm() {
-  const { user, updateProfile } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
   const [form, setForm] = useState({
     nama: "",
@@ -20,12 +21,11 @@ export default function ProfileForm() {
   useEffect(() => {
     if (user) {
       setForm({
-        nama: user.nama || "",
-        nik: user.nik || "",
+        nama: user.name || "",
+        nik: "",
         email: user.email || "",
-        jabatan: user.jabatan || "",
+        jabatan: "",
       });
-      setAvatar(user.avatar || null);
     }
   }, [user]);
 
@@ -35,9 +35,6 @@ export default function ProfileForm() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload: Record<string, string> = { ...form };
-    if (avatar) payload.avatar = avatar;
-    updateProfile?.(payload);
   };
 
   return (
@@ -50,7 +47,7 @@ export default function ProfileForm() {
 
         <div className="flex justify-end mb-6">
           <AvatarUpload
-            initials={user?.initials || "AP"}
+            initials={user?.name ? user.name.slice(0, 2).toUpperCase() : "AP"}
             onImageChange={(dataUrl) => setAvatar(dataUrl)}
           />
         </div>

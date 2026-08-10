@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
 import DashboardHeader from "@/components/karyawan/dashboard/DashboardHeader";
@@ -13,21 +13,22 @@ import CalendarCard from "@/components/karyawan/dashboard/CalendarCard";
 import DashboardRightPanel from "@/components/karyawan/dashboard/DashboardRightPanel";
 
 export default function DashboardKaryawanPage() {
-  const { user, isLoaded } = useAuth();
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && (!user || user.role !== "karyawan")) {
+    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "employee")) {
       router.replace("/auth/login");
     }
-  }, [user, isLoaded, router]);
+  }, [status, user?.role, router]);
 
-  if (!isLoaded) {
+  if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;
   }
 
-  if (!user || user.role !== "karyawan") {
+  if (!user || user.role !== "employee") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <p className="text-gray-500 text-sm">{t("accessDenied")}</p>

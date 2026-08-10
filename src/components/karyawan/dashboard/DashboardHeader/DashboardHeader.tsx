@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import useTypewriter from "@/hooks/useTypewriter";
 import { useLanguage } from "@/context/LanguageContext";
-import type { AuthUser } from "@/context/AuthContext";
+import type { Session } from "next-auth";
 import LanguageToggle from "@/components/common/LanguageToggle";
 import Notification from "@/components/karyawan/notification/Notification";
 
 interface Props {
-  user: AuthUser;
+  user?: Session["user"] | null;
 }
 
 export default function DashboardHeader({ user }: Props) {
@@ -28,7 +28,7 @@ export default function DashboardHeader({ user }: Props) {
         const gs = t("dashboardHeader.greetings");
         const g =
           hour < 11 ? gs[0] : hour < 14 ? gs[1] : hour < 18 ? gs[2] : gs[3];
-        const name = user?.nama?.split(" ")[0] || t("dashboardHeader.user");
+        const name = user?.name?.split(" ")[0] || t("dashboardHeader.user");
         return `${g}, ${name}! 👋`;
       })()
     : "";
@@ -72,10 +72,10 @@ export default function DashboardHeader({ user }: Props) {
           <LanguageToggle />
           <Notification />
           <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
-            {user?.avatar ? (
-              <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+            {user?.image ? (
+              <img src={user.image} alt="" className="w-full h-full object-cover" />
             ) : (
-              user?.initials || (user?.nama ? user.nama.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "AP")
+              user?.name ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "AP"
             )}
           </div>
         </div>

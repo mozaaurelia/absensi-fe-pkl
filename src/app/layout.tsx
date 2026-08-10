@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import SessionWrapper from "@/components/common/SessionWrapper";
 
 export const metadata: Metadata = {
   title: "E-Absensi",
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body suppressHydrationWarning>
         <ThemeProvider>
           <LanguageProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <SessionWrapper>{children}</SessionWrapper>
           </LanguageProvider>
         </ThemeProvider>
       </body>
