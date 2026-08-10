@@ -644,6 +644,14 @@ export const en = {
     title: "Account Summary",
     role: "Role",
     department: "Department",
+    position: "Position",
+    supervisor: "Supervisor",
+    company: "Company",
+    joinDate: "Join Date",
+    status: "Status",
+    statusActive: "Active",
+    statusInactive: "Inactive",
+    statusResigned: "Resigned",
     device: "Registered Device",
     deviceValue: "iPhone 13 · Verified",
   },
@@ -709,6 +717,9 @@ export const en = {
     nik: "Employee ID",
     email: "Email",
     position: "Position",
+    nameRequired: "Name cannot be empty",
+    saveFailed: "Failed to save profile. Please try again.",
+    saveSuccess: "Profile saved successfully.",
   },
 
   securityForm: {
@@ -718,6 +729,7 @@ export const en = {
     newPassword: "New Password",
     twoFA: "Enable Two-Factor Authentication (2FA)",
     twoFADesc: "Add an extra layer of security when logging into the system.",
+    comingSoon: "This feature will be available soon.",
   },
 
   settingsHeader: {

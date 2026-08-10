@@ -4,7 +4,12 @@ import CancelButton from "./CancelButton";
 import SaveButton from "./SaveButton";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function SettingsHeader() {
+interface Props {
+  isSaving?: boolean;
+  onCancel?: () => void;
+}
+
+export default function SettingsHeader({ isSaving = false, onCancel }: Props) {
   const { t } = useLanguage();
 
   return (
@@ -19,8 +24,8 @@ export default function SettingsHeader() {
       </div>
 
       <div className="flex items-center gap-3">
-        <CancelButton />
-        <SaveButton form="profile-form" />
+        <CancelButton onClick={onCancel} />
+        <SaveButton form="profile-form" loading={isSaving} />
       </div>
     </div>
   );

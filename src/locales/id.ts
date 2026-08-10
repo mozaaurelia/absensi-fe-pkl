@@ -644,6 +644,14 @@ export const id = {
     title: "Ringkasan Akun",
     role: "Role",
     department: "Departemen",
+    position: "Posisi",
+    supervisor: "Supervisor",
+    company: "Perusahaan",
+    joinDate: "Tanggal Bergabung",
+    status: "Status",
+    statusActive: "Aktif",
+    statusInactive: "Nonaktif",
+    statusResigned: "Berhenti",
     device: "Device Terdaftar",
     deviceValue: "iPhone 13 · Verified",
   },
@@ -709,6 +717,9 @@ export const id = {
     nik: "Nomor Induk Karyawan",
     email: "Email",
     position: "Jabatan",
+    nameRequired: "Nama tidak boleh kosong",
+    saveFailed: "Gagal menyimpan profil. Silakan coba lagi.",
+    saveSuccess: "Profil berhasil disimpan.",
   },
 
   securityForm: {
@@ -718,6 +729,7 @@ export const id = {
     newPassword: "Kata Sandi Baru",
     twoFA: "Aktifkan Autentikasi Dua Faktor (2FA)",
     twoFADesc: "Tambahkan lapisan keamanan saat login ke sistem.",
+    comingSoon: "Fitur ini akan tersedia segera.",
   },
 
   settingsHeader: {

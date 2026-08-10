@@ -1,4 +1,4 @@
-import axios from "axios";
+import { getSession } from "next-auth/react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -6,13 +6,41 @@ if (!API_URL) {
   throw new Error("NEXT_PUBLIC_API_URL belum dikonfigurasi");
 }
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 10_000,
-});
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: {
+    code: string;
+    message: string;
+  };
+}
 
-export default api;
-;
+export async function apiFetch<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const session = await getSession();
+
+  const accessToken = session?.user?.accessToken;
+
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(accessToken
+        ? {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        : {}),
+      ...options.headers,
+    },
+  });
+
+  const json: ApiResponse<T> = await response.json();
+
+  if (!response.ok || !json.success) {
+    throw new Error(json.error?.message || "Terjadi kesalahan pada server");
+  }
+
+  return json.data;
+}
