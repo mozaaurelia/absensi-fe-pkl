@@ -45,7 +45,7 @@ export default function Sidebar() {
     <aside
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`h-screen sticky top-0 flex flex-col px-3 py-6 bg-white border-r border-gray-100 shrink-0 overflow-y-auto transition-[width] duration-300 ease-in-out ${
+      className={`h-screen sticky top-0 flex flex-col px-3 py-6 bg-[#1E3A5F] shrink-0 overflow-y-auto transition-[width] duration-300 ease-in-out ${
         collapsed ? "w-17" : "w-64"
       }`}
     >
@@ -57,8 +57,8 @@ export default function Sidebar() {
             collapsed ? "opacity-0 max-w-0" : "opacity-100 max-w-45"
           }`}
         >
-          <p className="font-bold text-gray-900 text-base">E-Absensi</p>
-          <p className="text-gray-400 text-xs mt-0.5">{t("adminSidebar.tagline")}</p>
+          <p className="font-bold text-white text-base">E-Absensi</p>
+          <p className="text-blue-200/70 text-xs mt-0.5">{t("adminSidebar.tagline")}</p>
         </div>
         <svg
           width="20"
@@ -68,7 +68,7 @@ export default function Sidebar() {
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
-          className="text-gray-400 shrink-0"
+          className="text-blue-200/80 shrink-0"
         >
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
@@ -87,8 +87,8 @@ export default function Sidebar() {
               title={collapsed ? menu.label : undefined}
               className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
                 active
-                  ? "bg-blue-50 text-[#1E3A5F]"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+                  ? "bg-white/10 text-white"
+                  : "text-blue-100/80 hover:bg-white/10 hover:text-white"
               } ${collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"}`}
             >
               <Icon />
@@ -104,36 +104,11 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-gray-100">
-        <button
-          onClick={() => setCollapsed((v) => !v)}
-          title={collapsed ? t("adminSidebar.collapse") : undefined}
-          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all duration-300 ease-in-out ${
-            collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"
-          }`}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            className={`shrink-0 transition-transform ${collapsed ? "rotate-180" : ""}`}
-          >
-            <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span
-            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
-              collapsed ? "opacity-0 max-w-0" : "opacity-100 max-w-40"
-            }`}
-          >
-            {t("adminSidebar.collapse")}
-          </span>
-        </button>
-
+      <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
         <button
           onClick={() => signOut({ callbackUrl: "/auth/login" })}
           title={collapsed ? t("adminSidebar.logout") : undefined}
-          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-all duration-300 ease-in-out ${
+          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
             collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"
           }`}
         >
