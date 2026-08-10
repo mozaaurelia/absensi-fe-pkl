@@ -2,23 +2,25 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import Sidebar from "@/components/admin/layout/Sidebar";
 import LanguageToggle from "@/components/common/LanguageToggle";
+import { useSession } from "next-auth/react";
+
 
 export default function DashboardAdminPage() {
-  const { user, isLoaded } = useAuth();
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && (!user || user.role !== "admin")) {
+    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "admin")) {
       router.replace("/auth/login");
     }
-  }, [user, isLoaded, router]);
+  }, [user, status, router]);
 
-  if (!isLoaded) {
+  if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;
   }
 

@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSession } from "next-auth/react";
 
 export default function Sidebar() {
-  const { user, logout } = useAuth();
+  // const { status } = useSession();
   const { t } = useLanguage();
   const pathname = usePathname();
   const router = useRouter();
@@ -42,6 +42,10 @@ export default function Sidebar() {
     { label: t("adminSidebar.announcements"), href: "/admin/pengumuman", icon: AnnouncementIcon },
     { label: t("adminSidebar.settings"), href: "/admin/settings", icon: SettingsIcon },
   ];
+
+  function logout() {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <aside

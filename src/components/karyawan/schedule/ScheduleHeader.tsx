@@ -1,11 +1,12 @@
 "use client";
 
 import { FiPlus } from "react-icons/fi";
-import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSession } from "next-auth/react";
 
 export default function ScheduleHeader() {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const { t } = useLanguage();
 
   return (
