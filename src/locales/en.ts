@@ -11,6 +11,11 @@ export const en = {
     lightMode: "Light Mode",
     save: "Save Changes",
     saving: "Saving...",
+    loading: "Loading...",
+    retry: "Try Again",
+    loadErrorTitle: "Failed to Load Data",
+    loadErrorDesc: "Something went wrong while fetching data. Please try again.",
+    emptyData: "No data yet.",
     status: "Status",
     location: "Location",
     verification: "Verification",
@@ -250,11 +255,15 @@ export const en = {
     inProgressTag: "In Progress",
   },
 
-  dashAttendance: {
+dashAttendance: {
     title: "Today's Attendance",
     subtitle: "Attendance status",
     notCheckedIn: "Not Checked In",
-    shift: "Work Shift: 09:00 - 18:00 · Jakarta Head Office",
+    checkedIn: "Checked In",
+    checkedOut: "Checked Out",
+    late: "Late",
+    shift: "Work Shift: 09:00 - 18:00 · Head Office Jakarta",
+    shiftLabel: "Work Shift:",
     checkIn: "Check In",
     checkOut: "Check Out",
     location: "Location",
@@ -435,6 +444,18 @@ export const en = {
     checkIn: "Check In",
     checkOut: "Check Out",
     subtitle: "Verify Your Attendance",
+    submitting: "Submitting attendance...",
+    failedTitle: "Attendance Failed",
+    tryAgain: "Try Again",
+    errors: {
+      generic: "An error occurred while processing. Please try again.",
+      outsideRadius: "Your location is outside the office radius.",
+      faceMismatch: "Face does not match reference data.",
+      noFaceReference: "Face reference is not available yet. Contact the admin.",
+      noSchedule: "You do not have an active work schedule today.",
+      noClockIn: "You have not checked in today.",
+      captureRequired: "A face photo is required.",
+    },
   },
 
   progressCircle: {
@@ -518,6 +539,11 @@ export const en = {
     reasonPlaceholder: "Write your permit or leave request reason clearly...",
     fileTitle: "Upload doctor's certificate or supporting documents",
     submit: "Submit Request",
+    typeRequired: "Please choose a permit type first.",
+    dateRequired: "Start and end dates are required.",
+    reasonRequired: "Reason is required.",
+    submitFailed: "Failed to submit the request. Please try again.",
+    submitSuccess: "Request submitted successfully.",
   },
 
   leaveHeader: {
@@ -541,6 +567,7 @@ export const en = {
     days1: "1 Day",
     duration230: "2h 30m",
     duration400: "4h 00m",
+    daysUnit: "days",
   },
 
   scheduleHeader: {
@@ -633,6 +660,8 @@ export const en = {
     reasonPlaceholder:
       "e.g. finishing the end-of-month operational report and validating attendance data...",
     submit: "Submit Overtime Request",
+    notAvailable:
+      "Overtime feature is not available yet. Overtime requests will be supported soon.",
   },
 
   statusBadge: {
@@ -753,6 +782,37 @@ export const en = {
 
   atasan: {
     comingSoon: "Supervisor Dashboard - Coming Soon",
+    title: "Supervisor Dashboard",
+    subtitle: "Monitor team attendance and process permit/leave requests.",
+    teamToday: "Team Attendance Today",
+    present: "Present",
+    late: "Late",
+    absent: "Absent",
+    notCheckedIn: "Not Checked In",
+    pendingApproval: "Requests Awaiting Approval",
+    teamAttendance: "Team Attendance",
+    teamAttendanceDesc: "Today's team attendance list.",
+    teamLeave: "Team Permit / Leave Requests",
+    teamLeaveDesc: "Requests awaiting your decision.",
+    employee: "Employee",
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    status: "Status",
+    type: "Type",
+    date: "Date",
+    reason: "Reason",
+    approve: "Approve",
+    reject: "Reject",
+    approvalNote: "Approval Note",
+    approvalNotePlaceholder: "Write a note (required when rejecting)",
+    confirmApprove: "Approve this request?",
+    confirmReject: "Reject this request?",
+    actionSuccess: "Request processed successfully.",
+    actionFailed: "Failed to process the request. Please try again.",
+    noteRequired: "A note is required to reject the request.",
+    emptyAttendance: "No team attendance data yet.",
+    emptyRequests: "No requests awaiting approval.",
+    approveNote: "Note:",
   },
 
   accessDenied: "Access denied. Redirecting to login page...",

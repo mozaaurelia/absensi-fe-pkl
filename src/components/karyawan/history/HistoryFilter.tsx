@@ -1,13 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function HistoryFilter() {
+interface Props {
+  statusFilter: string;
+  onStatusChange: (value: string) => void;
+  dateQuery: string;
+  onDateQueryChange: (value: string) => void;
+  locationQuery: string;
+  onLocationChange: (value: string) => void;
+}
+
+export default function HistoryFilter({
+  statusFilter,
+  onStatusChange,
+  dateQuery,
+  onDateQueryChange,
+  locationQuery,
+  onLocationChange,
+}: Props) {
   const { t } = useLanguage();
-  const [status, setStatus] = useState(t("historyFilter.allStatuses"));
-  const [tanggal, setTanggal] = useState("");
-  const [lokasi, setLokasi] = useState(t("historyFilter.allLocations"));
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
@@ -17,14 +29,14 @@ export default function HistoryFilter() {
             {t("historyFilter.status")}
           </label>
           <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            value={statusFilter}
+            onChange={(e) => onStatusChange(e.target.value)}
             className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
           >
-            <option>{t("historyFilter.allStatuses")}</option>
-            <option>{t("historyFilter.present")}</option>
-            <option>{t("historyFilter.late")}</option>
-            <option>{t("historyFilter.sick")}</option>
+            <option value="all">{t("historyFilter.allStatuses")}</option>
+            <option value="present">{t("historyFilter.present")}</option>
+            <option value="late">{t("historyFilter.late")}</option>
+            <option value="sick">{t("historyFilter.sick")}</option>
           </select>
         </div>
 
@@ -35,8 +47,8 @@ export default function HistoryFilter() {
           <input
             type="text"
             placeholder={t("historyFilter.datePlaceholder")}
-            value={tanggal}
-            onChange={(e) => setTanggal(e.target.value)}
+            value={dateQuery}
+            onChange={(e) => onDateQueryChange(e.target.value)}
             className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F]"
           />
         </div>
@@ -46,13 +58,13 @@ export default function HistoryFilter() {
             {t("historyFilter.location")}
           </label>
           <select
-            value={lokasi}
-            onChange={(e) => setLokasi(e.target.value)}
+            value={locationQuery}
+            onChange={(e) => onLocationChange(e.target.value)}
             className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-[#1E3A5F]"
           >
-            <option>{t("historyFilter.allLocations")}</option>
-            <option>{t("historyFilter.jakartaOffice")}</option>
-            <option>{t("historyFilter.bandungOffice")}</option>
+            <option value="all">{t("historyFilter.allLocations")}</option>
+            <option value="jakarta">{t("historyFilter.jakartaOffice")}</option>
+            <option value="bandung">{t("historyFilter.bandungOffice")}</option>
           </select>
         </div>
 
@@ -60,7 +72,10 @@ export default function HistoryFilter() {
           <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
             {t("historyFilter.action")}
           </label>
-          <button className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#16304f] transition-colors">
+          <button
+            type="button"
+            className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
+          >
             {t("historyFilter.apply")}
           </button>
         </div>

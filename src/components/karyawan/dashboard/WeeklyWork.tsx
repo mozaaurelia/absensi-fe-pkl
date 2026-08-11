@@ -1,27 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { FiBarChart2, FiTarget } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
-import {
-  getWeeklyStats,
-  formatHours,
-  formatHoursEn,
-} from "@/lib/workHours";
+import { formatHours, formatHoursEn } from "@/lib/workHours";
+import { computeWeeklyStats } from "@/lib/attendanceStats";
+import type { AttendanceRecord } from "@/lib/services/attendance";
 
-export default function WeeklyWork() {
+interface Props {
+  attendanceList: AttendanceRecord[];
+}
+
+export default function WeeklyWork({ attendanceList }: Props) {
   const { daysShort, lang, t } = useLanguage();
-  const [stats, setStats] = useState<any>(null);
 
-  useEffect(() => {
-    setStats(getWeeklyStats());
-    const interval = setInterval(() => {
-      setStats(getWeeklyStats());
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!stats) return null;
+  const stats = useMemo(() => computeWeeklyStats(attendanceList), [attendanceList]);
 
   const { days, dailyPercentages, totalMinutes, progress, targetHours } = stats;
   const fmt = lang === "en" ? formatHoursEn : formatHours;

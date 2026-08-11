@@ -3,11 +3,31 @@
 import { useState } from "react";
 import { FiArrowLeft, FiBell, FiCalendar, FiCheck, FiChevronLeft, FiChevronRight, FiMic, FiMoreVertical, FiPaperclip, FiSearch, FiSend, FiSmile, FiSun } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
+import type { CurrentSchedule, LeaveQuotaBalance } from "@/lib/services/dashboard";
 
-export default function DashboardRightPanel() {
+interface Props {
+  currentSchedule?: CurrentSchedule | null;
+  leaveQuota?: LeaveQuotaBalance | null;
+}
+
+function toTime(value?: string | null): string {
+  if (!value) return "--:--";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) {
+    const match = value.match(/(\d{1,2}):(\d{2})/);
+    return match ? `${match[1]}:${match[2]}` : value;
+  }
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Props) {
   const { t } = useLanguage();
   const [index, setIndex] = useState(0);
   const [activeChat, setActiveChat] = useState(null);
+
+  const shiftStart = toTime(currentSchedule?.start_time);
+  const shiftEnd = toTime(currentSchedule?.end_time);
+  const daysLeft = leaveQuota?.remaining ?? 0;
 
   const slides = [
     {
@@ -15,14 +35,14 @@ export default function DashboardRightPanel() {
       iconBox: "bg-green-200 text-green-700",
       label: t("dashboardPanel.notification.shiftActive"),
       labelColor: "text-green-300",
-      value: t("dashboardPanel.notification.shiftTime"),
+      value: `${shiftStart} - ${shiftEnd}`,
     },
     {
       icon: <FiCalendar size={18} />,
       iconBox: "bg-blue-200 text-[#1E3A5F]",
       label: t("dashboardPanel.notification.leaveRemaining"),
       labelColor: "text-blue-200",
-      value: t("dashboardPanel.notification.daysLeft"),
+      value: `${daysLeft} ${t("overview.daysUnit")}`,
     },
     {
       icon: <FiBell size={18} />,

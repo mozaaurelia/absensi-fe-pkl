@@ -5,11 +5,16 @@ import DisciplineLeaderboard from "./DisciplineLeaderboard";
 import PendingApprovals from "./PendingApprovals";
 import RecentActivity from "./RecentActivity";
 import DepartmentBreakdown from "./DepartmentBreakdown";
+import type { DashboardAdminData } from "@/lib/services/dashboard";
 
-export default function DashboardContent() {
+interface Props {
+  data: DashboardAdminData | null;
+}
+
+export default function DashboardContent({ data }: Props) {
   return (
     <div>
-      <StatsGrid />
+      <StatsGrid data={data} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
         <div className="lg:col-span-2">

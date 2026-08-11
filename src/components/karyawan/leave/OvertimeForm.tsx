@@ -11,11 +11,11 @@ export default function OvertimeForm() {
   const [jamSelesai, setJamSelesai] = useState("");
   const [kategori, setKategori] = useState("");
   const [alasan, setAlasan] = useState("");
+  const [info, setInfo] = useState<string | null>(null);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: hubungkan ke API pengajuan lembur
-    console.log({ tanggalLembur, jamMulai, jamSelesai, kategori, alasan });
+    setInfo(t("overtimeForm.notAvailable"));
   };
 
   return (
@@ -32,6 +32,12 @@ export default function OvertimeForm() {
       <p className="text-xs text-gray-400 mb-6">
         {t("overtimeForm.desc")}
       </p>
+
+      {info && (
+        <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 rounded-lg px-4 py-3 mb-4">
+          {info}
+        </p>
+      )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         <div>

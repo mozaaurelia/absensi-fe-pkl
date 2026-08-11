@@ -1,72 +1,58 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { FiClock, FiBriefcase, FiCalendar, FiAlertTriangle } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
-import { getWeeklyStats, formatHours, formatHoursEn } from "@/lib/workHours";
+import { formatHours, formatHoursEn } from "@/lib/workHours";
+import { computeWeeklyStats, countLateThisMonth } from "@/lib/attendanceStats";
+import type { AttendanceRecord } from "@/lib/services/attendance";
+import type { DashboardTodayAttendance, LeaveQuotaBalance } from "@/lib/services/dashboard";
 
 const iconMap = [FiClock, FiBriefcase, FiCalendar, FiAlertTriangle];
 
-function getTodayStatusTag(totalMinutes: number, t: (key: string, params?: Record<string, string | number>) => any) {
-  if (totalMinutes === 0) return { text: t("overview.pendingTag"), color: "bg-amber-100 text-amber-700" };
-  return { text: t("overview.activeTag"), color: "bg-green-100 text-green-700" };
+interface Props {
+  todayAttendance?: DashboardTodayAttendance | null;
+  leaveQuota?: LeaveQuotaBalance | null;
+  attendanceList: AttendanceRecord[];
 }
 
-function getWeekHoursTag(progress: number, t: (key: string, params?: Record<string, string | number>) => any) {
-  if (progress >= 100) return { text: t("overview.completeTag"), color: "bg-green-100 text-green-700" };
-  if (progress >= 60) return { text: t("overview.normalTag"), color: "bg-green-100 text-green-700" };
-  return { text: t("overview.inProgressTag"), color: "bg-amber-100 text-amber-700" };
-}
-
-function getLateCount(): number {
-  let count = 0;
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + mondayOffset);
-
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    if (d > now) break;
-    const key = `checkin_${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-    const raw = localStorage.getItem(key);
-    if (!raw) continue;
-    const ct = new Date(parseInt(raw, 10));
-    if (ct.getHours() > 9 || (ct.getHours() === 9 && ct.getMinutes() > 0)) {
-      count++;
-    }
-  }
-  return count;
-}
-
-export default function Overview() {
+export default function Overview({ todayAttendance, leaveQuota, attendanceList }: Props) {
   const { lang, t } = useLanguage();
-  const [weeklyStats, setWeeklyStats] = useState(null);
-  const [lateCount, setLateCount] = useState(0);
 
-  useEffect(() => {
-    setWeeklyStats(getWeeklyStats());
-    setLateCount(getLateCount());
-    const interval = setInterval(() => {
-      setWeeklyStats(getWeeklyStats());
-      setLateCount(getLateCount());
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const weeklyStats = useMemo(() => computeWeeklyStats(attendanceList), [attendanceList]);
+  const lateCount = useMemo(() => countLateThisMonth(attendanceList, 9), [attendanceList]);
+
+  const hasCheckedIn = !!todayAttendance?.clock_in_time;
+  const isLate = todayAttendance?.status === "late";
 
   const fmt = lang === "en" ? formatHoursEn : formatHours;
-  const totalMin = weeklyStats?.totalMinutes ?? 0;
-  const progress = weeklyStats?.progress ?? 0;
+  const totalMin = weeklyStats.totalMinutes ?? 0;
+  const progress = weeklyStats.progress ?? 0;
   const weekHoursText = fmt(totalMin);
-  const statusTag = getTodayStatusTag(totalMin, t);
-  const weekTag = getWeekHoursTag(progress, t);
+
+  const leaveRemaining = leaveQuota?.remaining ?? 0;
+
+  const todayTag = hasCheckedIn
+    ? { text: isLate ? t("overview.needsReviewTag") : t("overview.activeTag"), color: isLate ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700" }
+    : { text: t("overview.pendingTag"), color: "bg-amber-100 text-amber-700" };
+
+  const todayValue = hasCheckedIn
+    ? isLate
+      ? t("overview.needsReviewTag")
+      : t("overview.activeTag")
+    : t("overview.notCheckedIn");
+
+  const weekTag =
+    progress >= 100
+      ? { text: t("overview.completeTag"), color: "bg-green-100 text-green-700" }
+      : progress >= 60
+        ? { text: t("overview.normalTag"), color: "bg-green-100 text-green-700" }
+        : { text: t("overview.inProgressTag"), color: "bg-amber-100 text-amber-700" };
 
   const stats = [
-    { label: t("overview.todayStatus"), value: t("overview.notCheckedIn"), tag: statusTag.text, tagColor: statusTag.color },
+    { label: t("overview.todayStatus"), value: todayValue, tag: todayTag.text, tagColor: todayTag.color },
     { label: t("overview.weekHours"), value: weekHoursText, tag: weekTag.text, tagColor: weekTag.color },
-    { label: t("overview.leaveRemaining"), value: `12 ${t("overview.daysUnit")}`, tag: t("overview.activeTag"), tagColor: "bg-blue-100 text-blue-700" },
+    { label: t("overview.leaveRemaining"), value: `${leaveRemaining} ${t("overview.daysUnit")}`, tag: t("overview.activeTag"), tagColor: "bg-blue-100 text-blue-700" },
     { label: t("overview.lateThisMonth"), value: `${lateCount} ${t("overview.timesUnit")}`, tag: lateCount > 0 ? t("overview.needsReviewTag") : t("overview.normalTag"), tagColor: lateCount > 0 ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700" },
   ];
 

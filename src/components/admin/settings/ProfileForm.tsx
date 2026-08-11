@@ -1,40 +1,103 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { ChangeEvent } from "react";
-import { useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AvatarUpload from "./AvatarUpload";
+import { updateMyProfile, type Profile } from "@/lib/services/profile";
 
-export default function ProfileForm() {
-  const { data: session } = useSession();
-  const user = session?.user;
+interface Props {
+  profile: Profile | null;
+  isLoading: boolean;
+  isSaving: boolean;
+  onSavingChange: (saving: boolean) => void;
+  onProfileUpdated: () => Promise<void> | void;
+  resetSignal: number;
+}
+
+export default function ProfileForm({
+  profile,
+  isLoading,
+  isSaving,
+  onSavingChange,
+  onProfileUpdated,
+  resetSignal,
+}: Props) {
   const { t } = useLanguage();
   const [form, setForm] = useState({
-    nama: "Admin E-Absensi",
-    nik: "ADM-001",
-    email: "admin@eabsensi.com",
-    jabatan: "HRD Manager",
+    nama: "",
+    nik: "",
+    email: "",
+    jabatan: "",
   });
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const profileRef = useRef<Profile | null>(null);
 
   useEffect(() => {
-    if (user) {
+    profileRef.current = profile;
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile) {
       setForm({
-        nama: user.name || "Admin E-Absensi",
-        nik: "ADM-001",
-        email: user.email || "admin@eabsensi.com",
-        jabatan: "HRD Manager",
+        nama: profile.name || "",
+        nik: profile.nik || "",
+        email: profile.email || "",
+        jabatan: profile.position || "",
       });
     }
-  }, [user]);
+  }, [profile]);
+
+  useEffect(() => {
+    const current = profileRef.current;
+    if (current) {
+      setForm({
+        nama: current.name || "",
+        nik: current.nik || "",
+        email: current.email || "",
+        jabatan: current.position || "",
+      });
+      setError(null);
+      setSuccess(false);
+      setAvatar(null);
+    }
+  }, [resetSignal]);
 
   const handleChange =
     (field: keyof typeof form) => (e: ChangeEvent<HTMLInputElement>) =>
       setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const name = form.nama.trim();
+    if (!name) {
+      setError(t("profileForm.nameRequired"));
+      return;
+    }
+
+    setError(null);
+    setSuccess(false);
+    onSavingChange(true);
+
+    try {
+      await updateMyProfile({
+        name,
+        nik: form.nik.trim() || undefined,
+        position: form.jabatan.trim() || undefined,
+      });
+      await onProfileUpdated();
+      setSuccess(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : t("profileForm.saveFailed"),
+      );
+    } finally {
+      onSavingChange(false);
+    }
   };
 
   return (
@@ -46,8 +109,23 @@ export default function ProfileForm() {
         </p>
 
         <div className="flex justify-end mb-6">
-          <AvatarUpload initials={user?.name ? user.name.slice(0, 2).toUpperCase() : "AD"} onImageChange={setAvatar} />
+          <AvatarUpload
+            initials={profile?.name ? profile.name.slice(0, 2).toUpperCase() : "AD"}
+            onImageChange={(dataUrl) => setAvatar(dataUrl)}
+          />
         </div>
+
+        {error && (
+          <p className="text-xs text-red-500 mb-4">
+            {error}
+          </p>
+        )}
+
+        {success && (
+          <p className="text-xs text-green-600 dark:text-green-400 mb-4">
+            {t("profileForm.saveSuccess")}
+          </p>
+        )}
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -58,7 +136,8 @@ export default function ProfileForm() {
               type="text"
               value={form.nama}
               onChange={handleChange("nama")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              disabled={isLoading || isSaving}
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors disabled:opacity-60"
             />
           </div>
           <div>
@@ -69,7 +148,8 @@ export default function ProfileForm() {
               type="text"
               value={form.nik}
               onChange={handleChange("nik")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              disabled={isLoading || isSaving}
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors disabled:opacity-60"
             />
           </div>
         </div>
@@ -82,8 +162,8 @@ export default function ProfileForm() {
             <input
               type="email"
               value={form.email}
-              onChange={handleChange("email")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              readOnly
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none opacity-60 cursor-not-allowed"
             />
           </div>
           <div>
@@ -94,7 +174,8 @@ export default function ProfileForm() {
               type="text"
               value={form.jabatan}
               onChange={handleChange("jabatan")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors"
+              disabled={isLoading || isSaving}
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors disabled:opacity-60"
             />
           </div>
         </div>

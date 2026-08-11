@@ -1,34 +1,41 @@
 import StatCard from "./StatCard";
+import type { DashboardAdminData } from "@/lib/services/dashboard";
 
-export default function StatsGrid() {
+interface Props {
+  data: DashboardAdminData | null;
+}
+
+export default function StatsGrid({ data }: Props) {
+  const breakdown = data?.today_attendance_breakdown;
+
   const stats = [
     {
       label: "Karyawan Aktif",
-      value: "148",
-      delta: "+3 bulan ini",
-      trend: "up" as const,
+      value: String(data?.total_active_employees ?? "-"),
+      delta: "Total aktif",
+      trend: "neutral" as const,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <EmployeeIcon />,
     },
     {
       label: "Hadir Hari Ini",
-      value: "132 (89%)",
-      delta: "+4% dari kemarin",
-      trend: "up" as const,
+      value: String(breakdown?.present ?? "-"),
+      delta: breakdown?.total != null ? `dari ${breakdown.total} karyawan` : "Hari ini",
+      trend: "neutral" as const,
       iconBg: "bg-green-50 text-green-600",
       icon: <CheckIcon />,
     },
     {
       label: "Terlambat Hari Ini",
-      value: "9",
-      delta: "-2 dari kemarin",
-      trend: "down" as const,
+      value: String(breakdown?.late ?? "-"),
+      delta: "Hari ini",
+      trend: "neutral" as const,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <ClockIcon />,
     },
     {
       label: "Pengajuan Pending",
-      value: "14",
+      value: String(data?.pending_leave_count ?? "-"),
       delta: "Perlu ditinjau",
       trend: "neutral" as const,
       iconBg: "bg-blue-50 text-[#1E3A5F]",

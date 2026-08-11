@@ -46,12 +46,20 @@ export async function apiFetch<T>(
     },
   });
 
-  const json: ApiResponse<T> = await response.json();
+  const text = await response.text();
 
-  if (!response.ok || !json.success) {
+  let json: ApiResponse<T> | null = null;
+  try {
+    json = JSON.parse(text) as ApiResponse<T>;
+  } catch {
+    json = null;
+  }
+
+  if (!response.ok || !json || !json.success) {
     throw new ApiError(
-      json.error?.code || "UNKNOWN_ERROR",
-      json.error?.message || "Terjadi kesalahan pada server",
+      json?.error?.code || "UNKNOWN_ERROR",
+      json?.error?.message ||
+        `Server returned HTTP ${response.status}. Check that the endpoint exists and the backend is running.`,
     );
   }
 

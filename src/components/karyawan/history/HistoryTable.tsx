@@ -1,65 +1,48 @@
 "use client";
 
+import { useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import type { AttendanceRecord } from "@/lib/services/attendance";
+import { isLateRecord } from "@/lib/attendanceStats";
 
-const attendanceLogs = [
-  {
-    day: "Jumat",
-    date: "13/03/2026",
-    status: "Tepat Waktu",
-    statusStyle: "bg-[#dff5e7] text-[#2b8a5b] border border-[#9ad7b0]",
-    inTime: "--:--",
-    outTime: "--:--",
-    total: "0h Om LIVE",
-    totalStyle: "bg-[#f3e8ff] text-[#9b4ad7]",
-    lateMinutes: "0m",
-    punctuality: "0%",
-    photoTone: "bg-[#eaf3ff]",
-    isLate: false,
-  },
-  {
-    day: "Kamis",
-    date: "12/03/2026",
-    status: "Tepat Waktu",
-    statusStyle: "bg-[#dff5e7] text-[#2b8a5b] border border-[#9ad7b0]",
-    inTime: "--:--",
-    outTime: "--:--",
-    total: "0h Om LIVE",
-    totalStyle: "bg-[#f3e8ff] text-[#9b4ad7]",
-    lateMinutes: "0m",
-    punctuality: "0%",
-    photoTone: "bg-[#eaf3ff]",
-    isLate: false,
-  },
-  {
-    day: "Rabu",
-    date: "11/03/2026",
-    status: "Terlambat",
-    statusStyle: "bg-[#fde8e8] text-[#d64545] border border-[#f5b5b5]",
-    inTime: "08:57",
-    outTime: "--:--",
-    total: "0h 0m LIVE",
-    totalStyle: "bg-[#f3e8ff] text-[#9b4ad7]",
-    lateMinutes: "30m",
-    punctuality: "100%",
-    photoTone: "bg-[#f9e4d5]",
-    isLate: true,
-  },
-  {
-    day: "Selasa",
-    date: "10/03/2026",
-    status: "Tepat Waktu",
-    statusStyle: "bg-[#dff5e7] text-[#2b8a5b] border border-[#9ad7b0]",
-    inTime: "08:40",
-    outTime: "17:55",
-    total: "8h 55m",
-    totalStyle: "bg-[#f3e8ff] text-[#9b4ad7]",
-    lateMinutes: "0m",
-    punctuality: "95%",
-    photoTone: "bg-[#eaf3ff]",
-    isLate: false,
-  },
-];
+interface Props {
+  records: AttendanceRecord[];
+}
+
+function pad(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+function toHHMM(value?: string | null): string {
+  if (!value) return "-";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "-";
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function formatDuration(record: AttendanceRecord): string {
+  if (!record.clock_in_time) return "-";
+  const start = new Date(record.clock_in_time).getTime();
+  const end = record.clock_out_time
+    ? new Date(record.clock_out_time).getTime()
+    : Date.now();
+  const diffMs = end - start;
+  if (diffMs < 0) return "-";
+  const minutes = Math.min(Math.round(diffMs / 60000), 8 * 60);
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
+
+function lateMinutes(record: AttendanceRecord): number {
+  if (!record.clock_in_time) return 0;
+  if (record.late_minutes != null) return record.late_minutes;
+  if (!isLateRecord(record, 9)) return 0;
+  const d = new Date(record.clock_in_time);
+  return Math.max(0, (d.getHours() - 9) * 60 + d.getMinutes());
+}
 
 function ClockIcon({ className = "" }: { className?: string }) {
   return (
@@ -99,9 +82,37 @@ function CheckIcon({ className = "" }: { className?: string }) {
   );
 }
 
-type AttendanceLog = (typeof attendanceLogs)[number];
+interface AttendanceCardData {
+  id: string;
+  day: string;
+  date: string;
+  inTime: string;
+  outTime: string;
+  total: string;
+  lateText: string;
+  isLate: boolean;
+  punctuality: string;
+}
 
-function AttendanceCard({ item }: { item: AttendanceLog }) {
+function buildCard(record: AttendanceRecord, daysFull: string[], months: string[]): AttendanceCardData {
+  const d = record.clock_in_time ? new Date(record.clock_in_time) : null;
+  const late = isLateRecord(record, 9);
+  return {
+    id: record.id,
+    day: d ? daysFull[d.getDay()] : "-",
+    date: d
+      ? `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`
+      : "-",
+    inTime: toHHMM(record.clock_in_time),
+    outTime: toHHMM(record.clock_out_time),
+    total: formatDuration(record),
+    lateText: late ? `${lateMinutes(record)}m` : "0m",
+    isLate: late,
+    punctuality: "-",
+  };
+}
+
+function AttendanceCard({ item }: { item: AttendanceCardData }) {
   return (
     <div
       className={`rounded-2xl border p-4 shadow-sm ${
@@ -113,7 +124,9 @@ function AttendanceCard({ item }: { item: AttendanceLog }) {
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className={`h-10 w-10 rounded-lg border border-white/80 shadow-sm ${item.photoTone} flex items-center justify-center text-sm font-semibold text-slate-700 dark:text-slate-200 shrink-0`}
+            className={`h-10 w-10 rounded-lg border border-white/80 shadow-sm ${
+              item.isLate ? "bg-[#f9e4d5]" : "bg-[#eaf3ff]"
+            } flex items-center justify-center text-sm font-semibold text-slate-700 dark:text-slate-200 shrink-0`}
           >
             {item.isLate ? "◔" : "✓"}
           </div>
@@ -126,8 +139,14 @@ function AttendanceCard({ item }: { item: AttendanceLog }) {
           </div>
         </div>
 
-        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold shrink-0 ${item.statusStyle}`}>
-          {item.status}
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold shrink-0 ${
+            item.isLate
+              ? "bg-[#fde8e8] text-[#d64545] border border-[#f5b5b5]"
+              : "bg-[#dff5e7] text-[#2b8a5b] border border-[#9ad7b0]"
+          }`}
+        >
+          {item.isLate ? "Terlambat" : "Tepat Waktu"}
         </span>
       </div>
 
@@ -142,7 +161,7 @@ function AttendanceCard({ item }: { item: AttendanceLog }) {
           <div className="text-base font-bold text-slate-800 dark:text-gray-100">{item.outTime}</div>
         </div>
 
-        <div className={`rounded-xl px-2 py-2 text-center shadow-sm ${item.totalStyle}`}>
+        <div className="rounded-xl bg-[#f3e8ff] text-[#9b4ad7] px-2 py-2 text-center shadow-sm">
           <div className="text-[11px] opacity-80 mb-0.5">Total</div>
           <div className="text-sm font-bold leading-tight">{item.total}</div>
         </div>
@@ -151,25 +170,26 @@ function AttendanceCard({ item }: { item: AttendanceLog }) {
       <div className="flex items-center justify-between border-t border-slate-200/60 dark:border-gray-600 pt-2.5">
         <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-gray-400">
           <span className="inline-flex items-center gap-1">
-            <ClockIcon className={item.lateMinutes !== "0m" ? "text-[#d86b1d]" : ""} />
-            {item.lateMinutes}
+            <ClockIcon className={item.isLate ? "text-[#d86b1d]" : ""} />
+            {item.lateText}
           </span>
           <span className="inline-flex items-center gap-1">
             <CheckIcon className="text-[#3d6ace]" />
             {item.punctuality}
           </span>
         </div>
-
-        <button className="text-sm font-semibold text-[#3d6ace] hover:text-[#244ca9] transition-colors">
-          Detail <span aria-hidden="true">›</span>
-        </button>
       </div>
     </div>
   );
 }
 
-export default function HistoryTable() {
-  const { t } = useLanguage();
+export default function HistoryTable({ records }: Props) {
+  const { daysFull, months, t } = useLanguage();
+
+  const items = useMemo(
+    () => records.map((r) => buildCard(r, daysFull, months)),
+    [records, daysFull, months],
+  );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden card-hover mt-6">
@@ -180,11 +200,15 @@ export default function HistoryTable() {
         <p className="text-xs text-blue-100/80 mt-0.5">{t("historyTable.desc")}</p>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-2 p-6">
-        {attendanceLogs.map((item) => (
-          <AttendanceCard key={`${item.day}-${item.date}`} item={item} />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <p className="p-8 text-center text-sm text-gray-400">{t("common.emptyData")}</p>
+      ) : (
+        <div className="grid gap-5 xl:grid-cols-2 p-6">
+          {items.map((item) => (
+            <AttendanceCard key={item.id} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
