@@ -310,7 +310,7 @@ export const id = {
   profileSummary: {
     title: "Ringkasan Saya",
     subtitle: "Informasi personal dan status terbaru.",
-    nik: "NIK",
+    email: "Surel",
     division: "Divisi",
     supervisor: "Atasan",
     lastSubmission: "Pengajuan Terakhir",

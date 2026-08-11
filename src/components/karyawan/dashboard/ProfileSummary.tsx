@@ -1,18 +1,30 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getMyProfile, type EmployeeProfile } from "@/lib/services/employee";
 import { FiHash, FiGrid, FiUser, FiCheckCircle } from "react-icons/fi";
 
 export default function ProfileSummary() {
-  const { data: session } = useSession();
-  const user = session?.user;
   const { t } = useLanguage();
+  const [profile, setProfile] = useState<EmployeeProfile | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setProfile(await getMyProfile());
+    } catch {
+      setProfile(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const rows = [
-    { label: "NIK", value: "EMP-00124", icon: FiHash, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-500/15" },
-    { label: t("profileSummary.division"), value: "Operasional", icon: FiGrid, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-500/15" },
-    { label: t("profileSummary.supervisor"), value: "Surya Prasetya", icon: FiUser, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/15" },
+    { label: t("profileSummary.email"), value: profile?.email ?? "—", icon: FiHash, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-500/15" },
+    { label: t("profileSummary.division"), value: profile?.department_name ?? "—", icon: FiGrid, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-500/15" },
+    { label: t("profileSummary.supervisor"), value: profile?.supervisor_name ?? "—", icon: FiUser, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/15" },
   ];
 
   return (

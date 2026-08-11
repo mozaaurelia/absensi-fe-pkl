@@ -310,7 +310,7 @@ dashAttendance: {
   profileSummary: {
     title: "My Summary",
     subtitle: "Personal information and latest status.",
-    nik: "NIK",
+    email: "Email",
     division: "Division",
     supervisor: "Supervisor",
     lastSubmission: "Last Submission",
