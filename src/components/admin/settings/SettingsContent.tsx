@@ -6,6 +6,8 @@ import ProfileForm from "./ProfileForm";
 import AccountSummary from "./AccountSummary";
 import SecurityForm from "./SecurityForm";
 import { getMe, type Profile } from "@/lib/services/profile";
+import AdminToolsPanel from "./AdminToolsPanel";
+import FaceRegisterPanel from "./FaceRegisterPanel";
 
 interface Props {
   isSaving: boolean;
@@ -87,6 +89,10 @@ export default function SettingsContent({
       </div>
 
       <SecurityForm />
+
+      <AdminToolsPanel />
+
+      <FaceRegisterPanel />
     </div>
   );
 }

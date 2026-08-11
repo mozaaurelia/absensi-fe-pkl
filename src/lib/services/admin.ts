@@ -226,3 +226,120 @@ export function updateCalendarEvent(
 export function deleteCalendarEvent(id: string): Promise<{ id: string }> {
   return apiFetch<{ id: string }>(`/calendar-events/${id}`, { method: "DELETE" });
 }
+
+export interface WorkingDayPattern {
+  id: string;
+  name: string;
+  active_days: number[];
+}
+
+export function getWorkingDayPatterns(): Promise<WorkingDayPattern[]> {
+  return apiFetch<WorkingDayPattern[]>("/working-day-patterns");
+}
+export function createWorkingDayPattern(body: {
+  name: string;
+  active_days: number[];
+}): Promise<WorkingDayPattern> {
+  return apiFetch<WorkingDayPattern>("/working-day-patterns", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+export function updateWorkingDayPattern(
+  id: string,
+  body: { name: string; active_days: number[] }
+): Promise<WorkingDayPattern> {
+  return apiFetch<WorkingDayPattern>(`/working-day-patterns/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export interface DepartmentPolicy {
+  id: string;
+  department_id: string;
+  allow_overtime: boolean;
+  allow_wfh: boolean;
+  min_attendance_percentage: number;
+  effective_date: string;
+}
+
+export function getDepartmentPolicy(departmentId: string): Promise<DepartmentPolicy | null> {
+  return apiFetch<DepartmentPolicy | null>(`/departments/${departmentId}/policy`);
+}
+export function updateDepartmentPolicy(
+  departmentId: string,
+  body: {
+    allow_overtime: boolean;
+    allow_wfh: boolean;
+    min_attendance_percentage: number;
+    effective_date: string;
+  }
+): Promise<DepartmentPolicy> {
+  return apiFetch<DepartmentPolicy>(`/departments/${departmentId}/policy`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export interface EmployeeSchedule {
+  id: string;
+  employee_id: string;
+  shift_id: string;
+  working_day_pattern_id?: string | null;
+  location_id: string;
+  start_date: string;
+  end_date?: string | null;
+  shift_name?: string | null;
+  start_time?: string | null;
+  end_time?: string | null;
+  location_name?: string | null;
+}
+
+export function assignEmployeeSchedule(body: {
+  employee_id: string;
+  shift_id: string;
+  working_day_pattern_id?: string | null;
+  location_id: string;
+  start_date: string;
+}): Promise<EmployeeSchedule> {
+  return apiFetch<EmployeeSchedule>("/schedules", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+export function endEmployeeSchedule(id: string, endDate: string): Promise<EmployeeSchedule> {
+  return apiFetch<EmployeeSchedule>(`/schedules/${id}/end`, {
+    method: "PUT",
+    body: JSON.stringify({ end_date: endDate }),
+  });
+}
+
+export function adjustLeaveQuota(
+  employeeId: string,
+  body: { amount: number; reason: string }
+): Promise<{ id: string }> {
+  return apiFetch<{ id: string }>(`/leave/quota/${employeeId}/adjust`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function triggerCronJob(job: "auto-alpha" | "monthly-quota" | "monthly-recap"): Promise<{
+  message: string;
+}> {
+  return apiFetch<{ message: string }>(`/admin/cron/${job}/trigger`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export function registerFaceReference(body: {
+  employeeId: string;
+  image: string;
+}): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/face-recognition/register", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
