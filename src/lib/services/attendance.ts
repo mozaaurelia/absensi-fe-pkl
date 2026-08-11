@@ -20,10 +20,10 @@ export async function getTeamAttendance(): Promise<AttendanceRecord[]> {
   return apiFetch<AttendanceRecord[]>("/attendance/team");
 }
 
-export async function clockIn(lat: number, lng: number): Promise<AttendanceRecord> {
+export async function clockIn(lat: number, lng: number, faceImage?: string): Promise<AttendanceRecord> {
   return apiFetch<AttendanceRecord>("/attendance/clock-in", {
     method: "POST",
-    body: JSON.stringify({ lat, lng, face_image: "" }),
+    body: JSON.stringify({ lat, lng, face_image: faceImage ?? "" }),
   });
 }
 
