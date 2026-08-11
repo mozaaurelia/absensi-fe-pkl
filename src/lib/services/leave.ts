@@ -19,6 +19,7 @@ export interface LeaveRequest {
   total_days?: number | null;
   duration_days?: number | null;
   approval_note?: string | null;
+  attachment_url?: string | null;
 }
 
 export interface LeaveQuota {
@@ -38,6 +39,7 @@ export async function createLeaveRequest(body: {
   start_date: string;
   end_date: string;
   reason: string;
+  attachment: string;
 }): Promise<LeaveRequest> {
   return apiFetch<LeaveRequest>("/leave/requests", {
     method: "POST",

@@ -1,45 +1,40 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
-import LeaveSummary from "./LeaveSummary";
-import OvertimeForm from "./OvertimeForm";
-import LeaveHistory from "./LeaveHistory";
+import PermitForm from "./PermitForm";
+import PermitHistory from "./PermitHistory";
 import {
+  getLeaveTypes,
   getMyLeaveRequests,
-  getLeaveQuota,
+  type LeaveType,
   type LeaveRequest,
-  type LeaveQuota,
 } from "@/lib/services/leave";
 
-export default function LeaveContent() {
-  const { data: session } = useSession();
+export default function PermitContent() {
   const { t } = useLanguage();
 
+  const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
   const [requests, setRequests] = useState<LeaveRequest[]>([]);
-  const [quota, setQuota] = useState<LeaveQuota | LeaveQuota[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
-    const employeeId = session?.user?.id;
-    if (!employeeId) return;
     setIsLoading(true);
     setError(null);
     try {
-      const [reqs, quotaData] = await Promise.all([
+      const [types, reqs] = await Promise.all([
+        getLeaveTypes(),
         getMyLeaveRequests(),
-        getLeaveQuota(employeeId),
       ]);
+      setLeaveTypes(Array.isArray(types) ? types : []);
       setRequests(Array.isArray(reqs) ? reqs : []);
-      setQuota(quotaData);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user?.id, t]);
+  }, [t]);
 
   useEffect(() => {
     loadData();
@@ -48,11 +43,6 @@ export default function LeaveContent() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-24 bg-white dark:bg-gray-800 rounded-2xl animate-pulse" />
-          ))}
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 h-96 bg-white dark:bg-gray-800 rounded-2xl animate-pulse" />
           <div className="h-96 bg-white dark:bg-gray-800 rounded-2xl animate-pulse" />
@@ -79,17 +69,12 @@ export default function LeaveContent() {
   }
 
   return (
-    <div>
-      <LeaveSummary quota={quota} requests={requests} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <OvertimeForm />
-        </div>
-
-        <div>
-          <LeaveHistory requests={requests} />
-        </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-2">
+        <PermitForm leaveTypes={leaveTypes} onSubmitted={loadData} />
+      </div>
+      <div>
+        <PermitHistory requests={requests} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { FiCheckCircle, FiClock, FiMapPin } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import type { AttendanceRecord } from "@/lib/services/attendance";
 import { isLateRecord } from "@/lib/attendanceStats";
@@ -44,43 +45,7 @@ function lateMinutes(record: AttendanceRecord): number {
   return Math.max(0, (d.getHours() - 9) * 60 + d.getMinutes());
 }
 
-function ClockIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 3" />
-    </svg>
-  );
-}
-
-function CheckIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <path d="M22 4L12 14.01l-3-3" />
-    </svg>
-  );
-}
+type AttendanceStatus = "present" | "late" | "empty";
 
 interface AttendanceCardData {
   id: string;
@@ -89,14 +54,19 @@ interface AttendanceCardData {
   inTime: string;
   outTime: string;
   total: string;
+  status: AttendanceStatus;
   lateText: string;
-  isLate: boolean;
-  punctuality: string;
+  location: string;
 }
 
-function buildCard(record: AttendanceRecord, daysFull: string[], months: string[]): AttendanceCardData {
+function buildCard(record: AttendanceRecord, daysFull: string[]): AttendanceCardData {
   const d = record.clock_in_time ? new Date(record.clock_in_time) : null;
   const late = isLateRecord(record, 9);
+  const status: AttendanceStatus = late
+    ? "late"
+    : record.clock_in_time
+      ? "present"
+      : "empty";
   return {
     id: record.id,
     day: d ? daysFull[d.getDay()] : "-",
@@ -106,77 +76,83 @@ function buildCard(record: AttendanceRecord, daysFull: string[], months: string[
     inTime: toHHMM(record.clock_in_time),
     outTime: toHHMM(record.clock_out_time),
     total: formatDuration(record),
+    status,
     lateText: late ? `${lateMinutes(record)}m` : "0m",
-    isLate: late,
-    punctuality: "-",
+    location: record.location_name || "-",
   };
 }
 
 function AttendanceCard({ item }: { item: AttendanceCardData }) {
-  return (
-    <div
-      className={`rounded-2xl border p-4 shadow-sm ${
-        item.isLate
-          ? "border-[#f0caa0] bg-[#f8f5f2] dark:border-orange-800 dark:bg-gray-800"
-          : "border-[#c4dcf5] bg-[#f0f6fd] dark:border-gray-700 dark:bg-gray-800"
-      }`}
-    >
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div
-            className={`h-10 w-10 rounded-lg border border-white/80 shadow-sm ${
-              item.isLate ? "bg-[#f9e4d5]" : "bg-[#eaf3ff]"
-            } flex items-center justify-center text-sm font-semibold text-slate-700 dark:text-slate-200 shrink-0`}
-          >
-            {item.isLate ? "◔" : "✓"}
-          </div>
+  const { t } = useLanguage();
 
+  const isLate = item.status === "late";
+  const isPresent = item.status === "present";
+
+  const badgeClass = isLate
+    ? "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30"
+    : isPresent
+      ? "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/30"
+      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300";
+
+  const badgeText = isLate
+    ? t("historyTable.late")
+    : isPresent
+      ? t("historyTable.onTime")
+      : t("historyTable.notAvailable");
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 card-hover">
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className={`h-11 w-11 rounded-xl flex items-center justify-center text-lg shrink-0 ${
+              isLate
+                ? "bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400"
+                : "bg-[#1E3A5F]/10 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300"
+            }`}
+          >
+            {isLate ? "◔" : "✓"}
+          </div>
           <div className="min-w-0">
-            <div className="text-base font-bold leading-none text-slate-800 dark:text-gray-100 truncate">
+            <p className="text-base font-bold text-gray-900 dark:text-gray-100 truncate">
               {item.day}
-            </div>
-            <div className="mt-1 text-xs text-slate-500 dark:text-gray-400">{item.date}</div>
+            </p>
+            <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">{item.date}</p>
           </div>
         </div>
 
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold shrink-0 ${
-            item.isLate
-              ? "bg-[#fde8e8] text-[#d64545] border border-[#f5b5b5]"
-              : "bg-[#dff5e7] text-[#2b8a5b] border border-[#9ad7b0]"
-          }`}
-        >
-          {item.isLate ? "Terlambat" : "Tepat Waktu"}
+        <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap shrink-0 ${badgeClass}`}>
+          {badgeText}
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5 mb-3">
-        <div className="rounded-xl bg-white/80 dark:bg-gray-700/60 border border-slate-200/80 dark:border-gray-600 px-2 py-2 text-center shadow-sm">
-          <div className="text-[11px] text-slate-500 dark:text-gray-400 mb-0.5">In</div>
-          <div className="text-base font-bold text-slate-800 dark:text-gray-100">{item.inTime}</div>
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-3 text-center">
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-1">{t("historyTable.checkIn")}</p>
+          <p className="text-lg font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.inTime}</p>
         </div>
-
-        <div className="rounded-xl bg-white/80 dark:bg-gray-700/60 border border-slate-200/80 dark:border-gray-600 px-2 py-2 text-center shadow-sm">
-          <div className="text-[11px] text-slate-500 dark:text-gray-400 mb-0.5">Out</div>
-          <div className="text-base font-bold text-slate-800 dark:text-gray-100">{item.outTime}</div>
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-3 text-center">
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-1">{t("historyTable.checkOut")}</p>
+          <p className="text-lg font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.outTime}</p>
         </div>
-
-        <div className="rounded-xl bg-[#f3e8ff] text-[#9b4ad7] px-2 py-2 text-center shadow-sm">
-          <div className="text-[11px] opacity-80 mb-0.5">Total</div>
-          <div className="text-sm font-bold leading-tight">{item.total}</div>
+        <div className="bg-[#1E3A5F] dark:bg-blue-600/90 rounded-xl px-2 py-3 text-center">
+          <p className="text-[11px] text-blue-100/80 mb-1">{t("historyTable.totalHours")}</p>
+          <p className="text-lg font-bold text-white tabular-nums">{item.total}</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-slate-200/60 dark:border-gray-600 pt-2.5">
-        <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-gray-400">
-          <span className="inline-flex items-center gap-1">
-            <ClockIcon className={item.isLate ? "text-[#d86b1d]" : ""} />
-            {item.lateText}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <CheckIcon className="text-[#3d6ace]" />
-            {item.punctuality}
-          </span>
+      <div className="flex items-center justify-between gap-3 border-t border-gray-100 dark:border-gray-700 pt-3">
+        <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 min-w-0">
+          <FiMapPin size={12} className="shrink-0 text-[#1E3A5F] dark:text-blue-300" />
+          <span className="truncate">{item.location}</span>
+        </div>
+        <div
+          className={`flex items-center gap-1.5 text-xs font-semibold shrink-0 ${
+            isLate ? "text-amber-600 dark:text-amber-400" : "text-green-600 dark:text-green-400"
+          }`}
+        >
+          {isLate ? <FiClock size={12} /> : <FiCheckCircle size={12} />}
+          {isLate ? item.lateText : t("historyTable.onTime")}
         </div>
       </div>
     </div>
@@ -184,26 +160,31 @@ function AttendanceCard({ item }: { item: AttendanceCardData }) {
 }
 
 export default function HistoryTable({ records }: Props) {
-  const { daysFull, months, t } = useLanguage();
+  const { daysFull, t } = useLanguage();
 
   const items = useMemo(
-    () => records.map((r) => buildCard(r, daysFull, months)),
-    [records, daysFull, months],
+    () => records.map((r) => buildCard(r, daysFull)),
+    [records, daysFull],
   );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden card-hover mt-6">
-      <div className="bg-[#1E3A5F] text-white px-5 py-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold">{t("historyTable.title")}</h3>
+      <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] text-white px-6 py-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-bold">{t("historyTable.title")}</h3>
+            <p className="text-xs text-blue-100/80 mt-1">{t("historyTable.desc")}</p>
+          </div>
+          <span className="hidden sm:inline-flex items-center bg-white/15 text-white text-xs font-semibold px-3 py-1.5 rounded-full shrink-0">
+            {items.length} {t("historyTable.present")}
+          </span>
         </div>
-        <p className="text-xs text-blue-100/80 mt-0.5">{t("historyTable.desc")}</p>
       </div>
 
       {items.length === 0 ? (
         <p className="p-8 text-center text-sm text-gray-400">{t("common.emptyData")}</p>
       ) : (
-        <div className="grid gap-5 xl:grid-cols-2 p-6">
+        <div className="grid gap-5 md:grid-cols-2 p-6">
           {items.map((item) => (
             <AttendanceCard key={item.id} item={item} />
           ))}
