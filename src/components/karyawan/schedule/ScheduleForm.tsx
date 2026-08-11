@@ -42,9 +42,7 @@ export default function ScheduleForm() {
       setKategori("");
     } catch (err) {
       setSuccess(false);
-      setInfo(
-        err instanceof ApiError ? err.message : t("scheduleForm.failed")
-      );
+      setInfo(err instanceof ApiError ? err.message : t("scheduleForm.failed"));
     } finally {
       setSubmitting(false);
     }
@@ -53,15 +51,15 @@ export default function ScheduleForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl border border-white/10 p-6 shadow-lg"
+      className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 h-full shadow-sm"
     >
       <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-white">{t("scheduleForm.title")}</h3>
-        <span className="bg-white/15 text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("scheduleForm.title")}</h3>
+        <span className="bg-[#1E3A5F]/10 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
           {t("scheduleHeader.badge")}
         </span>
       </div>
-      <p className="text-xs text-blue-200/80 mb-6">
+      <p className="text-xs text-gray-400 mb-6">
         {t("scheduleForm.desc")}
       </p>
 
@@ -78,7 +76,7 @@ export default function ScheduleForm() {
       )}
 
       <div className="mb-5">
-        <label className="block text-sm font-semibold text-blue-100 mb-2">
+        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
           {t("scheduleForm.titleLabel")}
         </label>
         <input
@@ -86,43 +84,43 @@ export default function ScheduleForm() {
           placeholder={t("scheduleForm.titlePlaceholder")}
           value={judul}
           onChange={(e) => setJudul(e.target.value)}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#2a4f7a] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+          className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div>
-          <label className="block text-sm font-semibold text-blue-100 mb-2">
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             {t("scheduleForm.dateLabel")}
           </label>
           <input
             type="date"
             value={tanggal}
             onChange={(e) => setTanggal(e.target.value)}
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#2a4f7a] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-blue-100 mb-2">
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             {t("scheduleForm.timeLabel")}
           </label>
           <input
             type="time"
             value={jam}
             onChange={(e) => setJam(e.target.value)}
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#2a4f7a] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
         </div>
       </div>
 
       <div className="mb-6">
-        <label className="block text-sm font-semibold text-blue-100 mb-2">
+        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
           {t("scheduleForm.categoryLabel")}
         </label>
         <select
           value={kategori}
           onChange={(e) => setKategori(e.target.value)}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#2a4f7a] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+          className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
         >
           <option value="">{t("scheduleForm.categoryPlaceholder")}</option>
           <option value="rapat">{t("scheduleForm.meeting")}</option>

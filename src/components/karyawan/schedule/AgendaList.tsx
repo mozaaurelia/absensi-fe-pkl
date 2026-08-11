@@ -32,14 +32,14 @@ export default function AgendaList() {
   }, [load]);
 
   return (
-    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl border border-white/10 p-6 shadow-lg">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 h-full shadow-sm">
       <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-white">{t("agendaList.title")}</h3>
-        <span className="bg-white/15 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("agendaList.title")}</h3>
+        <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">
           {agendas.length} {t("agendaList.dataLabel")}
         </span>
       </div>
-      <p className="text-xs text-blue-200/80 mb-5">
+      <p className="text-xs text-gray-400 mb-5">
         {t("agendaList.desc")}
       </p>
 

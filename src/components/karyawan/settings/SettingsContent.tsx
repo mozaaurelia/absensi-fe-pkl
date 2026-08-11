@@ -10,12 +10,14 @@ interface Props {
   isSaving: boolean;
   onSavingChange: (saving: boolean) => void;
   resetSignal: number;
+  onAvatarChange: (dataUrl: string) => void;
 }
 
 export default function SettingsContent({
   isSaving,
   onSavingChange,
   resetSignal,
+  onAvatarChange,
 }: Props) {
   const [profile, setProfile] = useState<EmployeeProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +48,7 @@ export default function SettingsContent({
             onSavingChange={onSavingChange}
             onProfileUpdated={loadProfile}
             resetSignal={resetSignal}
+            onAvatarChange={onAvatarChange}
           />
         </div>
         <div>

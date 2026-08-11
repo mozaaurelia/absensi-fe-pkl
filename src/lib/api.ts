@@ -1,10 +1,8 @@
 import { getSession } from "next-auth/react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL belum dikonfigurasi");
-}
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
+  "http://localhost:4000/api/v1";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -32,19 +30,28 @@ export async function apiFetch<T>(
   const session = await getSession();
 
   const accessToken = session?.user?.accessToken;
+  const safeEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken
-        ? {
-            Authorization: `Bearer ${accessToken}`,
-          }
-        : {}),
-      ...options.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${safeEndpoint}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : {}),
+        ...options.headers,
+      },
+    });
+  } catch (error) {
+    throw new ApiError(
+      "NETWORK_ERROR",
+      `Tidak dapat terhubung ke backend. Pastikan server backend berjalan di ${API_URL}.`,
+    );
+  }
 
   const text = await response.text();
 

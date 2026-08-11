@@ -98,6 +98,7 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
         <select
           value={jenisIzin}
           onChange={(e) => setJenisIzin(e.target.value)}
+          required
           className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
         >
           <option value="">{t("leaveForm.typePlaceholder")}</option>
@@ -118,6 +119,7 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
             type="date"
             value={tanggalMulai}
             onChange={(e) => setTanggalMulai(e.target.value)}
+            required
             className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
         </div>
@@ -129,6 +131,7 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
             type="date"
             value={tanggalSelesai}
             onChange={(e) => setTanggalSelesai(e.target.value)}
+            required
             className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
         </div>
@@ -143,6 +146,7 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
           placeholder={t("leaveForm.reasonPlaceholder")}
           value={alasan}
           onChange={(e) => setAlasan(e.target.value)}
+          required
           className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors resize-none"
         />
       </div>

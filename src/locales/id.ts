@@ -537,7 +537,9 @@ export const id = {
     present: "Hadir",
     late: "Terlambat",
     sick: "Sakit",
+    alpha: "Alpha",
     notAvailable: "Tidak tersedia",
+    empty: "Belum ada data presensi",
     jakartaOffice: "Kantor Pusat Jakarta",
     bandungOffice: "Kantor Cabang Bandung",
   },
@@ -680,7 +682,11 @@ export const id = {
     startTime: "Jam Mulai",
     endTime: "Jam Selesai",
     estDuration: "Estimasi Durasi",
-    durationValue: "2j 30m",
+    hourUnit: "j",
+    minuteUnit: "m",
+    maxHint: "Maks. {max}",
+    durationWarning:
+      "Durasi lembur melebihi batas maksimal 2 jam. Jam selesai maksimal {max}.",
     category: "Kategori Lembur",
     categoryPlaceholder: "Penyelesaian Project / Operasional",
     project: "Penyelesaian Project",
@@ -798,6 +804,7 @@ export const id = {
 
   settingsHeader: {
     title: "Pengaturan Akun & Profil",
+    heading: "Pengaturan Akun",
     desc: "Kelola informasi profil, keamanan akun, dan preferensi notifikasi.",
   },
 

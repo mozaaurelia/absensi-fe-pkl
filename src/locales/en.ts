@@ -537,7 +537,9 @@ dashAttendance: {
     present: "Present",
     late: "Late",
     sick: "Sick",
+    alpha: "Absent",
     notAvailable: "Not available",
+    empty: "No attendance records yet",
     jakartaOffice: "Jakarta Head Office",
     bandungOffice: "Bandung Branch Office",
   },
@@ -680,7 +682,11 @@ dashAttendance: {
     startTime: "Start Time",
     endTime: "End Time",
     estDuration: "Estimated Duration",
-    durationValue: "2h 30m",
+    hourUnit: "h",
+    minuteUnit: "m",
+    maxHint: "Max {max}",
+    durationWarning:
+      "Overtime duration exceeds the 2-hour limit. Maximum end time is {max}.",
     category: "Overtime Category",
     categoryPlaceholder: "Project Completion / Operational",
     project: "Project Completion",
@@ -798,6 +804,7 @@ dashAttendance: {
 
   settingsHeader: {
     title: "Account & Profile Settings",
+    heading: "Account Settings",
     desc: "Manage profile information, account security, and notification preferences.",
   },
 

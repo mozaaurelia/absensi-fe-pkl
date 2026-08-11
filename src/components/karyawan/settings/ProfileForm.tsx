@@ -17,6 +17,7 @@ interface Props {
   onSavingChange: (saving: boolean) => void;
   onProfileUpdated: () => Promise<void> | void;
   resetSignal: number;
+  onAvatarChange: (dataUrl: string) => void;
 }
 
 export default function ProfileForm({
@@ -26,11 +27,11 @@ export default function ProfileForm({
   onSavingChange,
   onProfileUpdated,
   resetSignal,
+  onAvatarChange,
 }: Props) {
   const { t } = useLanguage();
   const { update } = useSession();
   const [form, setForm] = useState({ nama: "", email: "" });
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -52,7 +53,6 @@ export default function ProfileForm({
       setForm({ nama: current.name || "", email: current.email || "" });
       setError(null);
       setSuccess(false);
-      setAvatar(null);
     }
   }, [resetSignal]);
 
@@ -98,7 +98,7 @@ export default function ProfileForm({
         <div className="flex justify-end mb-6">
           <AvatarUpload
             initials={profile?.name ? profile.name.slice(0, 2).toUpperCase() : "AP"}
-            onImageChange={(dataUrl) => setAvatar(dataUrl)}
+            onImageChange={onAvatarChange}
           />
         </div>
 

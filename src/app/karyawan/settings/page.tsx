@@ -7,10 +7,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import Sidebar from "@/components/karyawan/dashboard/SidebarWidget";
 import SettingsHeader from "@/components/karyawan/settings/SettingsHeader";
 import SettingsContent from "@/components/karyawan/settings/SettingsContent";
+import SettingsPageHeader from "@/components/karyawan/settings/SettingsPageHeader";
 
 export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -31,6 +33,10 @@ export default function SettingsPage() {
     setIsSaving(saving);
   }, []);
 
+  const handleAvatarChange = useCallback((dataUrl: string) => {
+    setAvatar(dataUrl);
+  }, []);
+
   if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;
   }
@@ -48,11 +54,13 @@ export default function SettingsPage() {
       <Sidebar />
 
       <main className="flex-1 p-8">
+        <SettingsPageHeader avatar={avatar} />
         <SettingsHeader isSaving={isSaving} onCancel={handleCancel} />
         <SettingsContent
           isSaving={isSaving}
           onSavingChange={handleSavingChange}
           resetSignal={resetSignal}
+          onAvatarChange={handleAvatarChange}
         />
       </main>
     </div>

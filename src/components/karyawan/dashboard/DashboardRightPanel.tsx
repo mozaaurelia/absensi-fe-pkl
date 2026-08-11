@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FiArrowLeft, FiBell, FiCalendar, FiCheck, FiChevronLeft, FiChevronRight, FiMic, FiMoreVertical, FiPaperclip, FiSearch, FiSend, FiSmile, FiSun } from "react-icons/fi";
+import { FiArrowLeft, FiBell, FiCalendar, FiCheck, FiChevronLeft, FiChevronRight, FiMoreVertical, FiSearch, FiSend, FiSun } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import type { CurrentSchedule, LeaveQuotaBalance } from "@/lib/services/dashboard";
 
@@ -233,20 +233,11 @@ export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Pro
           </div>
 
           <div className="flex items-center gap-2 px-3 py-2.5 border-t border-gray-100 dark:border-gray-700">
-            <button className="text-gray-400 hover:text-[#1E3A5F] transition p-1">
-              <FiSmile size={20} />
-            </button>
-            <button className="text-gray-400 hover:text-[#1E3A5F] transition p-1">
-              <FiPaperclip size={20} />
-            </button>
             <input
               type="text"
               placeholder={t("dashboardPanel.chatRoom.typeMessage")}
               className="flex-1 min-w-0 rounded-full bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 transition"
             />
-            <button className="text-gray-400 hover:text-[#1E3A5F] transition p-1">
-              <FiMic size={20} />
-            </button>
             <button className="w-9 h-9 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center hover:bg-[#162f50] transition shrink-0">
               <FiSend size={16} />
             </button>
