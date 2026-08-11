@@ -562,6 +562,7 @@ export const id = {
   leaveHeader: {
     title: "Pengajuan Izin, Cuti & Lembur Karyawan",
     desc: "Ajukan izin, cuti, lembur, dan pantau status persetujuan secara transparan.",
+    heading: "Izin & Cuti",
     history: "Riwayat Pengajuan",
     newRequest: "Buat Pengajuan Baru",
   },

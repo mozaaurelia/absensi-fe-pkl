@@ -21,7 +21,7 @@ export default function ScheduleHeader() {
   }, []);
 
   const name = user?.name?.split(" ")[0] || t("dashboardHeader.user");
-  const fullTitle = `${name}, ${t("scheduleHeader.heading")}`;
+  const fullTitle = `${name}, ${t("scheduleHeader.heading")}!`;
 
   const typedTitle = useTypewriter(fullTitle, 80);
 

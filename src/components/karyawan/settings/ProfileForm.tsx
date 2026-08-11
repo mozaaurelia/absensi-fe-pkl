@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import AvatarUpload from "./AvatarUpload";
 import {
@@ -27,6 +28,7 @@ export default function ProfileForm({
   resetSignal,
 }: Props) {
   const { t } = useLanguage();
+  const { update } = useSession();
   const [form, setForm] = useState({ nama: "", email: "" });
   const [avatar, setAvatar] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -73,6 +75,7 @@ export default function ProfileForm({
 
     try {
       await updateMyProfile(name);
+      await update({ name });
       await onProfileUpdated();
       setSuccess(true);
     } catch (err) {

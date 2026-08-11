@@ -562,6 +562,7 @@ dashAttendance: {
   leaveHeader: {
     title: "Employee Permit, Leave & Overtime Requests",
     desc: "Submit permits, leave, overtime, and monitor approval status transparently.",
+    heading: "Leave & Overtime",
     history: "Request History",
     newRequest: "New Request",
   },
