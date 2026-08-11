@@ -152,6 +152,40 @@ export function resignEmployee(id: string): Promise<{ id: string }> {
   return apiFetch<{ id: string }>(`/employees/${id}`, { method: "DELETE" });
 }
 
+export interface AttendanceReportRow {
+  id: string;
+  employee_id?: string | null;
+  employee_name?: string | null;
+  department_id?: string | null;
+  clock_in_time?: string | null;
+  clock_out_time?: string | null;
+  clock_in_lat?: string | number | null;
+  clock_in_lng?: string | number | null;
+  clock_in_distance_m?: string | number | null;
+  clock_out_distance_m?: string | number | null;
+  face_match_status?: string | null;
+  status?: string | null;
+}
+
+export interface AttendanceReportParams {
+  department_id?: string;
+  status?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export function getAttendanceReport(
+  params: AttendanceReportParams = {}
+): Promise<AttendanceReportRow[]> {
+  const query = new URLSearchParams();
+  if (params.department_id) query.set("department_id", params.department_id);
+  if (params.status) query.set("status", params.status);
+  if (params.start_date) query.set("start_date", params.start_date);
+  if (params.end_date) query.set("end_date", params.end_date);
+  const qs = query.toString();
+  return apiFetch<AttendanceReportRow[]>(`/attendance${qs ? `?${qs}` : ""}`);
+}
+
 export interface Holiday {
   id: string;
   date: string;

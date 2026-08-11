@@ -900,5 +900,24 @@ dashAttendance: {
     resignConfirm: "Resign this employee? Employee data will be deactivated.",
   },
 
+  adminReport: {
+    title: "Attendance Report",
+    department: "Department",
+    status: "Status",
+    startDate: "Start Date",
+    endDate: "End Date",
+    all: "All",
+    apply: "Apply Filter",
+    reset: "Reset",
+    empty: "No attendance data found.",
+    employee: "Employee",
+    date: "Date",
+    checkIn: "Check In",
+    checkOut: "Check Out",
+    present: "Present",
+    late: "Late",
+    absent: "Absent",
+  },
+
   accessDenied: "Access denied. Redirecting to login page...",
 };

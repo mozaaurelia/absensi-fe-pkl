@@ -900,5 +900,24 @@ export const id = {
     resignConfirm: "Resign karyawan ini? Data karyawan akan dinonaktifkan.",
   },
 
+  adminReport: {
+    title: "Laporan Absensi",
+    department: "Departemen",
+    status: "Status",
+    startDate: "Tanggal Mulai",
+    endDate: "Tanggal Selesai",
+    all: "Semua",
+    apply: "Terapkan Filter",
+    reset: "Reset",
+    empty: "Tidak ada data absensi.",
+    employee: "Karyawan",
+    date: "Tanggal",
+    checkIn: "Jam Masuk",
+    checkOut: "Jam Pulang",
+    present: "Hadir",
+    late: "Terlambat",
+    absent: "Alpha",
+  },
+
   accessDenied: "Akses ditolak. Mengalihkan ke halaman login...",
 };
