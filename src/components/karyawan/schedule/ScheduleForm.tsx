@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { ApiError } from "@/lib/api";
+import { createPersonalAgenda } from "@/lib/services/agenda";
 
 export default function ScheduleForm() {
   const { t } = useLanguage();
@@ -10,11 +12,42 @@ export default function ScheduleForm() {
   const [tanggal, setTanggal] = useState("");
   const [jam, setJam] = useState("");
   const [kategori, setKategori] = useState("");
+  const [info, setInfo] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: hubungkan ke API penambahan agenda
-    console.log({ judul, tanggal, jam, kategori });
+    if (!tanggal || !judul.trim()) {
+      setInfo(t("scheduleForm.required"));
+      setSuccess(false);
+      return;
+    }
+
+    setSubmitting(true);
+    setInfo(null);
+    try {
+      await createPersonalAgenda({
+        agenda_date: tanggal,
+        title: judul.trim(),
+        description: kategori || undefined,
+        start_time: jam || undefined,
+        end_time: undefined,
+      });
+      setSuccess(true);
+      setInfo(t("scheduleForm.success"));
+      setJudul("");
+      setTanggal("");
+      setJam("");
+      setKategori("");
+    } catch (err) {
+      setSuccess(false);
+      setInfo(
+        err instanceof ApiError ? err.message : t("scheduleForm.failed")
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -31,6 +64,18 @@ export default function ScheduleForm() {
       <p className="text-xs text-blue-200/80 mb-6">
         {t("scheduleForm.desc")}
       </p>
+
+      {info && (
+        <p
+          className={`text-xs rounded-lg px-4 py-3 mb-4 ${
+            success
+              ? "text-green-200 bg-green-500/15"
+              : "text-amber-200 bg-amber-500/15"
+          }`}
+        >
+          {info}
+        </p>
+      )}
 
       <div className="mb-5">
         <label className="block text-sm font-semibold text-blue-100 mb-2">
@@ -88,9 +133,10 @@ export default function ScheduleForm() {
 
       <button
         type="submit"
-        className="w-full bg-white text-[#1E3A5F] font-semibold text-sm py-3 rounded-lg hover:bg-blue-50 transition-colors"
+        disabled={submitting}
+        className="w-full bg-white text-[#1E3A5F] font-semibold text-sm py-3 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-60"
       >
-        {t("scheduleForm.submit")}
+        {submitting ? t("scheduleForm.saving") : t("scheduleForm.submit")}
       </button>
     </form>
   );

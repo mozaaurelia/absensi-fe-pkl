@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageToggle from "@/components/common/LanguageToggle";
+import AttendanceShortcut from "@/components/common/AttendanceShortcut";
 
 export default function AtasanHeader() {
   const { data: session } = useSession();
@@ -22,6 +23,7 @@ export default function AtasanHeader() {
       </div>
 
       <div className="flex items-center gap-3">
+        <AttendanceShortcut dark={false} />
         <LanguageToggle dark={false} />
         <button
           onClick={() => signOut({ callbackUrl: "/auth/login" })}

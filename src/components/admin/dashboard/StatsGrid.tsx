@@ -41,6 +41,22 @@ export default function StatsGrid({ data }: Props) {
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <InboxIcon />,
     },
+    {
+      label: "Belum Absen",
+      value: String(breakdown?.not_checked_in ?? "-"),
+      delta: breakdown?.total != null ? `dari ${breakdown.total} karyawan` : "Hari ini",
+      trend: "neutral" as const,
+      iconBg: "bg-amber-50 text-amber-600",
+      icon: <UserIcon />,
+    },
+    {
+      label: "Lembur Pending",
+      value: String(data?.pending_overtime_count ?? "-"),
+      delta: "Perlu ditinjau",
+      trend: "neutral" as const,
+      iconBg: "bg-purple-50 text-purple-600",
+      icon: <ClockIcon />,
+    },
   ];
 
   return (
@@ -80,6 +96,15 @@ function InboxIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
       <path d="M3 12h4l2 3h6l2-3h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="2" />
+      <path d="M5 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }

@@ -33,3 +33,57 @@ export async function clockOut(lat: number, lng: number): Promise<AttendanceReco
     body: JSON.stringify({ lat, lng, face_image: "" }),
   });
 }
+
+export interface OvertimeRequest {
+  id: string;
+  overtime_date: string;
+  start_time: string;
+  end_time: string;
+  total_hours: number;
+  category?: string | null;
+  reason?: string | null;
+  status: string;
+  created_at?: string;
+}
+
+export async function createOvertimeRequest(payload: {
+  overtime_date: string;
+  start_time: string;
+  end_time: string;
+  category: string;
+  reason: string;
+}): Promise<OvertimeRequest> {
+  return apiFetch<OvertimeRequest>("/overtime", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getMyOvertimeRequests(): Promise<OvertimeRequest[]> {
+  return apiFetch<OvertimeRequest[]>("/overtime/me");
+}
+
+export interface OvertimeTeamRequest extends OvertimeRequest {
+  employee_name?: string | null;
+}
+
+export async function getTeamOvertimeRequests(): Promise<OvertimeTeamRequest[]> {
+  return apiFetch<OvertimeTeamRequest[]>("/overtime/team");
+}
+
+export async function approveOvertimeRequest(id: string): Promise<OvertimeTeamRequest> {
+  return apiFetch<OvertimeTeamRequest>(`/overtime/${id}/approve`, {
+    method: "PATCH",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function rejectOvertimeRequest(
+  id: string,
+  note: string
+): Promise<OvertimeTeamRequest> {
+  return apiFetch<OvertimeTeamRequest>(`/overtime/${id}/reject`, {
+    method: "PATCH",
+    body: JSON.stringify({ approval_note: note }),
+  });
+}

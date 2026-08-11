@@ -41,12 +41,14 @@ export interface AdminAttendanceBreakdown {
   late?: number;
   absent?: number;
   total?: number;
+  not_checked_in?: number;
 }
 
 export interface DashboardAdminData {
   total_active_employees?: number;
   today_attendance_breakdown?: AdminAttendanceBreakdown | null;
   pending_leave_count?: number;
+  pending_overtime_count?: number;
 }
 
 export async function getAdminDashboard(): Promise<DashboardAdminData> {

@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSession } from "next-auth/react";
 import LanguageToggle from "@/components/common/LanguageToggle";
 import Notification from "@/components/karyawan/notification/Notification";
+import AttendanceShortcut from "@/components/common/AttendanceShortcut";
 
 export default function AdminHeader() {
   const { data: session } = useSession();
@@ -81,6 +82,7 @@ export default function AdminHeader() {
         <div className="flex items-center gap-4">
           <LanguageToggle />
           <Notification />
+          <AttendanceShortcut />
           <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
             {user?.image ? (
               <img

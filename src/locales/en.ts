@@ -279,8 +279,15 @@ dashAttendance: {
   },
 
   agenda: {
-    title: "Agenda & Leave",
+    title: "Personal Agenda",
     subtitle: "Work schedule and latest leave information.",
+    titlePlaceholder: "e.g. Meeting with vendor",
+    add: "Add",
+    adding: "Adding...",
+    addRequired: "Pick a date and add a title first.",
+    addFailed: "Failed to add agenda. Please try again.",
+    empty: "No upcoming agenda. Add one above.",
+    remove: "Delete agenda",
     shiftActive: "Active Shift",
     leaveRemaining: "Leave Remaining",
     daysLeft: "12 days",
@@ -295,6 +302,7 @@ dashAttendance: {
     subtitle: "View your current month at a glance.",
     todayLabel: "Today",
     note: "Tap any date to plan your leave or attendance.",
+    upcoming: "Upcoming Holidays & Events",
   },
 
   profileSummary: {
@@ -438,6 +446,11 @@ dashAttendance: {
     title: "Ready for a Selfie?",
     desc: "Position your face inside the circle. Make sure the lighting is bright enough.",
     takePhoto: "Take Photo Now",
+  },
+
+  attendanceShortcut: {
+    checkIn: "Clock In",
+    checkOut: "Clock Out",
   },
 
   verificationStepper: {
@@ -602,6 +615,7 @@ dashAttendance: {
     selesai: "Done",
     berjalan: "Ongoing",
     upcoming: "Upcoming",
+    unclassified: "General",
   },
 
   scheduleForm: {
@@ -617,6 +631,12 @@ dashAttendance: {
     task: "Task",
     personal: "Personal",
     submit: "Save Agenda",
+    saving: "Saving...",
+    required: "Pick a date and add a title first.",
+    success: "Agenda saved successfully.",
+    failed: "Failed to save agenda. Please try again.",
+    activeShift: "Active Shift",
+    noSchedule: "No active work schedule assigned yet.",
   },
 
   leaveSummary: {
@@ -660,8 +680,10 @@ dashAttendance: {
     reasonPlaceholder:
       "e.g. finishing the end-of-month operational report and validating attendance data...",
     submit: "Submit Overtime Request",
-    notAvailable:
-      "Overtime feature is not available yet. Overtime requests will be supported soon.",
+    submitting: "Submitting...",
+    required: "Please fill in the date, start time, and end time.",
+    success: "Overtime request submitted successfully. Waiting for supervisor approval.",
+    failed: "Failed to submit overtime request. Please try again.",
   },
 
   statusBadge: {
@@ -813,6 +835,68 @@ dashAttendance: {
     emptyAttendance: "No team attendance data yet.",
     emptyRequests: "No requests awaiting approval.",
     approveNote: "Note:",
+    teamOvertime: "Overtime Requests",
+    teamOvertimeDesc: "Overtime requests awaiting your decision.",
+    emptyOvertime: "No overtime requests awaiting approval.",
+  },
+
+  adminMaster: {
+    add: "Add",
+    edit: "Edit",
+    delete: "Delete",
+    deleteConfirm: "Are you sure you want to delete this data?",
+    deleteFailed: "Failed to delete data. Please try again.",
+    save: "Save",
+    placeholder: "Select an option",
+    required: "Please fill in all required fields.",
+    failed: "Failed to save data. Please try again.",
+    empty: "No data available yet.",
+    actions: "Actions",
+  },
+
+  adminCrud: {
+    placeholder: "Enter value",
+    name: "Name",
+    email: "Email",
+    role: "Role",
+    department: "Department",
+    position: "Position",
+    status: "Status",
+    password: "Password",
+    supervisor: "Supervisor",
+    joinDate: "Join Date",
+    latitude: "Latitude",
+    longitude: "Longitude",
+    radiusMeters: "Radius (m)",
+    startTime: "Start Time",
+    endTime: "End Time",
+    toleranceMinutes: "Tolerance (minutes)",
+    date: "Date",
+    eventTitle: "Event Title",
+    eventDescription: "Description",
+    employeesTitle: "Employee Management",
+    employees: "Employees",
+    employeesDesc: "Create, edit, update, and manage employee data.",
+    departmentsTitle: "Department Management",
+    departments: "Departments",
+    departmentsDesc: "Manage company department data.",
+    positionsTitle: "Position Management",
+    positions: "Positions",
+    positionsDesc: "Manage company position data.",
+    locationsTitle: "Office Location Management",
+    locations: "Office Locations",
+    locationsDesc: "Manage office locations, coordinates, and attendance radius.",
+    shiftsTitle: "Work Schedule Management",
+    shifts: "Work Shifts",
+    shiftsDesc: "Manage employee work shift schedules.",
+    calendarTitle: "Calendar & Holidays",
+    holidays: "Holidays",
+    holidaysDesc: "Manage public holidays and company holidays.",
+    events: "Calendar Events",
+    eventsDesc: "Manage company calendar events and announcements.",
+    overtimeTitle: "Overtime Approval",
+    resign: "Resign",
+    resignConfirm: "Resign this employee? Employee data will be deactivated.",
   },
 
   accessDenied: "Access denied. Redirecting to login page...",

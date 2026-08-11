@@ -279,8 +279,15 @@ export const id = {
   },
 
   agenda: {
-    title: "Agenda & Cuti",
+    title: "Agenda Pribadi",
     subtitle: "Jadwal kerja dan informasi izin terbaru.",
+    titlePlaceholder: "Contoh: Rapat dengan vendor",
+    add: "Tambah",
+    adding: "Menambahkan...",
+    addRequired: "Pilih tanggal dan isi judul terlebih dahulu.",
+    addFailed: "Gagal menambahkan agenda. Silakan coba lagi.",
+    empty: "Belum ada agenda mendatang. Tambahkan di atas.",
+    remove: "Hapus agenda",
     shiftActive: "Shift Aktif",
     leaveRemaining: "Sisa Cuti",
     daysLeft: "12 hari",
@@ -295,6 +302,7 @@ export const id = {
     subtitle: "Lihat bulan berjalan secara ringkas.",
     todayLabel: "Hari Ini",
     note: "Ketuk tanggal untuk merencanakan cuti atau absensi.",
+    upcoming: "Libur & Agenda Mendatang",
   },
 
   profileSummary: {
@@ -438,6 +446,11 @@ export const id = {
     title: "Siap Selfie?",
     desc: "Posisikan wajah Anda di dalam lingkaran. Pastikan cahaya cukup terang.",
     takePhoto: "Ambil Foto Sekarang",
+  },
+
+  attendanceShortcut: {
+    checkIn: "Absen Masuk",
+    checkOut: "Absen Pulang",
   },
 
   verificationStepper: {
@@ -602,6 +615,7 @@ export const id = {
     selesai: "Selesai",
     berjalan: "Berjalan",
     upcoming: "Akan Datang",
+    unclassified: "Umum",
   },
 
   scheduleForm: {
@@ -617,6 +631,12 @@ export const id = {
     task: "Tugas",
     personal: "Personal",
     submit: "Simpan Agenda",
+    saving: "Menyimpan...",
+    required: "Pilih tanggal dan isi judul terlebih dahulu.",
+    success: "Agenda berhasil disimpan.",
+    failed: "Gagal menyimpan agenda. Silakan coba lagi.",
+    activeShift: "Shift Aktif",
+    noSchedule: "Belum ada jadwal kerja aktif yang ditetapkan.",
   },
 
   leaveSummary: {
@@ -660,8 +680,10 @@ export const id = {
     reasonPlaceholder:
       "Contoh: menyelesaikan laporan operasional akhir bulan dan validasi data presensi...",
     submit: "Kirim Pengajuan Lembur",
-    notAvailable:
-      "Fitur lembur belum tersedia. Pengajuan lembur akan segera didukung di backend.",
+    submitting: "Mengirim...",
+    required: "Isi tanggal, jam mulai, dan jam selesai terlebih dahulu.",
+    success: "Pengajuan lembur berhasil dikirim. Menunggu persetujuan atasan.",
+    failed: "Gagal mengirim pengajuan lembur. Silakan coba lagi.",
   },
 
   statusBadge: {
@@ -813,6 +835,68 @@ export const id = {
     emptyAttendance: "Belum ada data kehadiran tim.",
     emptyRequests: "Tidak ada pengajuan yang menunggu persetujuan.",
     approveNote: "Catatan:",
+    teamOvertime: "Pengajuan Lembur",
+    teamOvertimeDesc: "Pengajuan lembur yang menunggu keputusan Anda.",
+    emptyOvertime: "Tidak ada pengajuan lembur yang menunggu persetujuan.",
+  },
+
+  adminMaster: {
+    add: "Tambah",
+    edit: "Ubah",
+    delete: "Hapus",
+    deleteConfirm: "Yakin ingin menghapus data ini?",
+    deleteFailed: "Gagal menghapus data. Silakan coba lagi.",
+    save: "Simpan",
+    placeholder: "Pilih salah satu",
+    required: "Harap isi semua kolom yang wajib diisi.",
+    failed: "Gagal menyimpan data. Silakan coba lagi.",
+    empty: "Belum ada data.",
+    actions: "Aksi",
+  },
+
+  adminCrud: {
+    placeholder: "Masukkan nilai",
+    name: "Nama",
+    email: "Email",
+    role: "Role",
+    department: "Departemen",
+    position: "Jabatan",
+    status: "Status",
+    password: "Kata Sandi",
+    supervisor: "Atasan",
+    joinDate: "Tanggal Bergabung",
+    latitude: "Latitude",
+    longitude: "Longitude",
+    radiusMeters: "Radius (m)",
+    startTime: "Jam Mulai",
+    endTime: "Jam Selesai",
+    toleranceMinutes: "Toleransi (menit)",
+    date: "Tanggal",
+    eventTitle: "Judul Acara",
+    eventDescription: "Deskripsi",
+    employeesTitle: "Manajemen Karyawan",
+    employees: "Karyawan",
+    employeesDesc: "Buat, ubah, dan kelola data karyawan.",
+    departmentsTitle: "Manajemen Departemen",
+    departments: "Departemen",
+    departmentsDesc: "Kelola data departemen perusahaan.",
+    positionsTitle: "Manajemen Jabatan",
+    positions: "Jabatan",
+    positionsDesc: "Kelola data jabatan perusahaan.",
+    locationsTitle: "Manajemen Lokasi Kantor",
+    locations: "Lokasi Kantor",
+    locationsDesc: "Kelola lokasi kantor, koordinat, dan radius absensi.",
+    shiftsTitle: "Manajemen Jadwal Kerja",
+    shifts: "Shift Kerja",
+    shiftsDesc: "Kelola jadwal shift kerja karyawan.",
+    calendarTitle: "Kalender & Hari Libur",
+    holidays: "Hari Libur",
+    holidaysDesc: "Kelola hari libur nasional dan perusahaan.",
+    events: "Acara Kalender",
+    eventsDesc: "Kelola acara kalender dan pengumuman perusahaan.",
+    overtimeTitle: "Persetujuan Lembur",
+    resign: "Resign",
+    resignConfirm: "Resign karyawan ini? Data karyawan akan dinonaktifkan.",
   },
 
   accessDenied: "Akses ditolak. Mengalihkan ke halaman login...",

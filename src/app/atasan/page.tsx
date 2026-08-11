@@ -8,9 +8,11 @@ import AtasanHeader from "@/components/atasan/AtasanHeader";
 import AtasanSummary from "@/components/atasan/AtasanSummary";
 import TeamAttendance from "@/components/atasan/TeamAttendance";
 import LeaveApproval from "@/components/atasan/LeaveApproval";
+import OvertimeApproval from "@/components/atasan/OvertimeApproval";
 import { getSupervisorDashboard, type DashboardSupervisorData } from "@/lib/services/dashboard";
 import { getTeamAttendance, type AttendanceRecord } from "@/lib/services/attendance";
 import { getTeamLeaveRequests, type LeaveRequest } from "@/lib/services/leave";
+import { getTeamOvertimeRequests, type OvertimeTeamRequest } from "@/lib/services/attendance";
 
 export default function DashboardAtasanPage() {
   const { data: session, status } = useSession();
@@ -21,6 +23,7 @@ export default function DashboardAtasanPage() {
   const [summary, setSummary] = useState<DashboardSupervisorData | null>(null);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [requests, setRequests] = useState<LeaveRequest[]>([]);
+  const [overtime, setOvertime] = useState<OvertimeTeamRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,14 +31,16 @@ export default function DashboardAtasanPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const [dash, team, leave] = await Promise.all([
+      const [dash, team, leave, ot] = await Promise.all([
         getSupervisorDashboard(),
         getTeamAttendance(),
         getTeamLeaveRequests(),
+        getTeamOvertimeRequests(),
       ]);
       setSummary(dash);
       setAttendance(Array.isArray(team) ? team : []);
       setRequests(Array.isArray(leave) ? leave : []);
+      setOvertime(Array.isArray(ot) ? ot : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
     } finally {
@@ -115,6 +120,10 @@ export default function DashboardAtasanPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <TeamAttendance records={attendance} />
         <LeaveApproval requests={requests} onProcessed={loadData} />
+      </div>
+
+      <div className="mt-6">
+        <OvertimeApproval requests={overtime} onProcessed={loadData} />
       </div>
     </div>
   );

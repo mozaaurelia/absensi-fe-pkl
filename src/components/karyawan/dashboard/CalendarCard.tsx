@@ -1,8 +1,22 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiCalendar } from "react-icons/fi";
+import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+
+type Holiday = {
+  id: string;
+  date: string;
+  name: string;
+};
+
+type CalendarEvent = {
+  id: string;
+  event_date: string;
+  title: string;
+  description?: string | null;
+};
 
 function getCalendarDays(year: number, month: number): (number | null)[] {
   const firstDay = new Date(year, month, 1).getDay();
@@ -12,6 +26,10 @@ function getCalendarDays(year: number, month: number): (number | null)[] {
   return [...blanks, ...days];
 }
 
+function dateKey(value: string): string {
+  return String(value).slice(0, 10);
+}
+
 export default function CalendarCard() {
   const { months, daysShort, t } = useLanguage();
   const today = new Date();
@@ -19,10 +37,51 @@ export default function CalendarCard() {
   const month = today.getMonth();
   const currentDate = today.getDate();
 
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  useEffect(() => {
+    apiFetch<Holiday[]>("/holidays")
+      .then(setHolidays)
+      .catch(() => {});
+    apiFetch<CalendarEvent[]>("/calendar-events")
+      .then(setEvents)
+      .catch(() => {});
+  }, []);
+
   const calendarDays = useMemo(
     () => getCalendarDays(year, month),
     [year, month]
   );
+
+  const markers = useMemo(() => {
+    const map: Record<string, "holiday" | "event"> = {};
+    holidays.forEach((h) => {
+      map[dateKey(h.date)] = "holiday";
+    });
+    events.forEach((e) => {
+      map[dateKey(e.event_date)] = "event";
+    });
+    return map;
+  }, [holidays, events]);
+
+  const upcoming = useMemo(() => {
+    const todayKey = dateKey(new Date().toISOString());
+    const merged = [
+      ...holidays.map((h) => ({ date: dateKey(h.date), name: h.name, kind: "holiday" as const })),
+      ...events.map((e) => ({ date: dateKey(e.event_date), name: e.title, kind: "event" as const })),
+    ]
+      .filter((i) => i.date >= todayKey)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 3);
+    return merged.map((i) => ({
+      ...i,
+      label: new Date(i.date + "T00:00:00").toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      }),
+    }));
+  }, [holidays, events]);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 card-hover opacity-0 animate-fade-slide-up">
@@ -60,10 +119,12 @@ export default function CalendarCard() {
       <div className="grid grid-cols-7 gap-2 text-center text-sm text-gray-700 dark:text-gray-200">
         {calendarDays.map((day, index) => {
           const isToday = day === currentDate;
+          const key = day ? `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}` : "";
+          const marker = day ? markers[key] : undefined;
           return (
             <div
               key={`${day ?? "blank"}-${index}`}
-              className={`h-10 rounded-2xl flex items-center justify-center ${
+              className={`h-10 rounded-2xl flex flex-col items-center justify-center relative ${
                 isToday
                   ? "bg-[#1E3A5F] text-white shadow-sm"
                   : day
@@ -72,10 +133,39 @@ export default function CalendarCard() {
               }`}
             >
               {day || ""}
+              {marker && (
+                <span
+                  className={`absolute bottom-1 w-1 h-1 rounded-full ${
+                    marker === "holiday" ? "bg-red-500" : "bg-blue-500"
+                  }`}
+                />
+              )}
             </div>
           );
         })}
       </div>
+
+      {upcoming.length > 0 && (
+        <div className="mt-5 space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            {t("calendarCard.upcoming")}
+          </p>
+          {upcoming.map((item, idx) => (
+            <div
+              key={`${item.date}-${idx}`}
+              className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300"
+            >
+              <span
+                className={`w-2 h-2 rounded-full shrink-0 ${
+                  item.kind === "holiday" ? "bg-red-500" : "bg-blue-500"
+                }`}
+              />
+              <span className="font-medium shrink-0">{item.label}</span>
+              <span className="truncate">{item.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="mt-5 text-xs text-gray-500 dark:text-gray-400">
         {t("calendarCard.note")}

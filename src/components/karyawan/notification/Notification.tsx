@@ -7,25 +7,44 @@ import {
   FiClock,
   FiCheckSquare,
   FiAlertCircle,
+  FiCheckCircle,
+  FiXCircle,
 } from "react-icons/fi";
+import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
 
-const ICONS = {
+const ICONS: Record<string, any> = {
   reminder: FiClock,
   late: FiAlertCircle,
   todo: FiCheckSquare,
+  leave_approved: FiCheckCircle,
+  leave_rejected: FiXCircle,
 };
 
-const ICON_STYLES = {
+const ICON_STYLES: Record<string, string> = {
   reminder: "bg-cyan-50 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400",
   late: "bg-amber-50 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400",
   todo: "bg-blue-50 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
+  leave_approved:
+    "bg-green-50 text-green-600 dark:bg-green-500/20 dark:text-green-400",
+  leave_rejected: "bg-red-50 text-red-600 dark:bg-red-500/20 dark:text-red-400",
 };
+
+const DEFAULT_ICON_STYLES =
+  "bg-slate-100 text-slate-500 dark:bg-gray-600/50 dark:text-gray-300";
 
 type NotificationItem = {
   id: string;
   type: "reminder" | "late" | "todo";
   count?: number;
+};
+
+type ServerNotification = {
+  id: string;
+  type: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
 };
 
 function getDateKey(d: Date) {
@@ -108,13 +127,18 @@ interface Props {
 }
 
 export default function Notification({ dark = true, className = "" }: Props) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [open, setOpen] = useState(false);
   const [readIds, setReadIds] = useState<string[]>([]);
+  const [serverItems, setServerItems] = useState<ServerNotification[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
-  const rawItems = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const items = rawItems.map((item) => ({
+  const localItems = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
+  const items = localItems.map((item) => ({
     ...item,
     unread: !readIds.includes(item.id),
   }));
@@ -127,11 +151,55 @@ export default function Notification({ dark = true, className = "" }: Props) {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  const unreadCount = items.filter((i) => i.unread).length;
+  useEffect(() => {
+    if (!open) return;
+    apiFetch<ServerNotification[]>("/notifications/me").then(setServerItems).catch(() => {
+      // keep local-only notifications if the API is unavailable
+    });
+  }, [open]);
+
+  const unreadServer = serverItems.filter((i) => !i.is_read).length;
+  const unreadLocal = items.filter((i) => i.unread).length;
+  const unreadCount = unreadServer + unreadLocal;
 
   const markAllRead = () => {
     setReadIds([...new Set([...readIds, ...items.map((i) => i.id)])]);
+    setServerItems((prev) => prev.map((i) => ({ ...i, is_read: true })));
+    try {
+      apiFetch(`/notifications/read-all`, { method: "PATCH" }).catch(() => {});
+    } catch {
+      // ignore
+    }
   };
+
+  const markServerRead = (id: string) => {
+    setServerItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, is_read: true } : i))
+    );
+    try {
+      apiFetch(`/notifications/${id}/read`, { method: "PATCH" }).catch(() => {});
+    } catch {
+      // ignore
+    }
+  };
+
+  const formatServerTime = (iso: string) => {
+    const ts = new Date(iso);
+    const now = new Date();
+    const sameDay = ts.toDateString() === now.toDateString();
+    if (!sameDay) {
+      return ts.toLocaleDateString(locale, { day: "numeric", month: "short" });
+    }
+    return ts.toLocaleTimeString(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const serverIcon = (type: string) => ICONS[type] ?? FiBell;
+  const serverIconStyle = (type: string) => ICON_STYLES[type] ?? DEFAULT_ICON_STYLES;
+
+  const isEmpty = serverItems.length === 0 && items.length === 0;
 
   return (
     <div ref={ref} className={`relative shrink-0 ${className}`}>
@@ -176,11 +244,45 @@ export default function Notification({ dark = true, className = "" }: Props) {
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-gray-50 dark:divide-gray-700">
-            {items.length === 0 && (
+            {isEmpty && (
               <div className="px-4 py-10 text-center">
                 <p className="text-xs text-gray-400">{t("notification.empty")}</p>
               </div>
             )}
+
+            {serverItems.map((item) => {
+              const Icon = serverIcon(item.type);
+              return (
+                <div
+                  key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => !item.is_read && markServerRead(item.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !item.is_read) markServerRead(item.id);
+                  }}
+                  className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
+                >
+                  <div className="relative shrink-0">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center ${serverIconStyle(item.type)}`}>
+                      <Icon size={16} />
+                    </div>
+                    {!item.is_read && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                      {item.message}
+                    </p>
+                    <p className="text-[11px] text-gray-300 dark:text-gray-500 mt-1">
+                      {formatServerTime(item.created_at)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
             {items.map((item) => {
               const Icon = ICONS[item.type];
               return (
