@@ -102,6 +102,14 @@ export const en = {
     roleAdmin: "Admin HRM",
   },
 
+  loginSuperadmin: {
+    title: "Super Admin Login",
+    badge: "Super Admin",
+    desc: "Use your super admin account to manage all companies.",
+    back: "Back to Employee Login",
+    link: "Super Admin Login",
+  },
+
   role: {
     eyebrow: "One System for All Roles",
     title: "Designed for the needs of employees, supervisors, and HRD",
@@ -206,6 +214,7 @@ export const en = {
     leave: "Permit & Leave",
     schedule: "Agenda",
     settings: "Settings",
+    companies: "Companies",
     close: "Close sidebar",
     open: "Open sidebar",
     logout: "Logout",
@@ -860,6 +869,7 @@ dashAttendance: {
   adminCrud: {
     placeholder: "Enter value",
     name: "Name",
+    nameRequired: "Name cannot be empty",
     email: "Email",
     role: "Role",
     department: "Department",
@@ -908,6 +918,15 @@ dashAttendance: {
     overtimeTitle: "Overtime Approval",
     resign: "Resign",
     resignConfirm: "Resign this employee? Employee data will be deactivated.",
+  },
+
+  adminCompanies: {
+    title: "Company Management",
+    desc: "Create, edit, and manage all companies in the system.",
+    name: "Company Name",
+    status: "Status",
+    active: "Active",
+    inactive: "Inactive",
   },
 
   patternDay: {

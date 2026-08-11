@@ -343,3 +343,42 @@ export function registerFaceReference(body: {
     body: JSON.stringify(body),
   });
 }
+
+export interface Company {
+  id: string;
+  name: string;
+  status: "active" | "inactive";
+  created_at?: string;
+  updated_at?: string;
+}
+
+export async function getCompanies(): Promise<Company[]> {
+  return apiFetch<Company[]>("/companies");
+}
+
+export async function createCompany(name: string): Promise<Company> {
+  return apiFetch<Company>("/companies", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
+}
+
+export async function updateCompany(
+  id: string,
+  name: string,
+): Promise<Company> {
+  return apiFetch<Company>(`/companies/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ name }),
+  });
+}
+
+export async function updateCompanyStatus(
+  id: string,
+  status: "active" | "inactive",
+): Promise<Company> {
+  return apiFetch<Company>(`/companies/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}

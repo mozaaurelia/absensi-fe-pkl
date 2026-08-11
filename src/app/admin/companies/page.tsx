@@ -1,0 +1,255 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { FiEdit2, FiPlus } from "react-icons/fi";
+import { useLanguage } from "@/context/LanguageContext";
+import Layout from "@/components/admin/layout/layout";
+import { ApiError } from "@/lib/api";
+import {
+  getCompanies,
+  createCompany,
+  updateCompany,
+  updateCompanyStatus,
+  type Company,
+} from "@/lib/services/admin";
+
+const inputClass =
+  "w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors";
+
+export default function AdminCompaniesPage() {
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const { t } = useLanguage();
+  const router = useRouter();
+
+  const [rows, setRows] = useState<Company[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [modal, setModal] = useState<"create" | "edit" | null>(null);
+  const [editRow, setEditRow] = useState<Company | null>(null);
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "superadmin")) {
+      router.replace("/auth/login");
+    }
+  }, [status, user?.role, router]);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const data = await getCompanies();
+      setRows(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+
+  useEffect(() => {
+    if (status === "authenticated" && user?.role === "superadmin") {
+      load();
+    }
+  }, [status, user?.role, load]);
+
+  const openCreate = () => {
+    setName("");
+    setError(null);
+    setEditRow(null);
+    setModal("create");
+  };
+
+  const openEdit = (row: Company) => {
+    setName(row.name);
+    setError(null);
+    setEditRow(row);
+    setModal("edit");
+  };
+
+  const closeModal = () => {
+    setModal(null);
+    setError(null);
+  };
+
+  const submit = async () => {
+    if (!name.trim()) {
+      setError(t("adminCrud.nameRequired"));
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      if (modal === "create") {
+        await createCompany(name.trim());
+      } else if (modal === "edit" && editRow) {
+        await updateCompany(editRow.id, name.trim());
+      }
+      closeModal();
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t("common.saveErrorDesc"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggleStatus = async (row: Company) => {
+    setSaving(true);
+    setError(null);
+    try {
+      await updateCompanyStatus(
+        row.id,
+        row.status === "active" ? "inactive" : "active",
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t("common.saveErrorDesc"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (status === "loading") {
+    return <div className="flex min-h-screen bg-gray-50" />;
+  }
+
+  if (!user || user.role !== "superadmin") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <p className="text-gray-500 text-sm">{t("accessDenied")}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Layout>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-700">
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base">
+              {t("adminCompanies.title")}
+            </h3>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {t("adminCompanies.desc")}
+            </p>
+          </div>
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 bg-[#1E3A5F] text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
+          >
+            <FiPlus size={14} />
+            {t("adminMaster.add")}
+          </button>
+        </div>
+
+        {error && (
+          <div className="px-6 py-3 bg-red-50 dark:bg-red-500/10 text-xs text-red-600 dark:text-red-400">
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="p-8 text-center text-sm text-gray-400">{t("common.loading")}</div>
+        ) : loadError ? (
+          <div className="p-8 text-center text-sm text-gray-400">{loadError}</div>
+        ) : rows.length === 0 ? (
+          <div className="p-8 text-center text-sm text-gray-400">{t("adminMaster.empty")}</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-700 text-xs uppercase text-gray-400 dark:text-gray-500">
+                  <th className="px-6 py-3 font-semibold">{t("adminCompanies.name")}</th>
+                  <th className="px-6 py-3 font-semibold">{t("adminCompanies.status")}</th>
+                  <th className="px-6 py-3 font-semibold text-right">{t("adminMaster.actions")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
+                {rows.map((row) => (
+                  <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">
+                      {row.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => toggleStatus(row)}
+                        disabled={saving}
+                        className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors disabled:opacity-60 ${
+                          row.status === "active"
+                            ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400"
+                            : "bg-gray-100 text-gray-500 dark:bg-gray-600 dark:text-gray-300"
+                        }`}
+                      >
+                        {row.status === "active"
+                          ? t("adminCompanies.active")
+                          : t("adminCompanies.inactive")}
+                      </button>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end">
+                        <button
+                          onClick={() => openEdit(row)}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                          aria-label={t("adminMaster.edit")}
+                        >
+                          <FiEdit2 size={15} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {modal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-md">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4">
+              {modal === "create" ? t("adminMaster.add") : t("adminMaster.edit")}
+            </h3>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                {t("adminCompanies.name")} *
+              </label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t("adminCrud.placeholder")}
+                className={inputClass}
+              />
+            </div>
+
+            {error && <p className="text-xs text-red-500 mt-4">{error}</p>}
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={closeModal}
+                disabled={saving}
+                className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-60"
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={submit}
+                disabled={saving}
+                className="flex-1 bg-[#1E3A5F] text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60"
+              >
+                {saving ? t("common.saving") : t("adminMaster.save")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Layout>
+  );
+}

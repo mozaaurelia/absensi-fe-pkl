@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
   const { t } = useLanguage();
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -24,24 +26,31 @@ export default function Sidebar() {
     closeTimer.current = setTimeout(() => setCollapsed(true), 250);
   };
 
+  const isSuperadmin = session?.user?.role === "superadmin";
+
   const menus = [
-    { label: t("adminSidebar.dashboard"), href: "/admin", icon: DashboardIcon },
-    { label: t("adminSidebar.employees"), href: "/admin/karyawan", icon: EmployeeIcon },
-    { label: t("adminSidebar.departments"), href: "/admin/departemen", icon: DeptIcon },
-    { label: t("adminSidebar.positions"), href: "/admin/jabatan", icon: PositionIcon },
-    { label: t("adminSidebar.workSchedule"), href: "/admin/jadwal-kerja", icon: ScheduleIcon },
-    { label: t("adminSidebar.patterns"), href: "/admin/pola-kerja", icon: PatternIcon },
-    { label: t("adminSidebar.scheduling"), href: "/admin/penjadwalan", icon: AssignmentIcon },
-    { label: t("adminSidebar.locations"), href: "/admin/lokasi", icon: LocationIcon },
-    { label: t("adminSidebar.permits"), href: "/admin/perizinan", icon: PermitIcon },
-    { label: t("adminSidebar.calendar"), href: "/admin/kalender", icon: CalendarIcon },
-    { label: t("adminSidebar.overtime"), href: "/admin/lembur", icon: OvertimeIcon },
-    { label: t("adminSidebar.reports"), href: "/admin/laporan", icon: ReportIcon },
-    { label: t("adminSidebar.reimbursement"), href: "/admin/reimburse", icon: ReimburseIcon },
-    { label: t("adminSidebar.attendance"), href: "/admin/kehadiran", icon: AttendanceIcon },
-    { label: t("adminSidebar.announcements"), href: "/admin/pengumuman", icon: AnnouncementIcon },
-    { label: t("adminSidebar.settings"), href: "/admin/settings", icon: SettingsIcon },
+    { label: t("adminSidebar.dashboard"), href: "/admin", icon: DashboardIcon, superadminOnly: false },
+    { label: t("adminSidebar.employees"), href: "/admin/karyawan", icon: EmployeeIcon, superadminOnly: false },
+    { label: t("adminSidebar.departments"), href: "/admin/departemen", icon: DeptIcon, superadminOnly: false },
+    { label: t("adminSidebar.positions"), href: "/admin/jabatan", icon: PositionIcon, superadminOnly: false },
+    { label: t("adminSidebar.workSchedule"), href: "/admin/jadwal-kerja", icon: ScheduleIcon, superadminOnly: false },
+    { label: t("adminSidebar.patterns"), href: "/admin/pola-kerja", icon: PatternIcon, superadminOnly: false },
+    { label: t("adminSidebar.scheduling"), href: "/admin/penjadwalan", icon: AssignmentIcon, superadminOnly: false },
+    { label: t("adminSidebar.locations"), href: "/admin/lokasi", icon: LocationIcon, superadminOnly: false },
+    { label: t("adminSidebar.permits"), href: "/admin/perizinan", icon: PermitIcon, superadminOnly: false },
+    { label: t("adminSidebar.calendar"), href: "/admin/kalender", icon: CalendarIcon, superadminOnly: false },
+    { label: t("adminSidebar.overtime"), href: "/admin/lembur", icon: OvertimeIcon, superadminOnly: false },
+    { label: t("adminSidebar.reports"), href: "/admin/laporan", icon: ReportIcon, superadminOnly: false },
+    { label: t("adminSidebar.reimbursement"), href: "/admin/reimburse", icon: ReimburseIcon, superadminOnly: false },
+    { label: t("adminSidebar.attendance"), href: "/admin/kehadiran", icon: AttendanceIcon, superadminOnly: false },
+    { label: t("adminSidebar.announcements"), href: "/admin/pengumuman", icon: AnnouncementIcon, superadminOnly: false },
+    { label: t("adminSidebar.settings"), href: "/admin/settings", icon: SettingsIcon, superadminOnly: false },
+    { label: t("adminSidebar.companies"), href: "/admin/companies", icon: CompanyIcon, superadminOnly: true },
   ];
+
+  const visibleMenus = isSuperadmin
+    ? menus
+    : menus.filter((m) => !m.superadminOnly);
 
   return (
     <aside
@@ -79,7 +88,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col gap-1 flex-1">
-        {menus.map((menu) => {
+        {visibleMenus.map((menu) => {
           const active = pathname === menu.href;
           const Icon = menu.icon;
           return (
@@ -282,6 +291,16 @@ function SettingsIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
       />
+    </svg>
+  );
+}
+
+function CompanyIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7 21v-4h10v4" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
     </svg>
   );
 }

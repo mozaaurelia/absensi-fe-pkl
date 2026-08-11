@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 import LoginForm from "./LoginForm";
 
 export default function LoginCard() {
@@ -18,6 +19,15 @@ export default function LoginCard() {
         <p className="text-sm text-gray-500 mb-6">{t("login.desc")}</p>
 
         <LoginForm />
+
+        <div className="mt-6 text-center">
+          <Link
+            href="/auth/superadmin"
+            className="text-xs font-semibold text-[#1E3A5F] hover:underline"
+          >
+            {t("loginSuperadmin.link")}
+          </Link>
+        </div>
       </div>
 
       <p className="text-center text-xs text-gray-400 mt-6">

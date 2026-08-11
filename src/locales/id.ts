@@ -102,6 +102,14 @@ export const id = {
     roleAdmin: "Admin HRM",
   },
 
+  loginSuperadmin: {
+    title: "Login Super Admin",
+    badge: "Super Admin",
+    desc: "Gunakan akun super admin untuk mengelola seluruh perusahaan.",
+    back: "Kembali ke Login Karyawan",
+    link: "Login Super Admin",
+  },
+
   role: {
     eyebrow: "Satu Sistem Untuk Semua Role",
     title: "Dirancang untuk kebutuhan karyawan, atasan, dan HRD",
@@ -206,6 +214,7 @@ export const id = {
     leave: "Izin & Cuti",
     schedule: "Agenda",
     settings: "Pengaturan",
+    companies: "Perusahaan",
     close: "Tutup sidebar",
     open: "Buka sidebar",
     logout: "Keluar",
@@ -860,6 +869,7 @@ export const id = {
   adminCrud: {
     placeholder: "Masukkan nilai",
     name: "Nama",
+    nameRequired: "Nama tidak boleh kosong",
     email: "Email",
     role: "Role",
     department: "Departemen",
@@ -908,6 +918,15 @@ export const id = {
     overtimeTitle: "Persetujuan Lembur",
     resign: "Resign",
     resignConfirm: "Resign karyawan ini? Data karyawan akan dinonaktifkan.",
+  },
+
+  adminCompanies: {
+    title: "Manajemen Perusahaan",
+    desc: "Buat, ubah, dan kelola semua perusahaan dalam sistem.",
+    name: "Nama Perusahaan",
+    status: "Status",
+    active: "Aktif",
+    inactive: "Nonaktif",
   },
 
   patternDay: {

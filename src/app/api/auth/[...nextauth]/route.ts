@@ -18,21 +18,34 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        const creds = credentials as {
+          email: string;
+          password: string;
+          mode?: string;
+        };
+
+        if (!creds?.email || !creds?.password) {
           return null;
         }
 
+        const isSuperadmin = creds.mode === "superadmin";
+
         try {
-          const response = await fetch(`${process.env.API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const response = await fetch(
+            `${process.env.API_URL}${
+              isSuperadmin ? "/auth/superadmin/login" : "/auth/login"
+            }`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: credentials.email,
+                password: credentials.password,
+              }),
             },
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-          });
+          );
 
           const json = await response.json();
 
@@ -47,7 +60,7 @@ const handler = NextAuth({
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role,
+            role: isSuperadmin ? "superadmin" : user.role,
             accessToken: token,
           };
         } catch (error) {
