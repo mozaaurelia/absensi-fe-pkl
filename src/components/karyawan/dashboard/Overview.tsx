@@ -23,7 +23,7 @@ export default function Overview({ todayAttendance, leaveQuota, attendanceList }
   const lateCount = useMemo(() => countLateThisMonth(attendanceList, 9), [attendanceList]);
 
   const hasCheckedIn = !!todayAttendance?.clock_in_time;
-  const isLate = todayAttendance?.status === "late";
+  const isLate = todayAttendance?.status === "telat";
 
   const fmt = lang === "en" ? formatHoursEn : formatHours;
   const totalMin = weeklyStats.totalMinutes ?? 0;

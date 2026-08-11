@@ -40,7 +40,20 @@ export default function TeamAttendance({ records }: Props) {
     () =>
       records.map((r) => {
         const isLate = isLateRecord(r, 9);
-        const status = r.status || (isLate ? "late" : r.clock_in_time ? "present" : "absent");
+        const rawStatus = r.status || null;
+        const status = rawStatus
+          ? rawStatus === "hadir"
+            ? "present"
+            : rawStatus === "telat"
+              ? "late"
+              : rawStatus === "alpha"
+                ? "absent"
+                : "notCheckedIn"
+          : isLate
+            ? "late"
+            : r.clock_in_time
+              ? "present"
+              : "absent";
         const labelKey =
           status === "present" || status === "late" || status === "absent"
             ? status

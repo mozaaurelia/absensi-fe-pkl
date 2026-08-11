@@ -35,7 +35,7 @@ export default function Attendance({ todayAttendance, currentSchedule }: Props) 
 
   const hasCheckedIn = !!todayAttendance?.clock_in_time;
   const hasCheckedOut = !!todayAttendance?.clock_out_time;
-  const isLate = todayAttendance?.status === "late";
+  const isLate = todayAttendance?.status === "telat";
 
   const formatted = time
     ? time.toLocaleTimeString(locale, { hour12: false })

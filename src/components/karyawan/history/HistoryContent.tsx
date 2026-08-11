@@ -36,8 +36,15 @@ export default function HistoryContent() {
 
   const filtered = useMemo(() => {
     return records.filter((record) => {
-      if (statusFilter !== "all" && record.status !== statusFilter) {
-        return false;
+      if (statusFilter !== "all") {
+        const backendStatus: Record<string, string> = {
+          present: "hadir",
+          late: "telat",
+        };
+        const expected = backendStatus[statusFilter] ?? statusFilter;
+        if (record.status !== expected) {
+          return false;
+        }
       }
       if (locationQuery !== "all" && record.location_name) {
         if (!record.location_name.toLowerCase().includes(locationQuery)) {

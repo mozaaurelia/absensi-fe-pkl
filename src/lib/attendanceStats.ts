@@ -87,7 +87,7 @@ export function computeWeeklyStats(records: AttendanceRecord[]): WeeklyStats {
 
 export function isLateRecord(record: AttendanceRecord, startHour: number): boolean {
   if (!record.clock_in_time) return false;
-  if (record.status === "late") return true;
+  if (record.status === "telat") return true;
   const d = new Date(record.clock_in_time);
   return d.getHours() > startHour || (d.getHours() === startHour && d.getMinutes() > 0);
 }
