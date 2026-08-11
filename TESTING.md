@@ -1,4 +1,4 @@
-# TESTING GUIDE — E-Absensi
+angan# TESTING GUIDE — E-Absensi
 
 > Backend: `http://localhost:4000/api/v1` | Frontend: `http://localhost:3000`
 > Login utama: `/auth/login` | Login super admin: `/auth/superadmin`
@@ -41,7 +41,7 @@
 | 2.13 | Laporan | `/admin/laporan`: filter + lihat rekap | Tabel rekap muncul |
 | 2.14 | Kuota cuti manual | `/admin/settings` → **Adjust Quota**: pilih karyawan, +3/-1, alasan | Saldo kuota karyawan berubah (cek di dashboard karyawan) |
 | 2.15 | Cron manual | `/admin/settings` → **Cron Jobs**: run Auto-Alpha / Monthly Quota / Monthly Recap | Muncul pesan sukses |
-| 2.16 | Registrasi wajah | `/admin/settings` → **Face Registration**: pilih karyawan, ambil foto, submit | Referensi wajah tersimpan (untuk fitur #3.1) |
+| 2.16 | Registrasi wajah | `/admin/settings` → **Face Registration**: pilih karyawan, ambil foto, submit | Referensi wajah tersimpan — **wajib** sebelum karyawan bisa clock-in/out (lihat 4.1) |
 | 2.17 | Sidebar & guard | Admin tidak melihat menu **Companies** | Benar, menu tersembunyi |
 
 ---
@@ -63,14 +63,20 @@
 ## 4. KARYAWAN (EMPLOYEE) (`/auth/login` → role employee)
 
 ### 4.1 Absensi (fitur wajah + lokasi)
+> **Alur verifikasi (Opsi A — simetris di clock-in & clock-out):**
+> 1. **Lokasi dulu** → backend cek koordinat GPS terhadap lokasi kantor yang di-assign di jadwal (`office_locations`) via radius meter. Di luar radius → ditolak `OUTSIDE_RADIUS`.
+> 2. **Wajah (AI Gemini)** → backend bandingkan selfie dengan foto referensi (`employee_face_references`, daftar di `/admin/settings`). Beda orang → `FACE_MISMATCH`; belum punya referensi → `FACE_REFERENCE_NOT_FOUND`.
+
 | # | Skenario | Langkah | Hasil yang diharapkan |
 |---|----------|---------|------------------------|
-| 4.1.1 | Clock-in | `/karyawan` → tombol Check-in → izinkan lokasi + kamera → selfie → submit | Muncul waktu & status "Hadir" (atau "Telat" jika melebihi toleransi); verifikasi wajah = match |
-| 4.1.2 | Clock-out | Tombol Check-out → selfie | Waktu pulang tercatat |
-| 4.1.3 | Face tidak match | Selfie orang lain / bukan wajah terdaftar | Ditolak dengan pesan verifikasi gagal |
-| 4.1.4 | Lokasi di luar radius | Check-in dari lokasi jauh dari kantor | Ditolak / diberi peringatan jarak |
-| 4.1.5 | Status wajah | `/karyawan` menampilkan status referensi wajah | Terlihat terdaftar / belum |
-| 4.1.6 | Kamera ditolak | Blokir akses kamera | Muncul pesan error kamera, tetap bisa lanjut? |
+| 4.1.1 | Clock-in (wajah + lokasi) | `/karyawan` → Check-in → izinkan lokasi + kamera → selfie → submit | Di dalam radius + wajah match → status "Hadir" (atau "Telat" bila lewat toleransi); wajah **wajib** sama seperti clock-out |
+| 4.1.2 | Clock-out (wajah + lokasi) | Tombol Check-out → selfie | Di dalam radius + wajah match → waktu pulang tercatat |
+| 4.1.3 | Face tidak match | Selfie orang lain / bukan wajah terdaftar | Ditolak `FACE_MISMATCH` (baik di clock-in maupun clock-out) |
+| 4.1.4 | Belum ada referensi wajah | Check-in/out sebelum admin daftarkan wajah | Ditolak `FACE_REFERENCE_NOT_FOUND` → pesan ajak hubungi pustaka admin |
+| 4.1.5 | Lokasi di luar radius | Check-in dari lokasi jauh dari kantor | Ditolak `OUTSIDE_RADIUS`, tampilkan jarak aktual |
+| 4.1.6 | Tanpa selfie | Submit tanpa foto | Ditolak `FACE_IMAGE_REQUIRED` |
+| 4.1.7 | Status wajah | `/karyawan` menampilkan status referensi wajah | Terlihat terdaftar / belum |
+| 4.1.8 | Kamera ditolak | Blokir akses kamera | Muncul pesan error kamera, tidak bisa lanjut ke submit |
 
 ### 4.2 Dashboard & data
 | # | Skenario | Langkah | Hasil yang diharapkan |
@@ -103,6 +109,8 @@
 
 - [ ] Admin login tetap normal setelah perubahan NextAuth (`mode` default = login biasa)
 - [ ] Karyawan dari perusahaan **Nonaktif** gagal login (#1.7) dengan pesan jelas
+- [ ] Clock-in **tanpa foto** ditolak `FACE_IMAGE_REQUIRED` (Opsi A: verif wajah kini di clock-in dan clock-out)
+- [ ] Jam kerja/history tidak berubah format setelah penambahan verif wajah di clock-in
 - [ ] Responsif: layout admin & karyawan di layar mobile/tablet
 - [ ] Dark mode: tidak ada kontras rusak di halaman baru (companies, superadmin)
 - [ ] Bahasa EN/ID: semua label halaman baru diterjemahkan
