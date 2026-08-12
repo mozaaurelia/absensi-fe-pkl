@@ -5,7 +5,7 @@ import type { ShiftTemplate, Employee, Assignments } from "./types";
 import { DAYS } from "./types";
 import JadwalKerjaHeader from "./JadwalKerjaHeader";
 import ScheduleStatsCards from "./ScheduleStatsCards";
-import ShiftTemplateList from "./ShiftTemplateList";
+import DailyAttendanceStats from "./DailyAttendanceStats";
 import WeeklyScheduleGrid from "./WeeklyScheduleGrid";
 import ShiftFormModal from "./ShiftFormModal";
 
@@ -60,23 +60,6 @@ export default function JadwalKerjaContent() {
     setModalOpen(true);
   };
 
-  const handleEditShift = (shift: ShiftTemplate) => {
-    setEditingShift(shift);
-    setModalOpen(true);
-  };
-
-  const handleDeleteShift = (id: string) => {
-    if (!confirm("Hapus template shift ini? Karyawan yang terjadwal akan jadi libur.")) return;
-    setShifts((prev) => prev.filter((s) => s.id !== id));
-    setAssignments((prev) => {
-      const next: Assignments = {};
-      for (const [empId, days] of Object.entries(prev)) {
-        next[empId] = days.map((d) => (d === id ? null : d));
-      }
-      return next;
-    });
-  };
-
   const handleSaveShift = (shift: ShiftTemplate) => {
     setShifts((prev) => {
       const exists = prev.some((s) => s.id === shift.id);
@@ -95,7 +78,7 @@ export default function JadwalKerjaContent() {
     <div>
       <JadwalKerjaHeader onAddShift={handleAddShift} />
       <ScheduleStatsCards shifts={shifts} employees={employees} assignments={assignments} />
-      <ShiftTemplateList shifts={shifts} assignments={assignments} onEdit={handleEditShift} onDelete={handleDeleteShift} />
+      <DailyAttendanceStats employees={employees} shifts={shifts} assignments={assignments} />
 
       <WeeklyScheduleGrid
         employees={employees}
