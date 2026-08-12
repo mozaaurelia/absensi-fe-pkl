@@ -13,9 +13,9 @@ interface Props {
   onSubmitted?: () => Promise<void> | void;
 }
 
-export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
+export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
   const { t } = useLanguage();
-  const [jenisIzin, setJenisIzin] = useState("");
+  const [jenisCuti, setJenisCuti] = useState("");
   const [tanggalMulai, setTanggalMulai] = useState("");
   const [tanggalSelesai, setTanggalSelesai] = useState("");
   const [alasan, setAlasan] = useState("");
@@ -25,10 +25,6 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const nonLeaveTypes = leaveTypes.filter(
-    (type) => !(type.name ?? "").toLowerCase().includes("cuti"),
-  );
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -58,8 +54,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
     setError(null);
     setSuccess(false);
 
-    if (!jenisIzin) {
-      setError(t("leaveForm.typeRequired"));
+    if (!jenisCuti) {
+      setError(t("cutiForm.typeRequired"));
       return;
     }
     if (!tanggalMulai || !tanggalSelesai) {
@@ -78,13 +74,13 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
     setSubmitting(true);
     try {
       await createLeaveRequest({
-        leave_type_id: jenisIzin,
+        leave_type_id: jenisCuti,
         start_date: tanggalMulai,
         end_date: tanggalSelesai,
         reason: alasan.trim(),
         attachment,
       });
-      setJenisIzin("");
+      setJenisCuti("");
       setTanggalMulai("");
       setTanggalSelesai("");
       setAlasan("");
@@ -108,13 +104,13 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6"
     >
       <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("leaveForm.title")}</h3>
+        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("cutiForm.title")}</h3>
         <span className="bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
-          {t("leaveForm.badge")}
+          {t("cutiForm.badge")}
         </span>
       </div>
       <p className="text-xs text-gray-400 mb-6">
-        {t("leaveForm.desc")}
+        {t("cutiForm.desc")}
       </p>
 
       {error && (
@@ -131,16 +127,16 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
 
       <div className="mb-5">
         <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-          {t("leaveForm.typeLabel")}
+          {t("cutiForm.typeLabel")}
         </label>
         <select
-          value={jenisIzin}
-          onChange={(e) => setJenisIzin(e.target.value)}
+          value={jenisCuti}
+          onChange={(e) => setJenisCuti(e.target.value)}
           required
           className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
         >
-          <option value="">{t("leaveForm.typePlaceholder")}</option>
-          {nonLeaveTypes.map((type) => (
+          <option value="">{t("cutiForm.typePlaceholder")}</option>
+          {leaveTypes.map((type) => (
             <option key={type.id} value={type.id}>
               {type.name}
             </option>
@@ -231,7 +227,7 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
           >
             <UploadIcon />
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-              {t("leaveForm.fileTitle")}
+              {t("cutiForm.fileTitle")}
             </p>
             <p className="text-xs text-gray-400">{t("leaveForm.fileHint")}</p>
           </button>
@@ -243,7 +239,7 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
         disabled={submitting}
         className="bg-[#1E3A5F] text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-[#16304f] transition-colors whitespace-nowrap disabled:opacity-60"
       >
-        {submitting ? t("common.saving") : t("leaveForm.submit")}
+        {submitting ? t("common.saving") : t("cutiForm.submit")}
       </button>
     </form>
   );

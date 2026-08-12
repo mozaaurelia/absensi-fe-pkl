@@ -7,7 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 
-const MAX_OVERTIME_HOURS = 2;
+const MAX_OVERTIME_HOURS = 3;
 
 function addHours(time: string, hours: number): string {
   const [h, m] = time.split(":").map(Number);

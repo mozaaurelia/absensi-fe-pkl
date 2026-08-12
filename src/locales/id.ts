@@ -553,7 +553,7 @@ export const id = {
   },
 
   leaveForm: {
-    title: "Form Pengajuan Izin & Cuti",
+    title: "Form Pengajuan Izin",
     badge: "Izin / Cuti",
     desc: "Lengkapi detail pengajuan izin atau cuti berikut.",
     typeLabel: "Jenis Izin",
@@ -579,6 +579,17 @@ export const id = {
     submitSuccess: "Pengajuan berhasil dikirim.",
   },
 
+  cutiForm: {
+    title: "Form Pengajuan Cuti",
+    badge: "Izin Cuti",
+    desc: "Ajukan izin cuti dan pantau status persetujuan secara transparan.",
+    typeLabel: "Jenis Cuti",
+    typePlaceholder: "Pilih jenis cuti",
+    fileTitle: "Upload dokumen pendukung cuti (surat dokter, dsb.)",
+    submit: "Kirim Pengajuan Cuti",
+    typeRequired: "Silakan pilih jenis cuti terlebih dahulu.",
+  },
+
   leaveHeader: {
     title: "Pengajuan Izin, Cuti & Lembur Karyawan",
     desc: "Ajukan izin, cuti, lembur, dan pantau status persetujuan secara transparan.",
@@ -590,7 +601,7 @@ export const id = {
 
   leaveHistory: {
     title: "Status Pengajuan",
-    desc: "Riwayat izin, cuti, dan lembur terbaru.",
+    desc: "Riwayat pengajuan terbaru.",
     dataLabel: "Data",
     annualLeave: "Cuti Tahunan",
     approved: "Disetujui",
@@ -881,6 +892,35 @@ export const id = {
     actions: "Aksi",
   },
 
+  adminEmployeeForm: {
+    title: "Daftarkan Karyawan Baru",
+    desc: "Lengkapi data identitas, organisasi, dan kontrak karyawan baru.",
+    idAccess: "ID & Akses",
+    fullName: "Nama Lengkap",
+    employeeNumber: "Nomor Karyawan",
+    email: "Email",
+    whatsapp: "WhatsApp",
+    organization: "Organisasi",
+    department: "Departemen",
+    position: "Jabatan",
+    manager: "Manager Langsung",
+    selectDepartment: "-- Pilih Departemen --",
+    selectPosition: "-- Pilih Jabatan --",
+    selectManager: "-- Pilih Manager --",
+    contractData: "Data Kontrak & Awal PKWT",
+    contractStatus: "Status Kontrak",
+    contract: "Kontrak",
+    startContract: "Mulai Kontrak",
+    endContract: "Selesai (EOC)",
+    pkwtData: "Masukkan Data PKWT ke-1 (Awal)",
+    pkwtNumber: "No. Surat PKWT 1",
+    pkwtDuration: "Durasi",
+    pkwtDurationPlaceholder: "e.g. 1 Tahun",
+    compensationDate: "Tgl Kompensasi",
+    cancel: "Batal",
+    continueFaceScan: "Lanjut Face Scan",
+  },
+
   adminEmployees: {
     total: "Total Karyawan",
     totalDesc: "Semua karyawan terdaftar",
@@ -901,8 +941,9 @@ export const id = {
     department: "Departemen",
     position: "Jabatan",
     status: "Status",
-    password: "Kata Sandi",
-    supervisor: "Atasan",
+    employeeId: "ID Karyawan",
+    detail: "Detail",
+    password: "Kata Sandi",    supervisor: "Atasan",
     joinDate: "Tanggal Bergabung",
     latitude: "Latitude",
     longitude: "Longitude",
@@ -919,6 +960,9 @@ export const id = {
     addEmployee: "Tambah Karyawan",
     searchEmployee: "Cari nama karyawan...",
     allDepartments: "Semua Departemen",
+    allStatuses: "Semua Status",
+    active: "Aktif",
+    resigned: "Resign",
     departmentsTitle: "Manajemen Departemen",
     departments: "Departemen",
     departmentsDesc: "Kelola data departemen perusahaan.",

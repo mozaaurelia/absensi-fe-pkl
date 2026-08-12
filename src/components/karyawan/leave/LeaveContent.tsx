@@ -1,16 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import LeaveSummary from "./LeaveSummary";
-import OvertimeForm from "./OvertimeForm";
+import LeaveForm from "./LeaveForm";
 import LeaveHistory from "./LeaveHistory";
 import {
   getMyLeaveRequests,
   getLeaveQuota,
+  getLeaveTypes,
   type LeaveRequest,
   type LeaveQuota,
+  type LeaveType,
 } from "@/lib/services/leave";
 
 export default function LeaveContent() {
@@ -18,6 +20,7 @@ export default function LeaveContent() {
   const { t } = useLanguage();
 
   const [requests, setRequests] = useState<LeaveRequest[]>([]);
+  const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
   const [quota, setQuota] = useState<LeaveQuota | LeaveQuota[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,12 +31,14 @@ export default function LeaveContent() {
     setIsLoading(true);
     setError(null);
     try {
-      const [reqs, quotaData] = await Promise.all([
+      const [reqs, quotaData, types] = await Promise.all([
         getMyLeaveRequests(),
         getLeaveQuota(employeeId),
+        getLeaveTypes(),
       ]);
       setRequests(Array.isArray(reqs) ? reqs : []);
       setQuota(quotaData);
+      setLeaveTypes(Array.isArray(types) ? types : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
     } finally {
@@ -45,11 +50,27 @@ export default function LeaveContent() {
     loadData();
   }, [loadData]);
 
+  const cutiTypes = useMemo(
+    () =>
+      leaveTypes.filter((type) =>
+        (type.name ?? "").toLowerCase().includes("cuti"),
+      ),
+    [leaveTypes],
+  );
+
+  const cutiRequests = useMemo(
+    () =>
+      requests.filter((req) =>
+        (req.leave_type_name ?? "").toLowerCase().includes("cuti"),
+      ),
+    [requests],
+  );
+
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-          {[0, 1, 2, 3, 4, 5].map((i) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[0, 1, 2, 3].map((i) => (
             <div key={i} className="h-24 bg-white dark:bg-gray-800 rounded-2xl animate-pulse" />
           ))}
         </div>
@@ -80,15 +101,15 @@ export default function LeaveContent() {
 
   return (
     <div>
-      <LeaveSummary quota={quota} requests={requests} />
+      <LeaveSummary quota={quota} requests={cutiRequests} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <OvertimeForm />
+          <LeaveForm leaveTypes={cutiTypes} onSubmitted={loadData} />
         </div>
 
         <div>
-          <LeaveHistory requests={requests} />
+          <LeaveHistory requests={cutiRequests} />
         </div>
       </div>
     </div>

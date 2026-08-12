@@ -553,7 +553,7 @@ dashAttendance: {
   },
 
   leaveForm: {
-    title: "Permit & Leave Request Form",
+    title: "Permit Request Form",
     badge: "Permit / Leave",
     desc: "Complete the following permit or leave request details.",
     typeLabel: "Type of Permit",
@@ -579,6 +579,17 @@ dashAttendance: {
     submitSuccess: "Request submitted successfully.",
   },
 
+  cutiForm: {
+    title: "Leave Request Form",
+    badge: "Annual Leave",
+    desc: "Submit your leave request and track the approval status.",
+    typeLabel: "Leave Type",
+    typePlaceholder: "Select leave type",
+    fileTitle: "Upload supporting documents for leave (medical letter, etc.)",
+    submit: "Submit Leave Request",
+    typeRequired: "Please select a leave type first.",
+  },
+
   leaveHeader: {
     title: "Employee Permit, Leave & Overtime Requests",
     desc: "Submit permits, leave, overtime, and monitor approval status transparently.",
@@ -590,7 +601,7 @@ dashAttendance: {
 
   leaveHistory: {
     title: "Request Status",
-    desc: "Latest permit, leave, and overtime history.",
+    desc: "Latest request history.",
     dataLabel: "Records",
     annualLeave: "Annual Leave",
     approved: "Approved",
@@ -881,6 +892,35 @@ dashAttendance: {
     actions: "Actions",
   },
 
+  adminEmployeeForm: {
+    title: "Register New Employee",
+    desc: "Fill in the new employee's identity, organization, and contract data.",
+    idAccess: "ID & Access",
+    fullName: "Full Name",
+    employeeNumber: "Employee Number",
+    email: "Email",
+    whatsapp: "WhatsApp",
+    organization: "Organization",
+    department: "Department",
+    position: "Position",
+    manager: "Direct Manager",
+    selectDepartment: "-- Select Department --",
+    selectPosition: "-- Select Position --",
+    selectManager: "-- Select Manager --",
+    contractData: "Contract & Initial PKWT Data",
+    contractStatus: "Contract Status",
+    contract: "Contract",
+    startContract: "Contract Start",
+    endContract: "End (EOC)",
+    pkwtData: "Enter PKWT #1 Data (Initial)",
+    pkwtNumber: "PKWT Letter No. 1",
+    pkwtDuration: "Duration",
+    pkwtDurationPlaceholder: "e.g. 1 Year",
+    compensationDate: "Compensation Date",
+    cancel: "Cancel",
+    continueFaceScan: "Continue to Face Scan",
+  },
+
   adminEmployees: {
     total: "Total Employees",
     totalDesc: "All registered employees",
@@ -901,6 +941,8 @@ dashAttendance: {
     department: "Department",
     position: "Position",
     status: "Status",
+    employeeId: "Employee ID",
+    detail: "Detail",
     password: "Password",
     supervisor: "Supervisor",
     joinDate: "Join Date",
@@ -919,6 +961,9 @@ dashAttendance: {
     addEmployee: "Add Employee",
     searchEmployee: "Search employee by name...",
     allDepartments: "All Departments",
+    allStatuses: "All Statuses",
+    active: "Active",
+    resigned: "Resigned",
     departmentsTitle: "Department Management",
     departments: "Departments",
     departmentsDesc: "Manage company department data.",
