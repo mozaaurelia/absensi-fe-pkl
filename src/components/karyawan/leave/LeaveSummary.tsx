@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { FiCalendar, FiCheckCircle, FiClock, FiXCircle, FiTrendingUp, FiAlertCircle } from "react-icons/fi";
 import SummaryCard from "./SummaryCard";
 import { useLanguage } from "@/context/LanguageContext";
 import type { LeaveRequest, LeaveQuota } from "@/lib/services/leave";
@@ -54,12 +55,12 @@ export default function LeaveSummary({ quota, requests }: Props) {
   }, [quota, requests, overtime]);
 
   const statsList = [
-    { label: t("leaveSummary.leaveRemaining"), value: String(stats.remaining), note: t("leaveSummary.stillAvailable"), noteColor: "text-green-600" },
-    { label: t("leaveSummary.leaveUsed"), value: String(stats.used), note: t("leaveSummary.thisYear"), noteColor: "text-blue-600" },
-    { label: t("leaveSummary.pendingRequests"), value: String(stats.pending), note: t("leaveSummary.waitingSupervisor"), noteColor: "text-orange-500" },
-    { label: t("leaveSummary.rejectedRequests"), value: String(stats.rejected), note: t("leaveSummary.needsRevision"), noteColor: "text-red-600" },
-    { label: t("leaveSummary.overtimeMonth"), value: String(stats.monthApproved), note: t("leaveSummary.recorded"), noteColor: "text-purple-600" },
-    { label: t("leaveSummary.overtimePending"), value: String(stats.overtimePending), note: t("leaveSummary.needsApproval"), noteColor: "text-amber-600" },
+    { label: t("leaveSummary.leaveRemaining"), value: String(stats.remaining), note: t("leaveSummary.stillAvailable"), noteColor: "text-green-300", icon: <FiCalendar size={16} /> },
+    { label: t("leaveSummary.leaveUsed"), value: String(stats.used), note: t("leaveSummary.thisYear"), noteColor: "text-blue-200", icon: <FiCheckCircle size={16} /> },
+    { label: t("leaveSummary.pendingRequests"), value: String(stats.pending), note: t("leaveSummary.waitingSupervisor"), noteColor: "text-amber-300", icon: <FiClock size={16} /> },
+    { label: t("leaveSummary.rejectedRequests"), value: String(stats.rejected), note: t("leaveSummary.needsRevision"), noteColor: "text-red-300", icon: <FiXCircle size={16} /> },
+    { label: t("leaveSummary.overtimeMonth"), value: String(stats.monthApproved), note: t("leaveSummary.recorded"), noteColor: "text-purple-300", icon: <FiTrendingUp size={16} /> },
+    { label: t("leaveSummary.overtimePending"), value: String(stats.overtimePending), note: t("leaveSummary.needsApproval"), noteColor: "text-amber-300", icon: <FiAlertCircle size={16} /> },
   ];
 
   return (

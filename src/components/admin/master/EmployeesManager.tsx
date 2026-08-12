@@ -37,6 +37,8 @@ export default function EmployeesManager() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,6 +83,17 @@ export default function EmployeesManager() {
       ),
     [rows]
   );
+
+  const filteredRows = useMemo(() => {
+    const keyword = search.trim().toLowerCase();
+    return rows.filter((e) => {
+      const matchSearch =
+        !keyword || e.name.toLowerCase().includes(keyword);
+      const matchDept =
+        !departmentFilter || e.department_id === departmentFilter;
+      return matchSearch && matchDept;
+    });
+  }, [rows, search, departmentFilter]);
 
   const openCreate = () => {
     setValues({});
@@ -187,8 +200,42 @@ export default function EmployeesManager() {
           className="flex items-center gap-2 bg-[#1E3A5F] text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
         >
           <FiPlus size={14} />
-          {t("adminMaster.add")}
+          {t("adminCrud.addEmployee")}
         </button>
+      </div>
+
+      <div className="px-6 py-4 flex flex-col sm:flex-row gap-3 border-b border-gray-100 dark:border-gray-700">
+        <div className="relative flex-1">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+            <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("adminCrud.searchEmployee")}
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 pl-10 pr-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+          />
+        </div>
+        <select
+          value={departmentFilter}
+          onChange={(e) => setDepartmentFilter(e.target.value)}
+          className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors sm:w-56"
+        >
+          <option value="">{t("adminCrud.allDepartments")}</option>
+          {departments.map((d) => (
+            <option key={d.id} value={d.id}>
+              {d.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {error && (
@@ -216,47 +263,55 @@ export default function EmployeesManager() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
-              {rows.map((row) => (
-                <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                  <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{row.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{row.email}</td>
-                  <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{row.role_name || "-"}</td>
-                  <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{deptName(row.department_id)}</td>
-                  <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{posName(row.position_id)}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        row.status === "active"
-                          ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-300"
-                          : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      {row.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(row)}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
-                        aria-label={t("adminMaster.edit")}
-                      >
-                        <FiEdit2 size={15} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setConfirmId(row.id);
-                          setError(null);
-                        }}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                        aria-label={t("adminMaster.delete")}
-                      >
-                        <FiTrash2 size={15} />
-                      </button>
-                    </div>
+              {filteredRows.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-sm text-gray-400">
+                    {t("common.emptyData")}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredRows.map((row) => (
+                  <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{row.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{row.email}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{row.role_name || "-"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{deptName(row.department_id)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">{posName(row.position_id)}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                          row.status === "active"
+                            ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-300"
+                            : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(row)}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                          aria-label={t("adminMaster.edit")}
+                        >
+                          <FiEdit2 size={15} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setConfirmId(row.id);
+                            setError(null);
+                          }}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                          aria-label={t("adminMaster.delete")}
+                        >
+                          <FiTrash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

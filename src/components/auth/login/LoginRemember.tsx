@@ -22,8 +22,8 @@ export default function LoginRemember({ checked, onChange }: LoginRememberProps)
         <span className="text-sm text-gray-600">{t("login.remember")}</span>
       </label>
 
-      <a
-        href="#"
+      
+       <a href="/auth/forgot-password"
         className="text-sm font-semibold text-[#1E3A5F] hover:underline"
       >
         {t("login.forgot")}

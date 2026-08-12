@@ -42,7 +42,7 @@ export default function LeaveHistory({ requests }: Props) {
       <div className="flex items-start justify-between mb-1">
         <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("leaveHistory.title")}</h3>
         <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">
-          {items.length} {t("leaveHistory.dataLabel")}
+          {items.slice(0, 3).length} {t("leaveHistory.dataLabel")}
         </span>
       </div>
       <p className="text-xs text-gray-400 mb-5">
@@ -53,7 +53,7 @@ export default function LeaveHistory({ requests }: Props) {
         <p className="text-center text-sm text-gray-400 py-8">{t("common.emptyData")}</p>
       ) : (
         <div className="flex flex-col gap-3">
-          {items.map((item) => (
+          {items.slice(0, 3).map((item) => (
             <LeaveCard key={item.id} {...item} />
           ))}
         </div>
