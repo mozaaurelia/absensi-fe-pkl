@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import AdminCrudPage from "@/components/admin/master/AdminCrudPage";
-import OvertimeApproval from "@/components/atasan/OvertimeApproval";
+import LemburContent from "@/components/admin/lembur/LemburContent";
 import { useLanguage } from "@/context/LanguageContext";
 import { getTeamOvertimeRequests, type OvertimeTeamRequest } from "@/lib/services/attendance";
 
@@ -45,7 +45,7 @@ export default function AdminOvertimePage() {
           </button>
         </div>
       ) : (
-        <OvertimeApproval requests={overtime} onProcessed={loadData} />
+        <LemburContent requests={overtime} onProcessed={loadData} />
       )}
     </AdminCrudPage>
   );

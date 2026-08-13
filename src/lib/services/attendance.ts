@@ -65,6 +65,9 @@ export async function getMyOvertimeRequests(): Promise<OvertimeRequest[]> {
 
 export interface OvertimeTeamRequest extends OvertimeRequest {
   employee_name?: string | null;
+  employee_id?: string | null;
+  department_name?: string | null;
+  rejection_note?: string | null;
 }
 
 export async function getTeamOvertimeRequests(): Promise<OvertimeTeamRequest[]> {

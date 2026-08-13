@@ -1106,6 +1106,15 @@ export const id = {
     present: "Hadir",
     late: "Terlambat",
     absent: "Alpha",
+    reportType: "Jenis Laporan",
+    period: "Periode Waktu",
+    attendance: "Kehadiran",
+    lateReport: "Keterlambatan",
+    absentReport: "Ketidakhadiran",
+    today: "Hari Ini",
+    thisWeek: "Minggu Ini",
+    thisMonth: "Bulan Ini",
+    thisYear: "Tahun Ini",
   },
 
   adminFace: {

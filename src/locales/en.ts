@@ -1107,6 +1107,15 @@ dashAttendance: {
     present: "Present",
     late: "Late",
     absent: "Absent",
+    reportType: "Report Type",
+    period: "Period",
+    attendance: "Attendance",
+    lateReport: "Late",
+    absentReport: "Absent",
+    today: "Today",
+    thisWeek: "This Week",
+    thisMonth: "This Month",
+    thisYear: "This Year",
   },
 
   adminFace: {
