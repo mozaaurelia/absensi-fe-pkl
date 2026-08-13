@@ -8,7 +8,11 @@ import LanguageToggle from "@/components/common/LanguageToggle";
 import Notification from "@/components/karyawan/notification/Notification";
 import AttendanceShortcut from "@/components/common/AttendanceShortcut";
 
-export default function AdminHeader() {
+interface AdminHeaderProps {
+  title?: string;
+}
+
+export default function AdminHeader({ title }: AdminHeaderProps) {
   const { data: session } = useSession();
   const user = session?.user;
   const [now, setNow] = useState<Date | null>(null);
@@ -49,9 +53,13 @@ export default function AdminHeader() {
       <div className="flex items-center justify-between">
         <div className="space-y-1.5">
           <h1 className="text-2xl font-bold tracking-tight">
-            {typedGreeting}
-            {typedGreeting.length < fullGreeting.length && (
-              <span className="animate-pulse ml-0.5 font-light">|</span>
+            {title ?? (
+              <>
+                {typedGreeting}
+                {typedGreeting.length < fullGreeting.length && (
+                  <span className="animate-pulse ml-0.5 font-light">|</span>
+                )}
+              </>
             )}
           </h1>
           <p className="text-blue-200/90 text-sm">{dateStr}</p>
