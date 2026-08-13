@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { AttendanceRecord } from "@/lib/services/attendance";
 import { isLateRecord } from "@/lib/attendanceStats";
@@ -19,6 +19,9 @@ function formatHours(minutes: number): string {
 
 export default function HistorySummary({ records }: Props) {
   const { lang, t } = useLanguage();
+  // Date.now() is impure; capture it in state on the client after mount.
+  const [nowMs, setNowMs] = useState<number | null>(null);
+  useEffect(() => { setNowMs(Date.now()); }, []);
 
   const stats = useMemo(() => {
     const presentDays = records.filter((r) => r.clock_in_time).length;
@@ -28,7 +31,7 @@ export default function HistorySummary({ records }: Props) {
       const start = new Date(r.clock_in_time).getTime();
       const end = r.clock_out_time
         ? new Date(r.clock_out_time).getTime()
-        : Date.now();
+        : (nowMs ?? start);
       const diff = end - start;
       if (diff < 0) return sum;
       return sum + Math.min(diff / 60000, 8 * 60);
@@ -37,7 +40,7 @@ export default function HistorySummary({ records }: Props) {
     const lateCount = records.filter((r) => isLateRecord(r, 9)).length;
 
     return { presentDays, totalMinutes, lateCount };
-  }, [records]);
+  }, [records, nowMs]);
 
   const statsList = [
     { label: t("historySummary.presentDays"), value: String(stats.presentDays) },

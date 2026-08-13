@@ -1,15 +1,22 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function AttendanceSuccess({ mode = "in", onFinish, serverTime }) {
   const { locale, t } = useLanguage();
   const isCheckIn = mode === "in";
-  const displayTime = new Date(serverTime ?? Date.now()).toLocaleTimeString(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  const [displayTime, setDisplayTime] = useState<string>("");
+
+  // Compute the display time after mount so Date.now() is not called during render.
+  useEffect(() => {
+    const ts = serverTime ?? Date.now();
+    setDisplayTime(new Date(ts).toLocaleTimeString(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }));
+  }, [serverTime, locale]);
 
   return (
     <div className="flex flex-col items-center text-center py-4">
