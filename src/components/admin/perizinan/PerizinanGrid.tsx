@@ -3,11 +3,12 @@ import PerizinanCard from "./PerizinanCard";
 
 interface PerizinanGridProps {
   requests: Perizinan[];
+  onDetail: (request: Perizinan) => void;
   onApprove: (request: Perizinan) => void;
   onReject: (request: Perizinan) => void;
 }
 
-export default function PerizinanGrid({ requests, onApprove, onReject }: PerizinanGridProps) {
+export default function PerizinanGrid({ requests, onDetail, onApprove, onReject }: PerizinanGridProps) {
   if (requests.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-gray-100 py-16 text-center animate-fade-slide-up">
@@ -23,6 +24,7 @@ export default function PerizinanGrid({ requests, onApprove, onReject }: Perizin
         <div key={request.id} style={{ animationDelay: `${i * 70}ms` }}>
           <PerizinanCard
             request={request}
+            onDetail={() => onDetail(request)}
             onApprove={() => onApprove(request)}
             onReject={() => onReject(request)}
           />

@@ -3,6 +3,7 @@ import { STATUS_MAP, getInitials } from "./types";
 
 interface PerizinanCardProps {
   request: Perizinan;
+  onDetail: () => void;
   onApprove: () => void;
   onReject: () => void;
 }
@@ -13,13 +14,16 @@ function formatDate(value: string): string {
   return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
-export default function PerizinanCard({ request, onApprove, onReject }: PerizinanCardProps) {
+export default function PerizinanCard({ request, onDetail, onApprove, onReject }: PerizinanCardProps) {
   const status = STATUS_MAP[request.status];
   const pending = request.status === "pending";
   const singleDay = request.startDate === request.endDate;
 
   return (
-    <div className="card-hover bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up">
+    <div
+      onClick={onDetail}
+      className="card-hover group bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up cursor-pointer hover:border-[#1E3A5F]/30 transition-colors"
+    >
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-3 min-w-0">
           <span
@@ -64,7 +68,10 @@ export default function PerizinanCard({ request, onApprove, onReject }: Perizina
       {pending ? (
         <div className="flex items-center gap-2">
           <button
-            onClick={onApprove}
+            onClick={(e) => {
+              e.stopPropagation();
+              onApprove();
+            }}
             className="flex-1 flex items-center justify-center gap-1.5 bg-green-600 text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-green-700 transition-colors"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
@@ -73,7 +80,10 @@ export default function PerizinanCard({ request, onApprove, onReject }: Perizina
             Setujui
           </button>
           <button
-            onClick={onReject}
+            onClick={(e) => {
+              e.stopPropagation();
+              onReject();
+            }}
             className="flex-1 flex items-center justify-center gap-1.5 bg-red-50 text-red-600 text-xs font-semibold py-2.5 rounded-xl hover:bg-red-100 transition-colors"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
@@ -92,10 +102,17 @@ export default function PerizinanCard({ request, onApprove, onReject }: Perizina
             {request.status === "approved" ? "Pengajuan disetujui" : "Pengajuan ditolak"}
           </span>
           {request.approvalNote && (
-            <p className="text-gray-400 mt-1 leading-relaxed">{request.approvalNote}</p>
+            <p className="text-gray-400 mt-1 leading-relaxed line-clamp-2">{request.approvalNote}</p>
           )}
         </div>
       )}
+
+      <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-center gap-1 text-[11px] font-semibold text-gray-300 group-hover:text-[#1E3A5F] transition-colors">
+        Klik untuk melihat detail
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
     </div>
   );
 }

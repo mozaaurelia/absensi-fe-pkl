@@ -7,6 +7,27 @@ import PerizinanStatsCards from "./PerizinanStatsCards";
 import PerizinanFilter, { type FilterStatus } from "./PerizinanFilter";
 import PerizinanGrid from "./PerizinanGrid";
 import ApprovalModal from "./ApprovalModal";
+import PerizinanDetailModal from "./PerizinanDetailModal";
+
+function sampleSurat(nama: string): string {
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="420" font-family="Arial, sans-serif">
+  <rect width="320" height="420" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="20" y="36" font-size="13" font-weight="bold" fill="#334155">SURAT IZIN</text>
+  <text x="20" y="58" font-size="10" fill="#64748b">Kepada Yth. HRD</text>
+  <text x="20" y="74" font-size="10" fill="#64748b">di tempat</text>
+  <text x="20" y="100" font-size="10" fill="#334155">Dengan hormat,</text>
+  <text x="20" y="120" font-size="10" fill="#334155">Yang bertanda tangan di bawah ini:</text>
+  <text x="20" y="146" font-size="11" fill="#334155">Nama : ${nama}</text>
+  <text x="20" y="162" font-size="11" fill="#334155">Divisi : Operasional</text>
+  <text x="20" y="188" font-size="10" fill="#334155">Mengajukan izin tidak masuk bekerja</text>
+  <text x="20" y="204" font-size="10" fill="#334155">dengan alasan yang disertakan.</text>
+  <text x="20" y="220" font-size="10" fill="#334155">Demikian surat ini dibuat.</text>
+  <text x="20" y="300" font-size="10" fill="#334155">Hormat saya,</text>
+  <text x="20" y="360" font-size="11" fill="#334155">${nama}</text>
+</svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
 
 const initialRequests: Perizinan[] = [
   {
@@ -19,6 +40,8 @@ const initialRequests: Perizinan[] = [
     duration: 5,
     reason: "Cuti tahunan ke kampung halaman bersama keluarga, sudah direncanakan sejak awal tahun.",
     status: "pending",
+    attachment: sampleSurat("Andi Pratama"),
+    attachmentName: "Surat_Izin_Cuti.png",
   },
   {
     id: "2",
@@ -30,6 +53,8 @@ const initialRequests: Perizinan[] = [
     duration: 1,
     reason: "Demam tinggi dan disarankan istirahat oleh dokter.",
     status: "pending",
+    attachment: sampleSurat("Sinta Rahma"),
+    attachmentName: "Surat_Keterangan_Dokter.png",
   },
   {
     id: "3",
@@ -77,6 +102,8 @@ const initialRequests: Perizinan[] = [
     duration: 2,
     reason: "Flu berat, mengikuti saran dokter untuk beristirahat.",
     status: "pending",
+    attachment: sampleSurat("Dewi Lestari"),
+    attachmentName: "Surat_Keterangan_Dokter.png",
   },
 ];
 
@@ -84,7 +111,10 @@ export default function PerizinanContent() {
   const [requests, setRequests] = useState<Perizinan[]>(initialRequests);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterStatus>("all");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [deptFilter, setDeptFilter] = useState("");
   const [action, setAction] = useState<{ request: Perizinan; mode: "approve" | "reject" } | null>(null);
+  const [detail, setDetail] = useState<Perizinan | null>(null);
 
   const counts = useMemo(
     () => ({
@@ -96,18 +126,30 @@ export default function PerizinanContent() {
     [requests]
   );
 
+  const types = useMemo(
+    () => Array.from(new Set(requests.map((r) => r.type))).sort(),
+    [requests]
+  );
+
+  const departments = useMemo(
+    () => Array.from(new Set(requests.map((r) => r.department))).sort(),
+    [requests]
+  );
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return requests.filter((r) => {
       const matchesStatus = filter === "all" || r.status === filter;
+      const matchesType = !typeFilter || r.type === typeFilter;
+      const matchesDept = !deptFilter || r.department === deptFilter;
       const matchesSearch =
         r.employeeName.toLowerCase().includes(q) ||
         r.department.toLowerCase().includes(q) ||
         r.type.toLowerCase().includes(q) ||
         r.reason.toLowerCase().includes(q);
-      return matchesStatus && matchesSearch;
+      return matchesStatus && matchesType && matchesDept && matchesSearch;
     });
-  }, [requests, search, filter]);
+  }, [requests, search, filter, typeFilter, deptFilter]);
 
   const handleConfirm = (note: string) => {
     if (!action) return;
@@ -129,14 +171,23 @@ export default function PerizinanContent() {
         search={search}
         filter={filter}
         counts={counts}
+        types={types}
+        departments={departments}
+        typeFilter={typeFilter}
+        deptFilter={deptFilter}
         onSearchChange={setSearch}
         onFilterChange={setFilter}
+        onTypeChange={setTypeFilter}
+        onDeptChange={setDeptFilter}
       />
       <PerizinanGrid
         requests={filtered}
+        onDetail={(request) => setDetail(request)}
         onApprove={(request) => setAction({ request, mode: "approve" })}
         onReject={(request) => setAction({ request, mode: "reject" })}
       />
+
+      {detail && <PerizinanDetailModal request={detail} onClose={() => setDetail(null)} />}
 
       {action && (
         <ApprovalModal

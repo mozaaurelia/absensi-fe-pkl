@@ -10,9 +10,10 @@ import Layout from "@/components/admin/layout/layout";
 interface Props {
   titleKey: string;
   children: ReactNode;
+  hideTitle?: boolean;
 }
 
-export default function AdminCrudPage({ titleKey, children }: Props) {
+export default function AdminCrudPage({ titleKey, children, hideTitle = false }: Props) {
   const { data: session, status } = useSession();
   const user = session?.user;
   const router = useRouter();
@@ -41,11 +42,13 @@ export default function AdminCrudPage({ titleKey, children }: Props) {
 
   return (
     <Layout>
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-          {t(titleKey)}
-        </h2>
-      </div>
+      {!hideTitle && (
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            {t(titleKey)}
+          </h2>
+        </div>
+      )}
       {children}
     </Layout>
   );

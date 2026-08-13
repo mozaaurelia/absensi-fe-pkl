@@ -16,6 +16,9 @@ export interface OfficeLocation {
   latitude: string | number;
   longitude: string | number;
   radius_meters: string | number;
+  address?: string | null;
+  type?: string;
+  is_active?: boolean;
 }
 
 export interface Shift {
@@ -70,23 +73,20 @@ export function deletePosition(id: string): Promise<{ id: string }> {
 export function getOfficeLocations(): Promise<OfficeLocation[]> {
   return apiFetch<OfficeLocation[]>("/locations");
 }
-export function createOfficeLocation(body: {
+export interface OfficeLocationBody {
   name: string;
   latitude: string | number;
   longitude: string | number;
   radius_meters: string | number;
-}): Promise<OfficeLocation> {
+  address?: string;
+  type?: string;
+  is_active?: boolean;
+}
+
+export function createOfficeLocation(body: OfficeLocationBody): Promise<OfficeLocation> {
   return apiFetch<OfficeLocation>("/locations", { method: "POST", body: JSON.stringify(body) });
 }
-export function updateOfficeLocation(
-  id: string,
-  body: {
-    name: string;
-    latitude: string | number;
-    longitude: string | number;
-    radius_meters: string | number;
-  }
-): Promise<OfficeLocation> {
+export function updateOfficeLocation(id: string, body: Partial<OfficeLocationBody>): Promise<OfficeLocation> {
   return apiFetch<OfficeLocation>(`/locations/${id}`, { method: "PUT", body: JSON.stringify(body) });
 }
 export function deleteOfficeLocation(id: string): Promise<{ id: string }> {
@@ -201,25 +201,40 @@ export function deleteHoliday(id: string): Promise<{ id: string }> {
   return apiFetch<{ id: string }>(`/holidays/${id}`, { method: "DELETE" });
 }
 
+export type EventType = "meeting" | "training" | "event" | "lainnya";
+
 export interface CalendarEvent {
   id: string;
   title: string;
   description?: string | null;
+  event_type?: string | null;
   event_date: string;
+  start_time?: string | null;
+  end_time?: string | null;
+  location?: string | null;
+  location_lat?: string | number | null;
+  location_lng?: string | number | null;
+}
+export interface CalendarEventBody {
+  title: string;
+  description?: string;
+  event_type?: string;
+  event_date: string;
+  start_time?: string;
+  end_time?: string;
+  location?: string;
+  location_lat?: number;
+  location_lng?: number;
 }
 export function getCalendarEvents(): Promise<CalendarEvent[]> {
   return apiFetch<CalendarEvent[]>("/calendar-events");
 }
-export function createCalendarEvent(body: {
-  title: string;
-  description?: string;
-  event_date: string;
-}): Promise<CalendarEvent> {
+export function createCalendarEvent(body: CalendarEventBody): Promise<CalendarEvent> {
   return apiFetch<CalendarEvent>("/calendar-events", { method: "POST", body: JSON.stringify(body) });
 }
 export function updateCalendarEvent(
   id: string,
-  body: { title?: string; description?: string; event_date?: string }
+  body: Partial<CalendarEventBody>
 ): Promise<CalendarEvent> {
   return apiFetch<CalendarEvent>(`/calendar-events/${id}`, { method: "PUT", body: JSON.stringify(body) });
 }

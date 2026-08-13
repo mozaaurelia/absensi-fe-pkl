@@ -34,8 +34,6 @@ export default function Sidebar() {
     { label: t("adminSidebar.departments"), href: "/admin/departemen", icon: DeptIcon, superadminOnly: false },
     { label: t("adminSidebar.positions"), href: "/admin/jabatan", icon: PositionIcon, superadminOnly: false },
     { label: t("adminSidebar.workSchedule"), href: "/admin/jadwal-kerja", icon: ScheduleIcon, superadminOnly: false },
-    { label: t("adminSidebar.patterns"), href: "/admin/pola-kerja", icon: PatternIcon, superadminOnly: false },
-    { label: t("adminSidebar.scheduling"), href: "/admin/penjadwalan", icon: AssignmentIcon, superadminOnly: false },
     { label: t("adminSidebar.locations"), href: "/admin/lokasi", icon: LocationIcon, superadminOnly: false },
     { label: t("adminSidebar.permits"), href: "/admin/perizinan", icon: PermitIcon, superadminOnly: false },
     { label: t("adminSidebar.calendar"), href: "/admin/kalender", icon: CalendarIcon, superadminOnly: false },
@@ -258,26 +256,6 @@ function AnnouncementIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
       <path d="M3 10v4a1 1 0 0 0 1 1h3l8 5V4L7 9H4a1 1 0 0 0-1 1z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
       <path d="M18 8a3.5 3.5 0 0 1 0 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function PatternIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="9" cy="9" r="1.2" fill="currentColor" />
-      <circle cx="15" cy="15" r="1.2" fill="currentColor" />
-    </svg>
-  );
-}
-
-function AssignmentIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M3 9h18M3 15h18M12 9v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }

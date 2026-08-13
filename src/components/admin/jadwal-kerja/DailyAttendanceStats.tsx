@@ -9,7 +9,7 @@ interface DailyAttendanceStatsProps {
 
 export default function DailyAttendanceStats({ employees, shifts, assignments }: DailyAttendanceStatsProps) {
   const shiftMap = new Map(shifts.map((s) => [s.id, s]));
-  const todayIdx = (new Date().getDay() + 6) % 7; // 0=Sen, 6=Min
+  const todayIdx = (new Date().getDay() + 6) % 7; // 0=Senin, 6=Minggu
 
   let wfo = 0;
   let wfh = 0;
@@ -35,14 +35,14 @@ export default function DailyAttendanceStats({ employees, shifts, assignments }:
       label: "WFO Hari Ini",
       desc: `Hari ${DAYS[todayIdx]}`,
       value: wfo,
-      iconBg: "bg-teal-50 text-teal-600",
+      iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <OfficeIcon />,
     },
     {
       label: "WFH Hari Ini",
       desc: `Hari ${DAYS[todayIdx]}`,
       value: wfh,
-      iconBg: "bg-purple-50 text-purple-600",
+      iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <HomeIcon />,
     },
     {
@@ -59,12 +59,17 @@ export default function DailyAttendanceStats({ employees, shifts, assignments }:
       {stats.map((stat, i) => (
         <div
           key={stat.label}
-          className="card-hover bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up"
+          className="bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up"
           style={{ animationDelay: `${i * 70}ms` }}
         >
-          <span className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${stat.iconBg}`}>
-            {stat.icon}
-          </span>
+          <div className="flex items-center justify-between mb-4">
+            <span className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.iconBg}`}>
+              {stat.icon}
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-300">
+              {i === 0 ? "Total" : "Hari Ini"}
+            </span>
+          </div>
           <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
           <p className="text-sm font-semibold text-gray-700 mt-0.5">{stat.label}</p>
           <p className="text-xs text-gray-400 mt-0.5">{stat.desc}</p>

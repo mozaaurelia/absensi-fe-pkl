@@ -1,38 +1,48 @@
-import type { Employee, ShiftTemplate, Assignments } from "./types";
-import { DAYS, getShiftDuration, SHIFT_COLOR_MAP } from "./types";
+import type { Employee, ShiftTemplate, Assignments, WeekDay, ScheduleTab } from "./types";
+import { getShiftDuration, getInitials } from "./types";
 import ScheduleCell from "./ScheduleCell";
-import WeekNavigator from "./WeekNavigator";
 
 interface WeeklyScheduleGridProps {
   employees: Employee[];
   shifts: ShiftTemplate[];
   assignments: Assignments;
-  weekLabel: string;
-  onPrevWeek: () => void;
-  onNextWeek: () => void;
-  onCopyWeek: () => void;
+  days: WeekDay[];
+  search: string;
+  tab: ScheduleTab;
+  counts: Record<ScheduleTab, number>;
+  onSearchChange: (value: string) => void;
+  onTabChange: (tab: ScheduleTab) => void;
   onAssign: (employeeId: string, dayIndex: number, shiftId: string | null) => void;
 }
+
+const TABS: { id: ScheduleTab; label: string }[] = [
+  { id: "all", label: "Semua" },
+  { id: "wfo", label: "WFO" },
+  { id: "wfh", label: "WFH" },
+  { id: "libur", label: "Libur" },
+];
 
 export default function WeeklyScheduleGrid({
   employees,
   shifts,
   assignments,
-  weekLabel,
-  onPrevWeek,
-  onNextWeek,
-  onCopyWeek,
+  days,
+  search,
+  tab,
+  counts,
+  onSearchChange,
+  onTabChange,
   onAssign,
 }: WeeklyScheduleGridProps) {
   const shiftMap = new Map(shifts.map((s) => [s.id, s]));
 
-  const emptyDays = DAYS.map((_, dayIdx) =>
+  const emptyDays = days.map((_, dayIdx) =>
     employees.every((emp) => !assignments[emp.id]?.[dayIdx])
   );
 
   const getTotalHours = (employeeId: string) => {
-    const days = assignments[employeeId] ?? [];
-    return days.reduce((total, shiftId) => {
+    const employeeDays = assignments[employeeId] ?? [];
+    return employeeDays.reduce((total, shiftId) => {
       if (!shiftId) return total;
       const shift = shiftMap.get(shiftId);
       return total + (shift ? getShiftDuration(shift) : 0);
@@ -41,62 +51,80 @@ export default function WeeklyScheduleGrid({
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden mb-6 animate-fade-slide-up">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 px-5 py-4 border-b border-gray-100">
-        <div>
-          <h3 className="text-sm font-bold text-gray-900">Penugasan Mingguan</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Atur shift tiap karyawan per hari.</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="hidden sm:flex items-center gap-4 mr-2">
-            {shifts.map((s) => (
-              <span key={s.id} className="flex items-center gap-1.5 text-xs text-gray-500">
-                <span className={`w-2.5 h-2.5 rounded-full ${SHIFT_COLOR_MAP[s.color].dot}`} />
-                {s.name}
-              </span>
-            ))}
-            <span className="flex items-center gap-1.5 text-xs text-gray-500">
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-200" />
-              Libur
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <WeekNavigator
-              weekLabel={weekLabel}
-              onPrev={onPrevWeek}
-              onNext={onNextWeek}
-            />
-            <button
-              onClick={onCopyWeek}
-              className="flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-2 text-xs font-semibold text-[#1E3A5F] hover:bg-blue-50 hover:border-blue-200 transition-colors whitespace-nowrap"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                <rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="2" />
-                <path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" strokeWidth="2" />
-              </svg>
-              Salin ke Minggu Depan
-            </button>
-          </div>
+      <div className="px-5 py-4 border-b border-gray-100">
+        <div className="relative">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+            <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Cari nama atau ID karyawan..."
+            className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
+          />
         </div>
       </div>
 
+      <div className="px-5 py-3 border-b border-gray-100 bg-gray-50/60 flex flex-wrap items-center gap-1">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => onTabChange(t.id)}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+              tab === t.id
+                ? "bg-[#1E3A5F] text-white shadow-sm"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {t.label}
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                tab === t.id ? "bg-white/20" : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {counts[t.id]}
+            </span>
+          </button>
+        ))}
+      </div>
+
       <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[820px]">
+        <table className="w-full text-sm min-w-[1000px]">
           <thead>
             <tr className="text-left text-xs text-gray-400 bg-gray-50 border-b border-gray-100">
-              <th className="py-3 px-4 font-medium sticky left-0 bg-gray-50">Karyawan</th>
-              {DAYS.map((day, i) => (
-                <th key={day} className="py-3 px-3 font-medium text-center">
-                  <div className="flex flex-col items-center gap-1">
-                    {day}
+              <th className="py-3 pl-5 pr-2 font-medium sticky left-0 bg-gray-50 w-16 text-center">ID</th>
+              <th className="py-3 pl-2 pr-4 font-medium sticky left-16 bg-gray-50">Nama Karyawan</th>
+              {days.map((day, i) => (
+                <th key={day.fullDate} className="py-3 px-2 font-medium text-center">
+                  <div
+                    className={`flex flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 ${
+                      day.isToday ? "bg-blue-50" : ""
+                    }`}
+                  >
+                    <span className={`text-[11px] font-semibold uppercase tracking-wide ${day.isToday ? "text-[#1E3A5F]" : "text-gray-500"}`}>
+                      {day.name}
+                    </span>
+                    <span className={`text-base font-bold leading-tight ${day.isToday ? "text-[#1E3A5F]" : "text-gray-800"}`}>
+                      {day.date}
+                    </span>
                     {emptyDays[i] && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400" title="Belum ada jadwal" />
+                      <span
+                        className="w-1.5 h-1.5 rounded-full bg-red-400"
+                        title="Belum ada jadwal"
+                      />
                     )}
                   </div>
                 </th>
               ))}
-              <th className="py-3 px-4 font-medium text-right">Total Jam</th>
+              <th className="py-3 px-5 font-medium text-center">Total Jam</th>
             </tr>
           </thead>
           <tbody>
@@ -105,16 +133,31 @@ export default function WeeklyScheduleGrid({
               const overLimit = totalHours > 44;
 
               return (
-                <tr key={emp.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/40 transition-colors">
-                  <td className="py-3 px-4 sticky left-0 bg-white">
-                    <p className="text-sm font-semibold text-gray-800">{emp.name}</p>
-                    <p className="text-[11px] text-gray-400">{emp.department}</p>
+                <tr
+                  key={emp.id}
+                  className="border-b border-gray-50 last:border-0 hover:bg-blue-50/30 transition-colors"
+                >
+                  <td className="py-3 pl-5 pr-2 sticky left-0 bg-white w-16 text-center">
+                    <span className="inline-flex text-[10px] font-bold text-[#1E3A5F] bg-blue-50 rounded px-1.5 py-0.5 whitespace-nowrap">
+                      {emp.id.toUpperCase()}
+                    </span>
                   </td>
-                  {DAYS.map((_, dayIdx) => {
+                  <td className="py-3 pl-2 pr-4 sticky left-16 bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="w-9 h-9 rounded-full bg-blue-50 text-[#1E3A5F] text-xs font-bold flex items-center justify-center shrink-0">
+                        {getInitials(emp.name)}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-800 truncate">{emp.name}</p>
+                        <p className="text-[11px] text-gray-400 truncate">{emp.department}</p>
+                      </div>
+                    </div>
+                  </td>
+                  {days.map((day, dayIdx) => {
                     const shiftId = assignments[emp.id]?.[dayIdx] ?? null;
                     const shift = shiftId ? shiftMap.get(shiftId) ?? null : null;
                     return (
-                      <td key={dayIdx} className="py-2 px-2">
+                      <td key={day.fullDate} className={`py-2 px-1.5 ${day.isToday ? "bg-blue-50/30" : ""}`}>
                         <ScheduleCell
                           shift={shift}
                           shifts={shifts}
@@ -123,10 +166,10 @@ export default function WeeklyScheduleGrid({
                       </td>
                     );
                   })}
-                  <td className="py-3 px-4 text-right">
+                  <td className="py-3 px-5 text-center">
                     <span
                       className={`text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${
-                        overLimit ? "bg-red-50 text-red-600" : "bg-gray-50 text-gray-600"
+                        overLimit ? "bg-red-50 text-red-600" : "bg-blue-50 text-[#1E3A5F]"
                       }`}
                       title={overLimit ? "Melebihi batas wajar 44 jam/minggu" : undefined}
                     >
@@ -138,10 +181,17 @@ export default function WeeklyScheduleGrid({
             })}
           </tbody>
         </table>
+
+        {employees.length === 0 && (
+          <div className="p-10 text-center">
+            <p className="text-sm font-semibold text-gray-600">Tidak ada karyawan ditemukan</p>
+            <p className="text-xs text-gray-400 mt-1">Coba ubah kata kunci pencarian atau filter.</p>
+          </div>
+        )}
       </div>
 
       {emptyDays.some(Boolean) && (
-        <div className="flex items-center gap-2 bg-blue-50 text-[#1E3A5F] text-xs font-semibold px-4 py-3 border-t border-blue-100">
+        <div className="flex items-center gap-2 bg-blue-50 text-[#1E3A5F] text-xs font-semibold px-5 py-3 border-t border-blue-100">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
             <path d="M12 9v4M12 17h.01M10.3 4.5L2.8 18a1.5 1.5 0 0 0 1.3 2.2h15.8a1.5 1.5 0 0 0 1.3-2.2L13.7 4.5a1.5 1.5 0 0 0-2.6 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>

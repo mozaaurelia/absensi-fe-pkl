@@ -11,6 +11,8 @@ export interface Perizinan {
   reason: string;
   status: PerizinanStatus;
   approvalNote?: string;
+  attachment?: string | null;
+  attachmentName?: string | null;
 }
 
 export const STATUS_MAP: Record<
