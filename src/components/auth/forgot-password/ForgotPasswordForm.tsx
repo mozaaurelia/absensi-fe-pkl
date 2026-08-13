@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { apiFetch } from "@/lib/api";
 
 interface ForgotPasswordFormProps {
   onSuccess: (email: string) => void;
@@ -17,11 +18,17 @@ export default function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProp
     setLoading(true);
 
     try {
-      // TODO: panggil API forgot-password, kirim { email }
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await apiFetch<{ message: string }>("/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
       onSuccess(email);
-    } catch {
-      setError("Email tidak ditemukan. Periksa kembali alamat email Anda.");
+    } catch (err: any) {
+      const message =
+        err?.code === "EMAIL_REQUIRED"
+          ? "Email wajib diisi."
+          : err?.message || "Gagal mengirim link reset. Silakan coba lagi.";
+      setError(message);
     } finally {
       setLoading(false);
     }

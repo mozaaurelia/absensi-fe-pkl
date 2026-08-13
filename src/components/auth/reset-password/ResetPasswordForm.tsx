@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { apiFetch } from "@/lib/api";
 
 interface ResetPasswordFormProps {
   token: string;
@@ -47,11 +48,20 @@ export default function ResetPasswordForm({ token, onSuccess }: ResetPasswordFor
 
     setLoading(true);
     try {
-      // TODO: panggil API reset-password, kirim { token, password }
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await apiFetch<{ message: string }>("/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify({ token, newPassword: password }),
+      });
       onSuccess();
-    } catch {
-      setError("Link reset sudah kedaluwarsa. Silakan minta link baru.");
+    } catch (err: any) {
+      const code = err?.code;
+      const message =
+        code === "INVALID_OR_EXPIRED_TOKEN"
+          ? "Link reset sudah kedaluwarsa atau tidak valid. Silakan minta link baru."
+          : code === "PASSWORD_TOO_SHORT"
+            ? "Kata sandi minimal 8 karakter."
+            : err?.message || "Gagal menyimpan kata sandi. Silakan coba lagi.";
+      setError(message);
     } finally {
       setLoading(false);
     }
