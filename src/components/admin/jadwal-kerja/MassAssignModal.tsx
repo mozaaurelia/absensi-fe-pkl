@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ShiftTemplate, WeekDay } from "./types";
 import { DAYS } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface MassAssignModalProps {
   shifts: ShiftTemplate[];
@@ -15,6 +16,7 @@ const inputClass =
   "w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all appearance-none cursor-pointer";
 
 export default function MassAssignModal({ shifts, days, onClose, onApply }: MassAssignModalProps) {
+  const { t } = useLanguage();
   const [shiftId, setShiftId] = useState("");
   const [allDays, setAllDays] = useState(true);
   const [selected, setSelected] = useState<number[]>(DAYS.map((_, i) => i));
@@ -33,11 +35,11 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!shiftId) {
-      setError("Pilih shift terlebih dahulu.");
+      setError(t("adminSchedule.shiftRequired"));
       return;
     }
     if (selected.length === 0) {
-      setError("Pilih minimal satu hari.");
+      setError(t("adminSchedule.dayRequired"));
       return;
     }
     setError("");
@@ -56,10 +58,9 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
                   <path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
-              Atur Massal
+              {t("adminSchedule.massTitle")}
             </h3>
-            <p className="text-xs text-gray-400 mt-1.5">Terapkan shift ke semua karyawan sekaligus</p>
-          </div>
+            <p className="text-xs text-gray-400 mt-1.5">{t("adminSchedule.massDesc")}</p>          </div>
           <button
             type="button"
             onClick={onClose}
@@ -73,7 +74,7 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
 
         <div className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Shift</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.shiftLabel")}</label>
             <select
               value={shiftId}
               onChange={(e) => {
@@ -82,8 +83,8 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
               }}
               className={inputClass}
             >
-              <option value="">Pilih shift...</option>
-              <option value="libur">Libur (kosongkan)</option>
+              <option value="">{t("adminSchedule.shiftPlaceholder")}</option>
+              <option value="libur">{t("adminSchedule.liburClearOption")}</option>
               {shifts.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name} ({s.startTime} - {s.endTime})
@@ -94,7 +95,7 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-semibold text-gray-700">Hari</label>
+              <label className="block text-sm font-semibold text-gray-700">{t("adminSchedule.daysLabel")}</label>
               <button
                 type="button"
                 onClick={toggleAllDays}
@@ -111,7 +112,7 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
                     </svg>
                   )}
                 </span>
-                Semua Hari
+                {t("adminSchedule.allDays")}
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
@@ -153,7 +154,7 @@ export default function MassAssignModal({ shifts, days, onClose, onApply }: Mass
             type="submit"
             className="flex-1 flex items-center justify-center gap-2 bg-[#1E3A5F] text-white rounded-lg py-3 text-sm font-semibold hover:bg-[#16304f] transition-colors"
           >
-            Terapkan
+            {t("adminSchedule.apply")}
           </button>
         </div>
       </form>

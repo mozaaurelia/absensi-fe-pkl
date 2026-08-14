@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export interface ScheduleEvent {
   id: string;
@@ -16,15 +17,21 @@ interface EventModalProps {
   onSave: (event: ScheduleEvent) => void;
 }
 
-const EVENT_TYPES = ["Meeting", "Pelatihan", "Maintenance", "Acara Perusahaan", "Lainnya"];
-
 const inputClass =
   "w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all";
 
 export default function EventModal({ onClose, onSave }: EventModalProps) {
+  const { t } = useLanguage();
+  const eventTypes = [
+    t("adminSchedule.eventMeeting"),
+    t("adminSchedule.eventTraining"),
+    t("adminSchedule.eventMaintenance"),
+    t("adminSchedule.eventCompany"),
+    t("adminSchedule.eventOther"),
+  ];
   const [form, setForm] = useState({
     date: new Date().toISOString().slice(0, 10),
-    type: "Meeting",
+    type: eventTypes[0],
     title: "",
     location: "",
     note: "",
@@ -35,7 +42,7 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
     e.preventDefault();
     const trimmed = form.title.trim();
     if (!trimmed) {
-      setTitleError("Judul event wajib diisi.");
+      setTitleError(t("adminSchedule.titleRequired"));
       return;
     }
     setTitleError("");
@@ -61,10 +68,9 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
                   <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </span>
-              Tambah Event Baru
+              {t("adminSchedule.addEventTitle")}
             </h3>
-            <p className="text-xs text-gray-400 mt-1.5">Buat agenda/event untuk jadwal kerja</p>
-          </div>
+            <p className="text-xs text-gray-400 mt-1.5">{t("adminSchedule.addEventDesc")}</p>          </div>
           <button
             type="button"
             onClick={onClose}
@@ -79,7 +85,7 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
         <div className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tanggal</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.dateLabel")}</label>
               <input
                 type="date"
                 value={form.date}
@@ -88,13 +94,13 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tipe Event</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.typeLabel")}</label>
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
                 className={`${inputClass} appearance-none cursor-pointer`}
               >
-                {EVENT_TYPES.map((type) => (
+                {eventTypes.map((type) => (
                   <option key={type} value={type}>
                     {type}
                   </option>
@@ -104,35 +110,35 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Judul</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.titleLabel")}</label>
             <input
               value={form.title}
               onChange={(e) => {
                 setForm({ ...form, title: e.target.value });
                 if (titleError) setTitleError("");
               }}
-              placeholder="Contoh: Meeting Koordinasi Bulanan"
+              placeholder={t("adminSchedule.titlePlaceholder")}
               className={inputClass}
             />
             {titleError && <p className="text-xs text-red-500 mt-1">{titleError}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Lokasi</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.locationLabel")}</label>
             <input
               value={form.location}
               onChange={(e) => setForm({ ...form, location: e.target.value })}
-              placeholder="Contoh: Ruang Meeting Lantai 2"
+              placeholder={t("adminSchedule.locationPlaceholder")}
               className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Keterangan</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminSchedule.noteLabel")}</label>
             <textarea
               value={form.note}
               onChange={(e) => setForm({ ...form, note: e.target.value })}
-              placeholder="Detail aktivitas..."
+              placeholder={t("adminSchedule.notePlaceholder")}
               rows={3}
               className={`${inputClass} resize-none`}
             />
@@ -154,7 +160,7 @@ export default function EventModal({ onClose, onSave }: EventModalProps) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
             </svg>
-            Tambah Event
+            {t("adminSchedule.addEvent")}
           </button>
         </div>
       </form>

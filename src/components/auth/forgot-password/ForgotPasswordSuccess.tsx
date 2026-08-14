@@ -1,9 +1,16 @@
 interface ForgotPasswordSuccessProps {
   email: string;
+  resending?: boolean;
+  resendError?: string;
   onResend: () => void;
 }
 
-export default function ForgotPasswordSuccess({ email, onResend }: ForgotPasswordSuccessProps) {
+export default function ForgotPasswordSuccess({
+  email,
+  resending = false,
+  resendError = "",
+  onResend,
+}: ForgotPasswordSuccessProps) {
   return (
     <div className="text-center">
       <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-5">
@@ -24,11 +31,16 @@ export default function ForgotPasswordSuccess({ email, onResend }: ForgotPasswor
         lalu coba kirim ulang.
       </p>
 
+      {resendError && (
+        <p className="text-xs text-red-600 mb-4">{resendError}</p>
+      )}
+
       <button
         onClick={onResend}
-        className="w-full border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-lg hover:bg-gray-50 transition-colors mb-4"
+        disabled={resending}
+        className="w-full border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-lg hover:bg-gray-50 transition-colors mb-4 disabled:opacity-60"
       >
-        Kirim Ulang Email
+        {resending ? "Mengirim ulang..." : "Kirim Ulang Email"}
       </button>
 
       

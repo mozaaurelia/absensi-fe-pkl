@@ -1,5 +1,6 @@
 import type { Employee, ShiftTemplate, Assignments } from "./types";
 import { DAYS } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface DailyAttendanceStatsProps {
   employees: Employee[];
@@ -8,6 +9,7 @@ interface DailyAttendanceStatsProps {
 }
 
 export default function DailyAttendanceStats({ employees, shifts, assignments }: DailyAttendanceStatsProps) {
+  const { t } = useLanguage();
   const shiftMap = new Map(shifts.map((s) => [s.id, s]));
   const todayIdx = (new Date().getDay() + 6) % 7; // 0=Senin, 6=Minggu
 
@@ -25,29 +27,29 @@ export default function DailyAttendanceStats({ employees, shifts, assignments }:
 
   const stats = [
     {
-      label: "Total Karyawan",
-      desc: "Terdaftar aktif",
+      label: t("adminSchedule.totalEmployeeLabel"),
+      desc: t("adminSchedule.totalEmployeeDesc"),
       value: employees.length,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <UsersIcon />,
     },
     {
-      label: "WFO Hari Ini",
-      desc: `Hari ${DAYS[todayIdx]}`,
+      label: t("adminSchedule.wfoToday"),
+      desc: t("adminSchedule.dayDesc", { day: DAYS[todayIdx] }),
       value: wfo,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <OfficeIcon />,
     },
     {
-      label: "WFH Hari Ini",
-      desc: `Hari ${DAYS[todayIdx]}`,
+      label: t("adminSchedule.wfhToday"),
+      desc: t("adminSchedule.dayDesc", { day: DAYS[todayIdx] }),
       value: wfh,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <HomeIcon />,
     },
     {
-      label: "Libur Hari Ini",
-      desc: `Hari ${DAYS[todayIdx]}`,
+      label: t("adminSchedule.liburToday"),
+      desc: t("adminSchedule.dayDesc", { day: DAYS[todayIdx] }),
       value: libur,
       iconBg: "bg-gray-100 text-gray-500",
       icon: <MoonIcon />,
@@ -67,7 +69,7 @@ export default function DailyAttendanceStats({ employees, shifts, assignments }:
               {stat.icon}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-gray-300">
-              {i === 0 ? "Total" : "Hari Ini"}
+              {i === 0 ? t("adminSchedule.totalTag") : t("adminSchedule.todayTag")}
             </span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{stat.value}</p>

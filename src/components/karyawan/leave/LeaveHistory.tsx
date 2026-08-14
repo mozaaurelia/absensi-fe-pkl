@@ -33,6 +33,7 @@ export default function LeaveHistory({ requests }: Props) {
           req.total_days != null
             ? `${req.total_days} ${t("leaveHistory.daysUnit")}`
             : "-",
+        attachmentUrl: req.attachment_url ?? null,
       })),
     [requests, t],
   );

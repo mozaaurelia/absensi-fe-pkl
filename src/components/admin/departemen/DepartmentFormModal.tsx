@@ -5,6 +5,7 @@ import type { Department } from "./types";
 import InfoDasarTab from "./InfoDasarTab";
 import HariKerjaTab from "./HariKerjaTab";
 import KebijakanTab from "./KebijakanTab";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Tab = "info" | "hari-kerja" | "kebijakan";
 
@@ -33,6 +34,7 @@ export default function DepartmentFormModal({
   onClose,
   onSave,
 }: DepartmentFormModalProps) {
+  const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>("info");
   const [form, setForm] = useState<Department>(
     initialData ?? { id: crypto.randomUUID(), employeeCount: 0, attendanceRate: 90, ...emptyForm }
@@ -40,15 +42,15 @@ export default function DepartmentFormModal({
   const [nameError, setNameError] = useState("");
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "info", label: "Info Dasar", icon: "📋" },
-    { id: "hari-kerja", label: "Hari Kerja", icon: "📅" },
-    { id: "kebijakan", label: "Kebijakan", icon: "📜" },
+    { id: "info", label: t("adminDepartments.tabInfo"), icon: "📋" },
+    { id: "hari-kerja", label: t("adminDepartments.tabWorkDays"), icon: "📅" },
+    { id: "kebijakan", label: t("adminDepartments.tabPolicy"), icon: "📜" },
   ];
 
   const handleSave = () => {
     const trimmed = form.name.trim();
     if (!trimmed) {
-      setNameError("Nama departemen wajib diisi.");
+      setNameError(t("adminDepartments.nameRequired"));
       setTab("info");
       return;
     }
@@ -56,7 +58,7 @@ export default function DepartmentFormModal({
       .filter((n) => n.toLowerCase() !== initialData?.name.toLowerCase())
       .some((n) => n.toLowerCase() === trimmed.toLowerCase());
     if (isDuplicate) {
-      setNameError("Nama departemen ini sudah dipakai.");
+      setNameError(t("adminDepartments.nameExists"));
       setTab("info");
       return;
     }
@@ -70,9 +72,9 @@ export default function DepartmentFormModal({
         <div className="flex items-center justify-between px-6 pt-6 pb-4">
           <div>
             <h3 className="font-bold text-gray-900 flex items-center gap-2">
-              <span>✏️</span> {initialData ? "Edit Departemen" : "Tambah Departemen"}
+              <span>✏️</span> {initialData ? t("adminDepartments.editTitle") : t("adminDepartments.addTitle")}
             </h3>
-            <p className="text-xs text-gray-400 mt-0.5">Konfigurasi departemen & kebijakan absensi</p>
+            <p className="text-xs text-gray-400 mt-0.5">{t("adminDepartments.modalDesc")}</p>
           </div>
           <button
             onClick={onClose}
@@ -120,7 +122,7 @@ export default function DepartmentFormModal({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Simpan Perubahan
+            {t("common.save")}
           </button>
         </div>
       </div>

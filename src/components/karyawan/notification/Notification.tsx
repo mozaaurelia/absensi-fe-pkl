@@ -158,6 +158,15 @@ export default function Notification({ dark = true, className = "" }: Props) {
     });
   }, [open]);
 
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      apiFetch<ServerNotification[]>("/notifications/me")
+        .then(setServerItems)
+        .catch(() => {});
+    }, 60_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
   const unreadServer = serverItems.filter((i) => !i.is_read).length;
   const unreadLocal = items.filter((i) => i.unread).length;
   const unreadCount = unreadServer + unreadLocal;
@@ -165,22 +174,24 @@ export default function Notification({ dark = true, className = "" }: Props) {
   const markAllRead = () => {
     setReadIds([...new Set([...readIds, ...items.map((i) => i.id)])]);
     setServerItems((prev) => prev.map((i) => ({ ...i, is_read: true })));
-    try {
-      apiFetch(`/notifications/read-all`, { method: "PATCH" }).catch(() => {});
-    } catch {
-      // ignore
-    }
+    apiFetch(`/notifications/read-all`, { method: "PATCH" })
+      .then(() => apiFetch<ServerNotification[]>("/notifications/me"))
+      .then(setServerItems)
+      .catch(() => {});
   };
 
   const markServerRead = (id: string) => {
     setServerItems((prev) =>
       prev.map((i) => (i.id === id ? { ...i, is_read: true } : i))
     );
-    try {
-      apiFetch(`/notifications/${id}/read`, { method: "PATCH" }).catch(() => {});
-    } catch {
-      // ignore
-    }
+    apiFetch(`/notifications/${id}/read`, { method: "PATCH" })
+      .then(() => apiFetch<ServerNotification[]>("/notifications/me"))
+      .then(setServerItems)
+      .catch(() => {});
+  };
+
+  const dismissLocal = (id: string) => {
+    setReadIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
   };
 
   const formatServerTime = (iso: string) => {
@@ -286,7 +297,16 @@ export default function Notification({ dark = true, className = "" }: Props) {
             {items.map((item) => {
               const Icon = ICONS[item.type];
               return (
-                <div key={item.id} className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <div
+                  key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => item.unread && dismissLocal(item.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && item.unread) dismissLocal(item.id);
+                  }}
+                  className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
+                >
                   <div className="relative shrink-0">
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center ${ICON_STYLES[item.type]}`}>
                       <Icon size={16} />

@@ -1,9 +1,12 @@
+import { useLanguage } from "@/context/LanguageContext";
+
 interface DepartmentFilterProps {
   search: string;
   onSearchChange: (value: string) => void;
 }
 
 export default function DepartmentFilter({ search, onSearchChange }: DepartmentFilterProps) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-6">
       <div className="relative flex-1">
@@ -21,7 +24,7 @@ export default function DepartmentFilter({ search, onSearchChange }: DepartmentF
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="🔍 Cari departemen..."
+          placeholder={t("adminDepartments.searchPlaceholder")}
           className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
         />
       </div>

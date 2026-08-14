@@ -1,5 +1,6 @@
 import type { ShiftTemplate } from "./types";
 import { SHIFT_COLOR_MAP } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ScheduleCellProps {
   shift: ShiftTemplate | null;
@@ -8,6 +9,7 @@ interface ScheduleCellProps {
 }
 
 export default function ScheduleCell({ shift, shifts, onChange }: ScheduleCellProps) {
+  const { t } = useLanguage();
   const style = shift ? SHIFT_COLOR_MAP[shift.color] : null;
 
   return (
@@ -17,7 +19,7 @@ export default function ScheduleCell({ shift, shifts, onChange }: ScheduleCellPr
       className={`w-full text-xs font-semibold rounded-lg px-2 py-2 outline-none border cursor-pointer transition-colors ${
         style ? `${style.bg} ${style.text} ${style.border}` : "bg-gray-50 text-gray-400 border-gray-100"
       }`}    >
-      <option value="">Libur</option>
+      <option value="">{t("adminSchedule.liburOption")}</option>
       {shifts.map((s) => (
         <option key={s.id} value={s.id}>
           {s.name}

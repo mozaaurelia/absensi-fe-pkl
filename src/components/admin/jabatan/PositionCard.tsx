@@ -1,5 +1,6 @@
 import type { Position } from "./types";
 import { formatRupiah } from "./utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PositionCardProps {
   position: Position;
@@ -8,6 +9,7 @@ interface PositionCardProps {
 }
 
 export default function PositionCard({ position, onEdit, onDelete }: PositionCardProps) {
+  const { t } = useLanguage();
   return (
     <div className="card-hover group bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up">
       <div className="flex items-start justify-between mb-4">
@@ -17,7 +19,7 @@ export default function PositionCard({ position, onEdit, onDelete }: PositionCar
           </span>
           <div>
             <h3 className="font-bold text-gray-900 text-sm leading-tight">{position.name}</h3>
-            <p className="text-xs text-gray-400 mt-1">{position.description || "Tidak ada deskripsi"}</p>
+            <p className="text-xs text-gray-400 mt-1">{position.description || t("adminPositions.noDesc")}</p>
           </div>
         </div>
 
@@ -25,7 +27,7 @@ export default function PositionCard({ position, onEdit, onDelete }: PositionCar
           <button
             onClick={onEdit}
             className="w-8 h-8 rounded-lg text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 flex items-center justify-center transition-colors"
-            title="Edit"
+            title={t("adminMaster.edit")}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
@@ -34,7 +36,7 @@ export default function PositionCard({ position, onEdit, onDelete }: PositionCar
           <button
             onClick={onDelete}
             className="w-8 h-8 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors"
-            title="Hapus"
+            title={t("adminMaster.delete")}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7h12z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -50,7 +52,7 @@ export default function PositionCard({ position, onEdit, onDelete }: PositionCar
             <path d="M2 10h20" stroke="currentColor" strokeWidth="2" />
             <circle cx="16" cy="15" r="1.5" fill="currentColor" />
           </svg>
-          Limit Reimburse
+          {t("adminPositions.limitLabel")}
         </span>
         <span className="text-sm font-bold text-gray-900">Rp {formatRupiah(position.reimbursementLimit)}</span>
       </div>
@@ -61,7 +63,7 @@ export default function PositionCard({ position, onEdit, onDelete }: PositionCar
             <circle cx="9" cy="8" r="3.5" stroke="currentColor" strokeWidth="2" />
             <path d="M2 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
-          {position.employeeCount} Karyawan
+          {t("adminPositions.employeesCount", { count: position.employeeCount })}
         </span>
       </div>
     </div>

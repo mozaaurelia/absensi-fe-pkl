@@ -1,4 +1,5 @@
 import type { PerizinanStatus } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 export type FilterStatus = "all" | PerizinanStatus;
 
@@ -16,11 +17,11 @@ interface PerizinanFilterProps {
   onDeptChange: (value: string) => void;
 }
 
-const TABS: { id: FilterStatus; label: string }[] = [
-  { id: "all", label: "Semua" },
-  { id: "pending", label: "Menunggu" },
-  { id: "approved", label: "Disetujui" },
-  { id: "rejected", label: "Ditolak" },
+const TABS: { id: FilterStatus; labelKey: string }[] = [
+  { id: "all", labelKey: "adminPermits.tabAll" },
+  { id: "pending", labelKey: "adminPermits.tabPending" },
+  { id: "approved", labelKey: "adminPermits.tabApproved" },
+  { id: "rejected", labelKey: "adminPermits.tabRejected" },
 ];
 
 const selectClass =
@@ -39,6 +40,7 @@ export default function PerizinanFilter({
   onTypeChange,
   onDeptChange,
 }: PerizinanFilterProps) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-6">
       <div className="relative flex-1">
@@ -56,7 +58,7 @@ export default function PerizinanFilter({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Cari nama karyawan, jenis izin, atau alasan..."
+          placeholder={t("adminPermits.searchPlaceholder")}
           className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
         />
       </div>
@@ -77,7 +79,7 @@ export default function PerizinanFilter({
             onChange={(e) => onTypeChange(e.target.value)}
             className={`${selectClass} sm:w-52`}
           >
-            <option value="">Semua Jenis Perizinan</option>
+            <option value="">{t("adminPermits.allTypes")}</option>
             {types.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -111,7 +113,7 @@ export default function PerizinanFilter({
             onChange={(e) => onDeptChange(e.target.value)}
             className={`${selectClass} sm:w-52`}
           >
-            <option value="">Semua Departemen</option>
+            <option value="">{t("adminPermits.allDepartments")}</option>
             {departments.map((dept) => (
               <option key={dept} value={dept}>
                 {dept}
@@ -130,23 +132,23 @@ export default function PerizinanFilter({
         </div>
 
         <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1">
-          {TABS.map((tab) => (
+          {TABS.map((tb) => (
             <button
-              key={tab.id}
-              onClick={() => onFilterChange(tab.id)}
+              key={tb.id}
+              onClick={() => onFilterChange(tb.id)}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                filter === tab.id
+                filter === tb.id
                   ? "bg-gradient-to-r from-[#1E3A5F] to-[#2f5d94] text-white shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {tab.label}
+              {t(tb.labelKey)}
               <span
                 className={`px-1.5 py-0.5 rounded-full text-[10px] ${
-                  filter === tab.id ? "bg-white/20" : "bg-gray-200 text-gray-500"
+                  filter === tb.id ? "bg-white/20" : "bg-gray-200 text-gray-500"
                 }`}
               >
-                {counts[tab.id]}
+                {counts[tb.id]}
               </span>
             </button>
           ))}

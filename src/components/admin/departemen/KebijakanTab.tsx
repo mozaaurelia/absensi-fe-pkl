@@ -1,4 +1,5 @@
 import type { Department } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface KebijakanTabProps {
   form: Department;
@@ -18,26 +19,27 @@ function getSliderLabelStyle(value: number) {
 }
 
 export default function KebijakanTab({ form, onChange }: KebijakanTabProps) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col gap-3">
       <ToggleRow
         icon={<ClockIcon />}
-        title="Izinkan Lembur"
-        desc="Karyawan dapat mencatat jam lembur setelah jam kerja"
+        title={t("adminDepartments.allowOvertime")}
+        desc={t("adminDepartments.allowOvertimeDesc")}
         checked={form.allowOvertime}
         onToggle={() => onChange({ ...form, allowOvertime: !form.allowOvertime })}
       />
       <ToggleRow
         icon={<HomeIcon />}
-        title="Izinkan Work From Home"
-        desc="Karyawan dapat absen dari lokasi lain"
+        title={t("adminDepartments.allowWFH")}
+        desc={t("adminDepartments.allowWFHDesc")}
         checked={form.allowWFH}
         onToggle={() => onChange({ ...form, allowWFH: !form.allowWFH })}
       />
 
       <div className={`rounded-xl border px-4 py-4 mt-1 ${getSliderLabelStyle(form.minAttendance)}`}>
         <p className="text-sm font-bold mb-3">
-          Batas Minimum Kehadiran Bulanan: {form.minAttendance}%
+          {t("adminDepartments.minAttendance", { value: form.minAttendance })}
         </p>
         <input
           type="range"
@@ -48,12 +50,12 @@ export default function KebijakanTab({ form, onChange }: KebijakanTabProps) {
           className={`w-full ${getSliderColor(form.minAttendance)}`}
         />
         <div className="flex justify-between text-[11px] opacity-70 mt-1">
-          <span>50% (longgar)</span>
+          <span>{t("adminDepartments.loose")}</span>
           <span>75%</span>
-          <span>100% (ketat)</span>
+          <span>{t("adminDepartments.strict")}</span>
         </div>
         <p className="text-xs mt-2 opacity-80">
-          Sistem akan menampilkan peringatan jika kehadiran bulan ini di bawah angka ini.
+          {t("adminDepartments.minWarning")}
         </p>
       </div>
 
@@ -61,7 +63,7 @@ export default function KebijakanTab({ form, onChange }: KebijakanTabProps) {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        Kebijakan ini berlaku untuk seluruh anggota departemen.
+        {t("adminDepartments.policyNote")}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Position } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PositionFormModalProps {
   initialData: Position | null;
@@ -16,6 +17,7 @@ export default function PositionFormModal({
   onClose,
   onSave,
 }: PositionFormModalProps) {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     name: initialData?.name ?? "",
     description: initialData?.description ?? "",
@@ -26,14 +28,14 @@ export default function PositionFormModal({
   const handleSave = () => {
     const trimmed = form.name.trim();
     if (!trimmed) {
-      setNameError("Nama jabatan wajib diisi.");
+      setNameError(t("adminPositions.nameRequired"));
       return;
     }
     const isDuplicate = existingNames
       .filter((n) => n.toLowerCase() !== initialData?.name.toLowerCase())
       .some((n) => n.toLowerCase() === trimmed.toLowerCase());
     if (isDuplicate) {
-      setNameError("Nama jabatan ini sudah dipakai.");
+      setNameError(t("adminPositions.nameExists"));
       return;
     }
     setNameError("");
@@ -52,10 +54,10 @@ export default function PositionFormModal({
         <div className="flex items-center justify-between px-6 pt-6 pb-5">
           <div>
             <h3 className="font-bold text-gray-900 flex items-center gap-2">
-              <span>✏️</span> {initialData ? "Edit Jabatan" : "Tambah Jabatan Baru"}
+              <span>✏️</span> {initialData ? t("adminPositions.editTitle") : t("adminPositions.addTitle")}
             </h3>
             <p className="text-xs text-gray-400 mt-0.5">
-              {initialData ? "Perbarui detail jabatan" : "Buat kategori jabatan baru"}
+              {initialData ? t("adminPositions.editDesc") : t("adminPositions.addDesc")}
             </p>
           </div>
           <button
@@ -70,7 +72,7 @@ export default function PositionFormModal({
 
         <div className="px-6 pb-6 max-h-[50vh] overflow-y-auto space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nama Jabatan</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t("adminPositions.nameLabel")}</label>
             <input
               type="text"
               value={form.name}
@@ -78,7 +80,7 @@ export default function PositionFormModal({
                 setForm({ ...form, name: e.target.value });
                 if (nameError) setNameError("");
               }}
-              placeholder={initialData ? "Nama jabatan" : "Contoh: Manager Operasional"}
+              placeholder={initialData ? t("adminPositions.namePlaceholder") : t("adminPositions.nameExamplePlaceholder")}
               className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
             />
             {nameError && <p className="text-xs text-red-500 mt-1">{nameError}</p>}
@@ -86,12 +88,12 @@ export default function PositionFormModal({
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Deskripsi (Opsional)
+              {t("adminPositions.descLabel")}
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="Tuliskan ringkasan tugas atau peran jabatan ini..."
+              placeholder={t("adminPositions.descPlaceholder")}
               rows={3}
               className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none resize-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
             />
@@ -99,7 +101,7 @@ export default function PositionFormModal({
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Batas Reimbursement (Rp)
+              {t("adminPositions.limitFieldLabel")}
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400">
@@ -117,7 +119,7 @@ export default function PositionFormModal({
               />
             </div>
             <p className="text-xs text-gray-400 mt-1.5">
-              Batas maksimal klaim per bulan untuk jabatan ini.
+              {t("adminPositions.limitHint")}
             </p>
           </div>
         </div>
@@ -136,7 +138,7 @@ export default function PositionFormModal({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            {initialData ? "Simpan Perubahan" : "Tambah Jabatan"}
+            {initialData ? t("adminPositions.saveChanges") : t("adminPositions.addButton")}
           </button>
         </div>
       </div>

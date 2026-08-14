@@ -20,6 +20,16 @@ function formatDate(value?: string | null): string {
   return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
 }
 
+function attachmentName(url?: string | null): string {
+  if (!url) return "lampiran";
+  try {
+    const path = new URL(url).pathname;
+    return decodeURIComponent(path.split("/").filter(Boolean).pop() ?? "lampiran");
+  } catch {
+    return "lampiran";
+  }
+}
+
 export default function LeaveApproval({ requests, onProcessed }: Props) {
   const { t } = useLanguage();
   const [action, setAction] = useState<{ id: string; mode: "approve" | "reject" } | null>(null);
@@ -112,6 +122,19 @@ export default function LeaveApproval({ requests, onProcessed }: Props) {
               </div>
               {req.reason && (
                 <p className="text-xs text-gray-500 dark:text-gray-400">{req.reason}</p>
+              )}
+              {req.attachment_url && (
+                <a
+                  href={req.attachment_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#1E3A5F] dark:text-blue-300 hover:underline"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {t("atasan.viewAttachment")} · {attachmentName(req.attachment_url)}
+                </a>
               )}
             </div>
           ))}

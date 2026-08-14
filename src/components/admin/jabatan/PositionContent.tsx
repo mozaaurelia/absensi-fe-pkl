@@ -7,6 +7,7 @@ import PositionHeader from "./PositionHeader";
 import PositionFilter from "./PositionFilter";
 import PositionGrid from "./PositionGrid";
 import PositionFormModal from "./PositionFormModal";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 const initialPositions: Position[] = [
   {
@@ -44,6 +45,7 @@ export default function PositionContent() {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPosition, setEditingPosition] = useState<Position | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Position | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -65,8 +67,14 @@ export default function PositionContent() {
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("Yakin ingin menghapus jabatan ini?")) return;
-    setPositions((prev) => prev.filter((p) => p.id !== id));
+    const target = positions.find((p) => p.id === id);
+    if (target) setDeleteTarget(target);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    setPositions((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+    setDeleteTarget(null);
   };
 
   const handleSave = (position: Position) => {
@@ -92,6 +100,14 @@ export default function PositionContent() {
           existingNames={positions.map((p) => p.name)}
           onClose={() => setModalOpen(false)}
           onSave={handleSave}
+        />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          description={deleteTarget.name}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

@@ -1,10 +1,12 @@
 import type { Department } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   departments: Department[];
 }
 
 export default function DepartmentStatsCards({ departments }: Props) {
+  const { t } = useLanguage();
   const total = departments.length;
   const active = departments.filter((d) => d.status === "active").length;
   const inactive = total - active;
@@ -12,29 +14,29 @@ export default function DepartmentStatsCards({ departments }: Props) {
 
   const stats = [
     {
-      label: "Total Departemen",
-      desc: "Semua departemen terdaftar",
+      label: t("adminDepartments.totalLabel"),
+      desc: t("adminDepartments.totalDesc"),
       value: total,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <BuildingIcon />,
     },
     {
-      label: "Departemen Aktif",
-      desc: "Berjalan & beroperasi",
+      label: t("adminDepartments.activeLabel"),
+      desc: t("adminDepartments.activeDesc"),
       value: active,
       iconBg: "bg-green-50 text-green-600",
       icon: <CheckIcon />,
     },
     {
-      label: "Departemen Nonaktif",
-      desc: "Tidak beroperasi",
+      label: t("adminDepartments.inactiveLabel"),
+      desc: t("adminDepartments.inactiveDesc"),
       value: inactive,
       iconBg: "bg-red-50 text-red-500",
       icon: <XIcon />,
     },
     {
-      label: "Total Karyawan",
-      desc: "Di seluruh departemen",
+      label: t("adminDepartments.employeesLabel"),
+      desc: t("adminDepartments.employeesDesc"),
       value: employees,
       iconBg: "bg-purple-50 text-purple-600",
       icon: <UsersIcon />,

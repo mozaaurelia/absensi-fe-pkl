@@ -1,5 +1,6 @@
 import type { Department } from "./types";
 import ColorPicker from "./ColorPicker";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface InfoDasarTabProps {
   form: Department;
@@ -8,6 +9,7 @@ interface InfoDasarTabProps {
 }
 
 export default function InfoDasarTab({ form, onChange, nameError }: InfoDasarTabProps) {
+  const { t } = useLanguage();
   const active = form.status === "active";
 
   return (
@@ -18,9 +20,9 @@ export default function InfoDasarTab({ form, onChange, nameError }: InfoDasarTab
             {active ? "✅" : "⛔"}
           </span>
           <div>
-            <p className="text-sm font-semibold text-gray-800">Status Departemen</p>
+            <p className="text-sm font-semibold text-gray-800">{t("adminDepartments.statusLabel")}</p>
             <p className="text-xs text-gray-400 mt-0.5">
-              {active ? "Departemen aktif & beroperasi" : "Departemen nonaktif"}
+              {active ? t("adminDepartments.statusActiveDesc") : t("adminDepartments.statusInactiveDesc")}
             </p>
           </div>
         </div>
@@ -37,7 +39,7 @@ export default function InfoDasarTab({ form, onChange, nameError }: InfoDasarTab
 
       <div>
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-          Nama Departemen *
+          {t("adminDepartments.nameLabel")}
         </label>
         <input
           value={form.name}
@@ -51,32 +53,32 @@ export default function InfoDasarTab({ form, onChange, nameError }: InfoDasarTab
 
       <div>
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-          Deskripsi
+          {t("adminDepartments.descLabel")}
         </label>
         <textarea
           rows={3}
           value={form.description || ""}
           onChange={(e) => onChange({ ...form, description: e.target.value })}
-          placeholder="Deskripsi singkat tugas dan fungsi departemen..."
+          placeholder={t("adminDepartments.descPlaceholder")}
           className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all resize-none"
         />
       </div>
 
       <div>
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-          Kepala Departemen
+          {t("adminDepartments.headLabel")}
         </label>
         <input
           value={form.head || ""}
           onChange={(e) => onChange({ ...form, head: e.target.value })}
-          placeholder="Nama kepala / manajer departemen"
+          placeholder={t("adminDepartments.headPlaceholder")}
           className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
         />
       </div>
 
       <div>
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-          Warna Identitas
+          {t("adminDepartments.colorLabel")}
         </label>
         <ColorPicker value={form.color} onChange={(color) => onChange({ ...form, color })} />
       </div>

@@ -1,11 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { apiFetch } from "@/lib/api";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import ForgotPasswordSuccess from "./ForgotPasswordSuccess";
 
 export default function ForgotPasswordCard() {
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendError, setResendError] = useState("");
+
+  const handleResend = async () => {
+    if (!sentTo || resending) return;
+    setResending(true);
+    setResendError("");
+    try {
+      await apiFetch<{ message: string }>("/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email: sentTo }),
+      });
+    } catch {
+      setResendError("Gagal mengirim ulang link reset. Silakan coba lagi.");
+    } finally {
+      setResending(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -20,7 +39,12 @@ export default function ForgotPasswordCard() {
             <ForgotPasswordForm onSuccess={setSentTo} />
           </>
         ) : (
-          <ForgotPasswordSuccess email={sentTo} onResend={() => setSentTo(sentTo)} />
+          <ForgotPasswordSuccess
+            email={sentTo}
+            resending={resending}
+            resendError={resendError}
+            onResend={handleResend}
+          />
         )}
       </div>
 

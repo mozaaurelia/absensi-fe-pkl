@@ -1,24 +1,26 @@
 import type { Position } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PositionStatsCardsProps {
   positions: Position[];
 }
 
 export default function PositionStatsCards({ positions }: PositionStatsCardsProps) {
+  const { t } = useLanguage();
   const total = positions.length;
   const filled = positions.reduce((sum, p) => sum + p.employeeCount, 0);
 
   const stats = [
     {
-      label: "Total Jabatan",
-      desc: "Semua jabatan terdaftar",
+      label: t("adminPositions.totalLabel"),
+      desc: t("adminPositions.totalDesc"),
       value: total,
       iconBg: "bg-blue-50 text-[#1E3A5F]",
       icon: <BriefcaseIcon />,
     },
     {
-      label: "Terisi (Karyawan)",
-      desc: "Karyawan dengan jabatan",
+      label: t("adminPositions.filledLabel"),
+      desc: t("adminPositions.filledDesc"),
       value: filled,
       iconBg: "bg-green-50 text-green-600",
       icon: <UsersIcon />,

@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Department } from "./types";
 import { COLOR_MAP } from "./types";
 import AttendanceStatsPanel from "./AttendanceStatsPanel";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface DepartmentCardProps {
   department: Department;
@@ -13,6 +14,7 @@ interface DepartmentCardProps {
 
 export default function DepartmentCard({ department, onEdit, onDelete }: DepartmentCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLanguage();
   const color = COLOR_MAP[department.color];
   const belowTarget = department.attendanceRate < department.minAttendance;
   const active = department.status === "active";
@@ -28,7 +30,7 @@ export default function DepartmentCard({ department, onEdit, onDelete }: Departm
           </span>
           <div>
             <h3 className="font-bold text-gray-900 text-sm leading-tight">{department.name}</h3>
-            <p className="text-xs text-gray-400 mt-1">{department.head || "Belum ada kepala"}</p>
+            <p className="text-xs text-gray-400 mt-1">{department.head || t("adminDepartments.noHead")}</p>
           </div>
         </div>
 
@@ -39,13 +41,13 @@ export default function DepartmentCard({ department, onEdit, onDelete }: Departm
             }`}
           >
             <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-green-500" : "bg-gray-400"}`} />
-            {active ? "Aktif" : "Nonaktif"}
+            {active ? t("adminDepartments.active") : t("adminDepartments.inactive")}
           </span>
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={onEdit}
               className="w-8 h-8 rounded-lg text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 flex items-center justify-center transition-colors"
-              title="Edit"
+              title={t("adminMaster.edit")}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
@@ -54,7 +56,7 @@ export default function DepartmentCard({ department, onEdit, onDelete }: Departm
             <button
               onClick={onDelete}
               className="w-8 h-8 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors"
-              title="Hapus"
+              title={t("adminMaster.delete")}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7h12z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -70,7 +72,7 @@ export default function DepartmentCard({ department, onEdit, onDelete }: Departm
             <circle cx="9" cy="8" r="3.5" stroke="currentColor" strokeWidth="2" />
             <path d="M2 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
-          {department.employeeCount} karyawan
+          {t("adminDepartments.employeesCount", { count: department.employeeCount })}
         </span>
         <span className={`font-semibold ${belowTarget ? "text-red-500" : "text-green-600"}`}>
           {department.attendanceRate}%
@@ -90,7 +92,7 @@ export default function DepartmentCard({ department, onEdit, onDelete }: Departm
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
           <path d="M4 20V10M12 20V4M20 20v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
-        {expanded ? "Sembunyikan Statistik" : "Statistik Kehadiran"}
+        {expanded ? t("adminDepartments.hideStats") : t("adminDepartments.showStats")}
         <svg
           width="12"
           height="12"

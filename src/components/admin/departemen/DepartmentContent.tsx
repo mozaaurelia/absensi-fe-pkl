@@ -7,6 +7,7 @@ import DepartmentHeader from "./DepartmentHeader";
 import DepartmentFilter from "./DepartmentFilter";
 import DepartmentGrid from "./DepartmentGrid";
 import DepartmentFormModal from "./DepartmentFormModal";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 const initialDepartments: Department[] = [
   { id: "1", name: "Akuntansi", head: "Hendra Audit", color: "blue", status: "active", workDays: ["Sen", "Sel", "Rab", "Kam", "Jum"], allowOvertime: true, allowWFH: false, minAttendance: 85, employeeCount: 8, attendanceRate: 92 },
@@ -19,6 +20,7 @@ export default function DepartmentContent() {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Department | null>(null);
 
   const filtered = useMemo(() => {
     return departments.filter((d) =>
@@ -37,8 +39,14 @@ export default function DepartmentContent() {
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("Yakin ingin menghapus departemen ini?")) return;
-    setDepartments((prev) => prev.filter((d) => d.id !== id));
+    const target = departments.find((d) => d.id === id);
+    if (target) setDeleteTarget(target);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    setDepartments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
+    setDeleteTarget(null);
   };
 
   const handleSave = (dept: Department) => {
@@ -62,6 +70,14 @@ export default function DepartmentContent() {
           existingNames={departments.map((d) => d.name)}
           onClose={() => setModalOpen(false)}
           onSave={handleSave}
+        />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          description={deleteTarget.name}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

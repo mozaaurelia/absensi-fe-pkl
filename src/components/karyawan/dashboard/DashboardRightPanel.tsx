@@ -92,7 +92,7 @@ export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Pro
         <div className="relative px-2">
           <button
             onClick={prev}
-            aria-label="Previous"
+            aria-label={t("common.previous")}
             className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white text-[#1E3A5F] shadow-md hover:bg-gray-100 transition flex items-center justify-center"
           >
             <FiChevronLeft size={18} />
@@ -115,7 +115,7 @@ export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Pro
 
           <button
             onClick={next}
-            aria-label="Next"
+            aria-label={t("common.next")}
             className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white text-[#1E3A5F] shadow-md hover:bg-gray-100 transition flex items-center justify-center"
           >
             <FiChevronRight size={18} />
