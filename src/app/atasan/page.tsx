@@ -57,10 +57,7 @@ export default function DashboardAtasanPage() {
       router.replace("/auth/login");
       return;
     }
-    if (status === "authenticated" && user?.role !== "supervisor" && user?.role !== "admin") {
-      router.replace("/auth/login");
-    }
-  }, [status, user, router]);
+  }, [status, router]);
 
   if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;

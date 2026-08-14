@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ export default function SettingsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "employee")) {
+    if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
   }, [status, user, router]);
@@ -61,6 +61,7 @@ export default function SettingsPage() {
           onSavingChange={handleSavingChange}
           resetSignal={resetSignal}
           onAvatarChange={handleAvatarChange}
+          avatar={avatar}
         />
       </main>
     </div>

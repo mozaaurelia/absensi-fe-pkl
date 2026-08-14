@@ -823,6 +823,10 @@ dashAttendance: {
     twoFA: "Enable Two-Factor Authentication (2FA)",
     twoFADesc: "Add an extra layer of security when logging into the system.",
     comingSoon: "This feature will be available soon.",
+    changePassword: "Change Password",
+    changeSuccess: "Password changed successfully.",
+    changeFailed: "Failed to change password.",
+    saving: "Saving...",
   },
 
   settingsHeader: {
@@ -1170,6 +1174,7 @@ dashAttendance: {
     desc: "Register an employee's face reference for attendance verification.",
     employee: "Employee",
     capture: "Take Photo",
+    uploadGallery: "Upload from Gallery",
     retake: "Retake",
     submit: "Register Face",
     required: "Choose an employee and capture a photo.",

@@ -18,10 +18,10 @@ export default function AdminSettingsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "admin")) {
+    if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
-  }, [status, user, router]);
+  }, [status, router]);
 
   const handleCancel = useCallback(() => {
     setResetSignal((s) => s + 1);

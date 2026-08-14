@@ -11,8 +11,7 @@ export interface LeaveRequest {
   employee_id?: string | null;
   employee_name?: string | null;
   leave_type_id?: string | null;
-  leave_type_name?: string | null;
-  start_date?: string | null;
+  leave_type_name?: string | null;  start_date?: string | null;
   end_date?: string | null;
   reason?: string | null;
   status?: string | null;
@@ -20,6 +19,7 @@ export interface LeaveRequest {
   duration_days?: number | null;
   approval_note?: string | null;
   attachment_url?: string | null;
+  department_name?: string | null;
 }
 
 export interface LeaveQuota {
@@ -59,6 +59,10 @@ export async function getLeaveQuota(
 
 export async function getTeamLeaveRequests(): Promise<LeaveRequest[]> {
   return apiFetch<LeaveRequest[]>("/leave/requests/team");
+}
+
+export async function getAllLeaveRequests(): Promise<LeaveRequest[]> {
+  return apiFetch<LeaveRequest[]>("/leave/requests");
 }
 
 export async function approveLeaveRequest(

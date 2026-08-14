@@ -7,9 +7,10 @@ import { useLanguage } from "@/context/LanguageContext";
 interface Props {
   initials?: string;
   onImageChange?: (dataUrl: string) => void;
+  initialImage?: string | null;
 }
 
-export default function AvatarUpload({ initials = "AP", onImageChange }: Props) {
+export default function AvatarUpload({ initials = "AP", onImageChange, initialImage }: Props) {
   const { t } = useLanguage();
   const [preview, setPreview] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +21,8 @@ export default function AvatarUpload({ initials = "AP", onImageChange }: Props) 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const currentPreview = preview ?? initialImage ?? null;
 
   useEffect(() => {
     return () => {
@@ -115,8 +118,8 @@ export default function AvatarUpload({ initials = "AP", onImageChange }: Props) 
           onClick={openModal}
           className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-500/20 text-[#1E3A5F] dark:text-blue-300 font-bold text-xl flex items-center justify-center overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all"
         >
-          {preview ? (
-            <img src={preview} alt="Avatar" className="w-full h-full object-cover" />
+          {currentPreview ? (
+            <img src={currentPreview} alt="Avatar" className="w-full h-full object-cover" />
           ) : (
             initials
           )}

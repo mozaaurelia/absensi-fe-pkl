@@ -60,6 +60,7 @@ const handler = NextAuth({
             id: user.id,
             name: user.name,
             email: user.email,
+            image: user.image,
             role: isSuperadmin ? "superadmin" : user.role,
             accessToken: token,
           };
@@ -85,10 +86,12 @@ const handler = NextAuth({
         token.id = user.id;
         token.role = user.role;
         token.accessToken = user.accessToken;
+        token.image = user.image;
       }
 
-      if (trigger === "update" && session?.name) {
-        token.name = session.name;
+      if (trigger === "update") {
+        if (session?.name) token.name = session.name;
+        if (session?.image) token.image = session.image;
       }
 
       return token;
@@ -99,6 +102,7 @@ const handler = NextAuth({
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
+        session.user.image = (token.image as string) ?? null;
         session.user.role = token.role as
           | "employee"
           | "supervisor"

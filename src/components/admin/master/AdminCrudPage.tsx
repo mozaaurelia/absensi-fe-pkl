@@ -20,13 +20,10 @@ export default function AdminCrudPage({ titleKey, children, hideTitle = false }:
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (
-      status === "unauthenticated" ||
-      (status === "authenticated" && user?.role !== "admin")
-    ) {
+    if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
-  }, [status, user, router]);
+  }, [status, router]);
 
   if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function AttendancePage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "employee")) {
+    if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
   }, [status, user, router]);

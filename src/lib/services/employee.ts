@@ -22,6 +22,7 @@ export interface EmployeeProfile {
 
   company_id: string;
   company_name: string;
+  image: string | null;
 }
 
 export async function getMyProfile(): Promise<EmployeeProfile> {
@@ -32,15 +33,18 @@ export interface UpdatedEmployeeProfile {
   id: string;
   name: string;
   email: string;
+  image: string | null;
 }
 
 export async function updateMyProfile(
   name: string,
+  image?: string,
 ): Promise<UpdatedEmployeeProfile> {
   return apiFetch<UpdatedEmployeeProfile>("/employees/me/profile", {
     method: "PUT",
     body: JSON.stringify({
       name,
+      image,
     }),
   });
 }

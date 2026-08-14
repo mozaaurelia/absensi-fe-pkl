@@ -34,3 +34,13 @@ export async function updateMyProfile(body: {
     body: JSON.stringify(body),
   });
 }
+
+export async function changeMyPassword(body: {
+  oldPassword: string;
+  newPassword: string;
+}): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}

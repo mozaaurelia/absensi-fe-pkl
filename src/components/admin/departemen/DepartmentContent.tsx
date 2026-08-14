@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Department } from "./types";
 import DepartmentStatsCards from "./DepartmentStatsCards";
 import DepartmentHeader from "./DepartmentHeader";
@@ -8,19 +8,57 @@ import DepartmentFilter from "./DepartmentFilter";
 import DepartmentGrid from "./DepartmentGrid";
 import DepartmentFormModal from "./DepartmentFormModal";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import {
+  getDepartments,
+  createDepartment,
+  updateDepartment,
+  deleteDepartment,
+  getDepartmentPolicy,
+  updateDepartmentPolicy,
+} from "@/lib/services/admin";
 
-const initialDepartments: Department[] = [
-  { id: "1", name: "Akuntansi", head: "Hendra Audit", color: "blue", status: "active", workDays: ["Sen", "Sel", "Rab", "Kam", "Jum"], allowOvertime: true, allowWFH: false, minAttendance: 85, employeeCount: 8, attendanceRate: 92 },
-  { id: "2", name: "Layanan Nasabah", head: "Ani Lestari", color: "green", status: "active", workDays: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab"], allowOvertime: true, allowWFH: false, minAttendance: 90, employeeCount: 14, attendanceRate: 78 },
-  { id: "3", name: "Pemasaran", head: "Dewi Marketing", color: "purple", status: "inactive", workDays: ["Sen", "Sel", "Rab", "Kam", "Jum"], allowOvertime: false, allowWFH: true, minAttendance: 75, employeeCount: 6, attendanceRate: 88 },
-];
+const DEFAULT_WORK_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum"];
 
 export default function DepartmentContent() {
-  const [departments, setDepartments] = useState<Department[]>(initialDepartments);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Department | null>(null);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    getDepartments()
+      .then(async (rows) => {
+        const items: Department[] = [];
+        for (const d of rows) {
+          const policy = await getDepartmentPolicy(d.id).catch(() => null);
+          items.push({
+            id: d.id,
+            name: d.name,
+            head: "",
+            color: "blue",
+            status: "active",
+            workDays: DEFAULT_WORK_DAYS,
+            allowOvertime: policy?.allow_overtime ?? false,
+            allowWFH: policy?.allow_wfh ?? false,
+            minAttendance: policy?.min_attendance_percentage ?? 80,
+            employeeCount: 0,
+            attendanceRate: 0,
+          });
+        }
+        setDepartments(items);
+        setError(null);
+      })
+      .catch(() => setError("Gagal memuat data departemen."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const filtered = useMemo(() => {
     return departments.filter((d) =>
@@ -43,19 +81,75 @@ export default function DepartmentContent() {
     if (target) setDeleteTarget(target);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return;
-    setDepartments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
-    setDeleteTarget(null);
+    try {
+      await deleteDepartment(deleteTarget.id);
+      setDepartments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
+    } catch {
+      // keep list unchanged
+    } finally {
+      setDeleteTarget(null);
+    }
   };
 
-  const handleSave = (dept: Department) => {
-    setDepartments((prev) => {
-      const exists = prev.some((d) => d.id === dept.id);
-      return exists ? prev.map((d) => (d.id === dept.id ? dept : d)) : [...prev, dept];
-    });
-    setModalOpen(false);
+  const handleSave = async (dept: Department) => {
+    const exists = departments.some((d) => d.id === dept.id);
+    try {
+      if (exists) {
+        const updated = await updateDepartment(dept.id, { name: dept.name });
+        await updateDepartmentPolicy(dept.id, {
+          allow_overtime: dept.allowOvertime,
+          allow_wfh: dept.allowWFH,
+          min_attendance_percentage: dept.minAttendance,
+          effective_date: new Date().toISOString(),
+        });
+        setDepartments((prev) =>
+          prev.map((d) =>
+            d.id === updated.id ? { ...d, ...dept, name: updated.name } : d
+          )
+        );
+      } else {
+        const created = await createDepartment({ name: dept.name });
+        await updateDepartmentPolicy(created.id, {
+          allow_overtime: dept.allowOvertime,
+          allow_wfh: dept.allowWFH,
+          min_attendance_percentage: dept.minAttendance,
+          effective_date: new Date().toISOString(),
+        });
+        setDepartments((prev) => [
+          ...prev,
+          { ...dept, id: created.id, name: created.name },
+        ]);
+      }
+    } catch {
+      // keep state unchanged
+    } finally {
+      setModalOpen(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 py-16 text-center">
+        <p className="text-sm text-gray-400">Memuat data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 py-16 text-center">
+        <p className="text-sm text-gray-400">{error}</p>
+        <button
+          onClick={load}
+          className="mt-3 px-4 py-2 text-sm font-semibold text-white bg-[#1E3A5F] rounded-xl hover:opacity-90"
+        >
+          Muat Ulang
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -133,6 +133,24 @@ export default function Notification({ dark = true, className = "" }: Props) {
   const [serverItems, setServerItems] = useState<ServerNotification[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("notification_dismissed");
+      if (raw) setReadIds(JSON.parse(raw));
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
+  const persistReadIds = (ids: string[]) => {
+    setReadIds(ids);
+    try {
+      localStorage.setItem("notification_dismissed", JSON.stringify(ids));
+    } catch {
+      // ignore storage errors
+    }
+  };
+
   const localItems = useSyncExternalStore(
     subscribe,
     getSnapshot,
@@ -172,7 +190,7 @@ export default function Notification({ dark = true, className = "" }: Props) {
   const unreadCount = unreadServer + unreadLocal;
 
   const markAllRead = () => {
-    setReadIds([...new Set([...readIds, ...items.map((i) => i.id)])]);
+    persistReadIds([...new Set([...readIds, ...items.map((i) => i.id)])]);
     setServerItems((prev) => prev.map((i) => ({ ...i, is_read: true })));
     apiFetch(`/notifications/read-all`, { method: "PATCH" })
       .then(() => apiFetch<ServerNotification[]>("/notifications/me"))
@@ -191,7 +209,7 @@ export default function Notification({ dark = true, className = "" }: Props) {
   };
 
   const dismissLocal = (id: string) => {
-    setReadIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    persistReadIds(readIds.includes(id) ? readIds : [...readIds, id]);
   };
 
   const formatServerTime = (iso: string) => {

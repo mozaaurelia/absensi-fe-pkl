@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export default function DashboardKaryawanPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "employee")) {
+    if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
   }, [status, user?.role, router]);

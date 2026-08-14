@@ -18,6 +18,7 @@ interface Props {
   onProfileUpdated: () => Promise<void> | void;
   resetSignal: number;
   onAvatarChange: (dataUrl: string) => void;
+  avatar?: string | null;
 }
 
 export default function ProfileForm({
@@ -28,6 +29,7 @@ export default function ProfileForm({
   onProfileUpdated,
   resetSignal,
   onAvatarChange,
+  avatar,
 }: Props) {
   const { t } = useLanguage();
   const { update } = useSession();
@@ -74,8 +76,8 @@ export default function ProfileForm({
     onSavingChange(true);
 
     try {
-      await updateMyProfile(name);
-      await update({ name });
+      await updateMyProfile(name, avatar ?? undefined);
+      await update({ name, image: avatar ?? undefined });
       await onProfileUpdated();
       setSuccess(true);
     } catch (err) {
@@ -99,6 +101,7 @@ export default function ProfileForm({
           <AvatarUpload
             initials={profile?.name ? profile.name.slice(0, 2).toUpperCase() : "AP"}
             onImageChange={onAvatarChange}
+            initialImage={profile?.image}
           />
         </div>
 
@@ -134,6 +137,31 @@ export default function ProfileForm({
             <input
               type="email"
               value={form.email}
+              readOnly
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none opacity-60 cursor-not-allowed"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+              {t("profileForm.nik")}
+            </label>
+            <input
+              type="text"
+              value={profile?.id ? profile.id.slice(0, 8).toUpperCase() : "-"}
+              readOnly
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none opacity-60 cursor-not-allowed"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+              {t("profileForm.position")}
+            </label>
+            <input
+              type="text"
+              value={profile?.position_name ?? "-"}
               readOnly
               className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none opacity-60 cursor-not-allowed"
             />

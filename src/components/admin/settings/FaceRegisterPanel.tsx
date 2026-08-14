@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import SelfieVerification from "@/components/karyawan/attendance/SelfieVerification";
 import { getEmployees, registerFaceReference, type AdminEmployee } from "@/lib/services/admin";
@@ -18,6 +18,7 @@ export default function FaceRegisterPanel() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadEmployees = useCallback(async () => {
     try {
@@ -35,6 +36,18 @@ export default function FaceRegisterPanel() {
   const handleCapture = (dataUrl: string) => {
     setPreview(dataUrl);
     setCapturing(false);
+  };
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setPreview(ev.target.result as string);
+      setCapturing(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
   };
 
   const submit = async () => {
@@ -117,12 +130,27 @@ export default function FaceRegisterPanel() {
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => setCapturing(true)}
-            className="flex items-center gap-2 bg-[#1E3A5F] text-white text-xs font-semibold px-5 py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
-          >
-            {t("adminFace.capture")}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCapturing(true)}
+              className="flex items-center gap-2 bg-[#1E3A5F] text-white text-xs font-semibold px-5 py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
+            >
+              {t("adminFace.capture")}
+            </button>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-100 text-xs font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              {t("adminFace.uploadGallery")}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFile}
+              className="hidden"
+            />
+          </div>
         )}
 
         {preview && (

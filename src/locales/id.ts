@@ -823,6 +823,10 @@ export const id = {
     twoFA: "Aktifkan Autentikasi Dua Faktor (2FA)",
     twoFADesc: "Tambahkan lapisan keamanan saat login ke sistem.",
     comingSoon: "Fitur ini akan tersedia segera.",
+    changePassword: "Ubah Kata Sandi",
+    changeSuccess: "Kata sandi berhasil diubah.",
+    changeFailed: "Gagal mengubah kata sandi.",
+    saving: "Menyimpan...",
   },
 
   settingsHeader: {
@@ -1169,6 +1173,7 @@ export const id = {
     desc: "Daftarkan referensi wajah karyawan untuk verifikasi absensi.",
     employee: "Karyawan",
     capture: "Ambil Foto",
+    uploadGallery: "Unggah dari Galeri",
     retake: "Ulang",
     submit: "Daftarkan Wajah",
     required: "Pilih karyawan dan ambil foto.",
