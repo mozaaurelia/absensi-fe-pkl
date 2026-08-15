@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { FiClock } from "react-icons/fi";
+import { FiClock, FiCalendar } from "react-icons/fi";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { apiFetch } from "@/lib/api";
+import { getEmployeeDashboard, type CurrentSchedule } from "@/lib/services/dashboard";
 import CheckInButton from "./CheckInButton";
 import CheckOutButton from "./CheckOutButton";
 import VerificationStepper from "./VerificationStepper";
@@ -38,6 +40,12 @@ function isToday(isoString: string) {
   );
 }
 
+function toScheduleTime(value?: string | null): string {
+  if (!value) return "";
+  const p = String(value).split(":");
+  return p.length >= 2 ? `${p[0]}:${p[1]}` : value;
+}
+
 export default function AttendanceAction({
   hasCheckedIn: hasCheckedInProp = false,
   hasCheckedOut: hasCheckedOutProp = false,
@@ -46,6 +54,7 @@ export default function AttendanceAction({
   const [warning, setWarning] = useState(null);
   const [showCheckOutDone, setShowCheckOutDone] = useState(false);
   const [todayRecord, setTodayRecord] = useState<AttendanceRecord | null>(null);
+  const [schedule, setSchedule] = useState<CurrentSchedule | null>(null);
   const [now, setNow] = useState(() => new Date());
   const { t } = useLanguage();
 
@@ -60,6 +69,9 @@ export default function AttendanceAction({
 
   useEffect(() => {
     fetchStatus();
+    getEmployeeDashboard()
+      .then((data) => setSchedule(data.current_schedule ?? null))
+      .catch(() => setSchedule(null));
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, [fetchStatus]);
@@ -69,6 +81,13 @@ export default function AttendanceAction({
 
   const clockOpen = now.getHours() >= CLOCK_IN_START_HOUR && now.getHours() < CLOCK_IN_END_HOUR;
   const checkOutOpen = now.getHours() >= CLOCK_OUT_START_HOUR;
+
+  const scheduleStart =
+    toScheduleTime(schedule?.start_time) ||
+    `${String(CLOCK_IN_START_HOUR).padStart(2, "0")}:00`;
+  const scheduleEnd =
+    toScheduleTime(schedule?.end_time) ||
+    `${String(CLOCK_IN_END_HOUR).padStart(2, "0")}:00`;
 
   const handleClick = (type: "in" | "out") => {
     if (type === "out") {
@@ -99,7 +118,13 @@ export default function AttendanceAction({
     <>
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
         <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{t("attendanceAction.title")}</h3>
-        <p className="text-xs text-gray-400 dark:text-gray-400 mb-8">{t("attendanceAction.desc")}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-400 mb-4">{t("attendanceAction.desc")}</p>
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-50 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-xs font-semibold px-3 py-1.5">
+            <FiCalendar size={13} />
+            {t("attendanceAction.schedule")}: {scheduleStart} - {scheduleEnd}
+          </span>
+        </div>
         <div className="flex items-center justify-center gap-14">
           <CheckInButton disabled={hasCheckedIn} clockOpen={clockOpen} onClick={() => handleClick("in")} />
           <CheckOutButton checkedOut={hasCheckedOut} clockOpen={checkOutOpen} onClick={() => handleClick("out")} />

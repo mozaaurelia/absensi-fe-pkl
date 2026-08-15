@@ -338,6 +338,7 @@ export const id = {
   attendanceAction: {
     title: "Aksi Presensi",
     desc: "Klik salah satu tombol untuk memulai verifikasi kehadiran.",
+    schedule: "Jadwal Kerja",
     outsideTitle: "Di Luar Jam Kerja",
     outsideDesc:
       "Fitur absensi hanya dapat digunakan pada pukul 09:00 - 17:00. Silakan kembali pada jam kerja.",
@@ -421,9 +422,12 @@ export const id = {
       title: "Message",
       subtitle: "Let's chit-chat with your partner!",
       searchPlaceholder: "Cari pesan...",
-      chat1: { name: "Rina Amelia", message: "Pagi! Tugas sudah dikirim ya.", time: "09:41", unread: 2 },
-      chat2: { name: "Budi Santoso", message: "OK, nanti saya review.", time: "08:15", unread: 0 },
-      chat3: { name: "Tim Marketing", message: "Rapat lanjut jam 13.00.", time: "Kemarin", unread: 5 },
+      supervisorFallback: "Atasan Saya",
+      departmentFallback: "Departemen Saya",
+      teamName: "Tim {dept}",
+      chat1: { message: "Pagi! Tugas sudah dikirim ya.", time: "09:41", unread: 2 },
+      chat2: { message: "OK, nanti saya review.", time: "08:15", unread: 0 },
+      chat3: { message: "Rapat {dept} lanjut jam 13.00.", time: "Kemarin", unread: 5 },
       chatRoom: {
         back: "Kembali",
         online: "online",
@@ -499,6 +503,8 @@ export const id = {
   },
 
   historyFilter: {
+    title: "Filter Riwayat",
+    subtitle: "Saring data presensi berdasarkan status, tanggal, dan lokasi.",
     status: "Filter Status",
     searchDate: "Cari Tanggal",
     datePlaceholder: "Contoh: 12 Juni 2026",
@@ -708,6 +714,7 @@ export const id = {
     hourUnit: "j",
     minuteUnit: "m",
     maxHint: "Maks. {max}",
+    durationValue: "2 jam",
     durationWarning:
       "Durasi lembur melebihi batas maksimal 2 jam. Jam selesai maksimal {max}.",
     category: "Kategori Lembur",

@@ -28,7 +28,7 @@ export interface CurrentSchedule {
 
 export interface DashboardEmployeeData {
   today_attendance?: DashboardTodayAttendance | null;
-  leave_quota_balance?: LeaveQuotaBalance | null;
+  leave_quota_balance?: number | LeaveQuotaBalance | null;
   current_schedule?: CurrentSchedule | null;
 }
 

@@ -30,10 +30,10 @@ export default function LeaveSummary({ quota, requests }: Props) {
   }, [quota, requests]);
 
   const statsList = [
-    { label: t("leaveSummary.leaveRemaining"), value: String(stats.remaining), note: t("leaveSummary.stillAvailable"), noteColor: "text-green-300", icon: <FiCalendar size={16} /> },
-    { label: t("leaveSummary.leaveUsed"), value: String(stats.used), note: t("leaveSummary.thisYear"), noteColor: "text-blue-200", icon: <FiCheckCircle size={16} /> },
-    { label: t("leaveSummary.pendingRequests"), value: String(stats.pending), note: t("leaveSummary.waitingSupervisor"), noteColor: "text-amber-300", icon: <FiClock size={16} /> },
-    { label: t("leaveSummary.rejectedRequests"), value: String(stats.rejected), note: t("leaveSummary.needsRevision"), noteColor: "text-red-300", icon: <FiXCircle size={16} /> },
+    { label: t("leaveSummary.leaveRemaining"), value: String(stats.remaining), note: t("leaveSummary.stillAvailable"), noteColor: "text-green-600 dark:text-green-300", icon: <FiCalendar size={16} />, iconBox: "bg-cyan-50 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400" },
+    { label: t("leaveSummary.leaveUsed"), value: String(stats.used), note: t("leaveSummary.thisYear"), noteColor: "text-blue-600 dark:text-blue-300", icon: <FiCheckCircle size={16} />, iconBox: "bg-blue-50 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400" },
+    { label: t("leaveSummary.pendingRequests"), value: String(stats.pending), note: t("leaveSummary.waitingSupervisor"), noteColor: "text-amber-600 dark:text-amber-300", icon: <FiClock size={16} />, iconBox: "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400" },
+    { label: t("leaveSummary.rejectedRequests"), value: String(stats.rejected), note: t("leaveSummary.needsRevision"), noteColor: "text-red-600 dark:text-red-300", icon: <FiXCircle size={16} />, iconBox: "bg-sky-50 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400" },
   ];
 
   return (

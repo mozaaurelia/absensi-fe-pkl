@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { FiAlertCircle, FiCheckCircle, FiClock, FiFileText } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import type { AttendanceRecord } from "@/lib/services/attendance";
 import { isLateRecord } from "@/lib/attendanceStats";
@@ -43,13 +44,30 @@ export default function HistorySummary({ records }: Props) {
   }, [records, nowMs]);
 
   const statsList = [
-    { label: t("historySummary.presentDays"), value: String(stats.presentDays) },
+    {
+      label: t("historySummary.presentDays"),
+      value: String(stats.presentDays),
+      icon: <FiCheckCircle size={18} />,
+      iconBox: "bg-cyan-50 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400",
+    },
     {
       label: t("historySummary.totalHours"),
       value: lang === "en" ? `${Math.floor(stats.totalMinutes / 60)}h ${Math.round(stats.totalMinutes % 60)}m` : formatHours(stats.totalMinutes),
+      icon: <FiClock size={18} />,
+      iconBox: "bg-blue-50 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
     },
-    { label: t("historySummary.late"), value: `${stats.lateCount} ${t("historySummary.daysUnit")}` },
-    { label: t("historySummary.permitSick"), value: "-" },
+    {
+      label: t("historySummary.late"),
+      value: `${stats.lateCount} ${t("historySummary.daysUnit")}`,
+      icon: <FiAlertCircle size={18} />,
+      iconBox: "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400",
+    },
+    {
+      label: t("historySummary.permitSick"),
+      value: "-",
+      icon: <FiFileText size={18} />,
+      iconBox: "bg-sky-50 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400",
+    },
   ];
 
   return (
@@ -59,8 +77,13 @@ export default function HistorySummary({ records }: Props) {
           key={stat.label}
           className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5"
         >
-          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">{stat.label}</p>
-          <p className="font-bold text-gray-900 dark:text-gray-100 text-lg">{stat.value}</p>
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${stat.iconBox}`}>
+              {stat.icon}
+            </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 leading-snug">{stat.label}</p>
+          </div>
+          <p className="font-bold text-gray-900 dark:text-gray-100 text-xl">{stat.value}</p>
         </div>
       ))}
     </div>

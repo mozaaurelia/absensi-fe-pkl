@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiUser } from "react-icons/fi";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import Notification from "@/components/karyawan/notification/Notification";
+import LanguageToggle from "@/components/common/LanguageToggle";
 
 function getMonday(date) {
   const d = new Date(date);
@@ -19,6 +20,8 @@ function dateKey(d) {
 }
 
 export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay }) {
+  const { data: session } = useSession();
+  const user = session?.user;
   const { daysShort, months, locale, t } = useLanguage();
   const [now, setNow] = useState(null);
   const [holidayMap, setHolidayMap] = useState({});
@@ -119,14 +122,23 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
           <h3 className="text-lg font-semibold text-white">{t("attendanceHeader.title")}</h3>
           <p className="mt-1 text-sm text-blue-200/80">{rangeText}</p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-blue-200">
-            {t("attendanceHeader.morningShift")}
-          </span>
+        <div className="flex items-center gap-4">
+          <LanguageToggle />
           <Notification />
-          <button className="text-white/70 hover:text-white transition">
-            <FiUser size={20} />
-          </button>
+          <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
+            {user?.image ? (
+              <img src={user.image} alt="" className="w-full h-full object-cover" />
+            ) : user?.name ? (
+              user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2)
+            ) : (
+              "AP"
+            )}
+          </div>
         </div>
       </div>
 

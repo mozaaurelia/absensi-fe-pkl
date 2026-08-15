@@ -12,7 +12,7 @@ const iconMap = [FiClock, FiBriefcase, FiCalendar, FiAlertTriangle];
 
 interface Props {
   todayAttendance?: DashboardTodayAttendance | null;
-  leaveQuota?: LeaveQuotaBalance | null;
+  leaveQuota?: number | LeaveQuotaBalance | null;
   attendanceList: AttendanceRecord[];
 }
 
@@ -30,7 +30,10 @@ export default function Overview({ todayAttendance, leaveQuota, attendanceList }
   const progress = weeklyStats.progress ?? 0;
   const weekHoursText = fmt(totalMin);
 
-  const leaveRemaining = leaveQuota?.remaining ?? 0;
+  const leaveRemaining =
+    typeof leaveQuota === "number"
+      ? leaveQuota
+      : (leaveQuota?.remaining ?? 0);
 
   const todayTag = hasCheckedIn
     ? { text: isLate ? t("overview.needsReviewTag") : t("overview.activeTag"), color: isLate ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700" }

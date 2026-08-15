@@ -109,8 +109,8 @@ export default function AttendanceHistory({ selectedDate }) {
   }, [selectedDate, records, months, daysFull]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 card-hover">
-      <div className="flex items-center justify-between mb-5">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 card-hover">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
             <FiList size={20} />
@@ -130,13 +130,13 @@ export default function AttendanceHistory({ selectedDate }) {
         <table className="w-full text-sm text-gray-700 dark:text-gray-200">
           <thead>
             <tr className="text-left text-xs text-white bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a]">
-              <th className="pb-3 pt-3 px-3 font-medium w-8">{t("attendanceHistory.no")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.photo")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.date")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.checkIn")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.checkOut")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.location")}</th>
-              <th className="pb-3 pt-3 px-3 font-medium">{t("attendanceHistory.status")}</th>
+              <th className="py-2 px-3 font-medium w-8">{t("attendanceHistory.no")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.photo")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.date")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.checkIn")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.checkOut")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.location")}</th>
+              <th className="py-2 px-3 font-medium">{t("attendanceHistory.status")}</th>
             </tr>
           </thead>
           <tbody>
@@ -146,19 +146,19 @@ export default function AttendanceHistory({ selectedDate }) {
                 className="border-b border-gray-100 dark:border-gray-700 last:border-0 opacity-0 animate-fade-slide-in"
                 style={{ animationDelay: `${0.2 + i * 0.08}s` }}
               >
-                <td className="py-3 px-3 text-gray-400 text-xs font-medium">{log.no}</td>
-                <td className="py-3 px-3">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-gray-400">
+                <td className="py-2 px-3 text-gray-400 text-xs font-medium">{log.no}</td>
+                <td className="py-2 px-3">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-400">
                       <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
                       <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                   </div>
                 </td>
-                <td className="py-3 px-3 text-gray-800 dark:text-gray-100 font-medium whitespace-nowrap">{log.date}</td>
-                <td className="py-3 px-3 text-gray-500">{log.masuk}</td>
-                <td className="py-3 px-3 text-gray-500">{log.pulang}</td>
-                <td className="py-3 px-3 max-w-35">
+                <td className="py-2 px-3 text-gray-800 dark:text-gray-100 font-medium whitespace-nowrap">{log.date}</td>
+                <td className="py-2 px-3 text-gray-500">{log.masuk}</td>
+                <td className="py-2 px-3 text-gray-500">{log.pulang}</td>
+                <td className="py-2 px-3 max-w-35">
                   {log.lokasi ? (
                     <span className="text-xs text-gray-500 truncate block" title={log.lokasi}>
                       {log.lokasi}
@@ -167,7 +167,7 @@ export default function AttendanceHistory({ selectedDate }) {
                     <span className="text-xs text-gray-400">-</span>
                   )}
                 </td>
-                <td className="py-3 px-3">
+                <td className="py-2 px-3">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${log.color}`}>
                     {log.statusKey === "-" ? "-" : t(`attendanceHistory.${log.statusKey}`)}
                   </span>

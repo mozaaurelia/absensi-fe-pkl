@@ -1,5 +1,6 @@
 "use client";
 
+import { FiCalendar, FiCheckSquare, FiFilter, FiMapPin } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
@@ -23,9 +24,20 @@ export default function HistoryFilter({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+          <FiFilter size={20} />
+        </div>
+        <div>
+          <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("historyFilter.title")}</h3>
+          <p className="text-xs text-gray-400 dark:text-gray-400">{t("historyFilter.subtitle")}</p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div>
-          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+            <FiCheckSquare size={13} className="text-[#1E3A5F] dark:text-blue-300" />
             {t("historyFilter.status")}
           </label>
           <select
@@ -41,7 +53,8 @@ export default function HistoryFilter({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+            <FiCalendar size={13} className="text-[#1E3A5F] dark:text-blue-300" />
             {t("historyFilter.searchDate")}
           </label>
           <input
@@ -54,7 +67,8 @@ export default function HistoryFilter({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+            <FiMapPin size={13} className="text-[#1E3A5F] dark:text-blue-300" />
             {t("historyFilter.location")}
           </label>
           <select
@@ -74,8 +88,9 @@ export default function HistoryFilter({
           </label>
           <button
             type="button"
-            className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#16304f] transition-colors"
+            className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#16304f] transition-colors flex items-center justify-center gap-2"
           >
+            <FiFilter size={14} />
             {t("historyFilter.apply")}
           </button>
         </div>

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { FiAlignLeft, FiCalendar, FiClipboard, FiFileText, FiList, FiSend } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createLeaveRequest, type LeaveType } from "@/lib/services/leave";
@@ -107,15 +108,20 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       onSubmit={handleSubmit}
       className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6"
     >
-      <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("leaveForm.title")}</h3>
-        <span className="bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 flex items-center justify-center shrink-0">
+            <FiClipboard size={20} />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("leaveForm.title")}</h3>
+            <p className="text-xs text-gray-400 dark:text-gray-400">{t("leaveForm.desc")}</p>
+          </div>
+        </div>
+        <span className="bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap shrink-0">
           {t("leaveForm.badge")}
         </span>
       </div>
-      <p className="text-xs text-gray-400 mb-6">
-        {t("leaveForm.desc")}
-      </p>
 
       {error && (
         <p className="text-xs text-red-500 bg-red-50 dark:bg-red-500/10 rounded-lg px-4 py-3 mb-4">
@@ -130,7 +136,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       )}
 
       <div className="mb-5">
-        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <FiList size={14} className="text-[#1E3A5F] dark:text-blue-300" />
           {t("leaveForm.typeLabel")}
         </label>
         <select
@@ -150,7 +157,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
 
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiCalendar size={14} className="text-[#1E3A5F] dark:text-blue-300" />
             {t("leaveForm.startDate")}
           </label>
           <input
@@ -162,7 +170,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiCalendar size={14} className="text-[#1E3A5F] dark:text-blue-300" />
             {t("leaveForm.endDate")}
           </label>
           <input
@@ -176,7 +185,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       </div>
 
       <div className="mb-5">
-        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <FiAlignLeft size={14} className="text-[#1E3A5F] dark:text-blue-300" />
           {t("leaveForm.reason")}
         </label>
         <textarea
@@ -190,7 +200,8 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       </div>
 
       <div className="mb-5">
-        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <FiFileText size={14} className="text-[#1E3A5F] dark:text-blue-300" />
           {t("leaveForm.fileLabel")} *
         </label>
         <input
@@ -241,8 +252,9 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       <button
         type="submit"
         disabled={submitting}
-        className="bg-[#1E3A5F] text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-[#16304f] transition-colors whitespace-nowrap disabled:opacity-60"
+        className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-3 rounded-lg hover:bg-[#16304f] transition-colors whitespace-nowrap disabled:opacity-60 flex items-center justify-center gap-2"
       >
+        <FiSend size={14} />
         {submitting ? t("common.saving") : t("leaveForm.submit")}
       </button>
     </form>

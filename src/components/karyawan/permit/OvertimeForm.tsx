@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
+import { FiAlignLeft, FiAlertTriangle, FiCalendar, FiClock, FiList, FiSend, FiUserCheck } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 
-const MAX_OVERTIME_HOURS = 3;
+const MAX_OVERTIME_HOURS = 2;
 
 function addHours(time: string, hours: number): string {
   const [h, m] = time.split(":").map(Number);
@@ -101,15 +101,20 @@ export default function OvertimeForm() {
       onSubmit={handleSubmit}
       className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6"
     >
-      <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("overtimeForm.title")}</h3>
-        <span className="bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 flex items-center justify-center shrink-0">
+            <FiClock size={20} />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("overtimeForm.title")}</h3>
+            <p className="text-xs text-gray-400 dark:text-gray-400">{t("overtimeForm.desc")}</p>
+          </div>
+        </div>
+        <span className="bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap shrink-0">
           {t("overtimeForm.badge")}
         </span>
       </div>
-      <p className="text-xs text-gray-400 mb-6">
-        {t("overtimeForm.desc")}
-      </p>
 
       {info && (
         <p
@@ -125,7 +130,8 @@ export default function OvertimeForm() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiCalendar size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.date")}
           </label>
           <input
@@ -137,7 +143,8 @@ export default function OvertimeForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiClock size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.startTime")}
           </label>
           <input
@@ -149,7 +156,8 @@ export default function OvertimeForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiClock size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.endTime")}
           </label>
           <input
@@ -167,7 +175,8 @@ export default function OvertimeForm() {
           )}
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiClock size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.estDuration")}
           </label>
           <div
@@ -191,7 +200,8 @@ export default function OvertimeForm() {
 
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiList size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.category")}
           </label>
           <select
@@ -207,7 +217,8 @@ export default function OvertimeForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiUserCheck size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.approval")}
           </label>
           <select
@@ -220,7 +231,8 @@ export default function OvertimeForm() {
       </div>
 
       <div className="mb-5">
-        <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+        <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+          <FiAlignLeft size={14} className="text-purple-600 dark:text-purple-300" />
           {t("overtimeForm.reason")}
         </label>
         <textarea
@@ -236,8 +248,9 @@ export default function OvertimeForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-3 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60"
+        className="w-full bg-[#1E3A5F] text-white font-semibold text-sm py-3 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
       >
+        <FiSend size={14} />
         {submitting ? t("overtimeForm.submitting") : t("overtimeForm.submit")}
       </button>
     </form>

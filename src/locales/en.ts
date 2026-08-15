@@ -338,6 +338,7 @@ dashAttendance: {
   attendanceAction: {
     title: "Attendance Actions",
     desc: "Click one of the buttons to start attendance verification.",
+    schedule: "Work Schedule",
     outsideTitle: "Outside Working Hours",
     outsideDesc:
       "Attendance features can only be used from 09:00 - 17:00. Please return during working hours.",
@@ -421,9 +422,12 @@ dashAttendance: {
       title: "Message",
       subtitle: "Let's chit-chat with your partner!",
       searchPlaceholder: "Search messages...",
-      chat1: { name: "Rina Amelia", message: "Good morning! The task has been sent.", time: "09:41", unread: 2 },
-      chat2: { name: "Budi Santoso", message: "OK, I'll review it later.", time: "08:15", unread: 0 },
-      chat3: { name: "Marketing Team", message: "Meeting continues at 01:00 PM.", time: "Yesterday", unread: 5 },
+      supervisorFallback: "My Supervisor",
+      departmentFallback: "My Department",
+      teamName: "{dept} Team",
+      chat1: { message: "Good morning! The task has been sent.", time: "09:41", unread: 2 },
+      chat2: { message: "OK, I'll review it later.", time: "08:15", unread: 0 },
+      chat3: { message: "The {dept} meeting continues at 01:00 PM.", time: "Yesterday", unread: 5 },
       chatRoom: {
         back: "Back",
         online: "online",
@@ -499,6 +503,8 @@ dashAttendance: {
   },
 
   historyFilter: {
+    title: "History Filter",
+    subtitle: "Filter attendance data by status, date, and location.",
     status: "Filter Status",
     searchDate: "Search Date",
     datePlaceholder: "e.g. 12 June 2026",
@@ -708,6 +714,7 @@ dashAttendance: {
     hourUnit: "h",
     minuteUnit: "m",
     maxHint: "Max {max}",
+    durationValue: "2 h",
     durationWarning:
       "Overtime duration exceeds the 2-hour limit. Maximum end time is {max}.",
     category: "Overtime Category",

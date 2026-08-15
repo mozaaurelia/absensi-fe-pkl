@@ -101,11 +101,11 @@ function AttendanceCard({ item }: { item: AttendanceCardData }) {
       : t("historyTable.notAvailable");
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 card-hover">
-      <div className="flex items-center justify-between gap-3 mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 card-hover">
+      <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`h-11 w-11 rounded-xl flex items-center justify-center text-lg shrink-0 ${
+            className={`h-9 w-9 rounded-xl flex items-center justify-center text-base shrink-0 ${
               isLate
                 ? "bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400"
                 : "bg-[#1E3A5F]/10 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300"
@@ -114,34 +114,34 @@ function AttendanceCard({ item }: { item: AttendanceCardData }) {
             {isLate ? "◔" : "✓"}
           </div>
           <div className="min-w-0">
-            <p className="text-base font-bold text-gray-900 dark:text-gray-100 truncate">
+            <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">
               {item.day}
             </p>
-            <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">{item.date}</p>
+            <p className="mt-0.5 text-[11px] text-gray-400 dark:text-gray-500">{item.date}</p>
           </div>
         </div>
 
-        <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap shrink-0 ${badgeClass}`}>
+        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold whitespace-nowrap shrink-0 ${badgeClass}`}>
           {badgeText}
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-3 text-center">
-          <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-1">{t("historyTable.checkIn")}</p>
-          <p className="text-lg font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.inTime}</p>
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-2 text-center">
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-0.5">{t("historyTable.checkIn")}</p>
+          <p className="text-base font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.inTime}</p>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-3 text-center">
-          <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-1">{t("historyTable.checkOut")}</p>
-          <p className="text-lg font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.outTime}</p>
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl px-2 py-2 text-center">
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-0.5">{t("historyTable.checkOut")}</p>
+          <p className="text-base font-bold text-[#1E3A5F] dark:text-blue-300 tabular-nums">{item.outTime}</p>
         </div>
-        <div className="bg-[#1E3A5F] dark:bg-blue-600/90 rounded-xl px-2 py-3 text-center">
-          <p className="text-[11px] text-blue-100/80 mb-1">{t("historyTable.totalHours")}</p>
-          <p className="text-lg font-bold text-white tabular-nums">{item.total}</p>
+        <div className="bg-[#1E3A5F] dark:bg-blue-600/90 rounded-xl px-2 py-2 text-center">
+          <p className="text-[10px] text-blue-100/80 mb-0.5">{t("historyTable.totalHours")}</p>
+          <p className="text-base font-bold text-white tabular-nums">{item.total}</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-gray-100 dark:border-gray-700 pt-3">
+      <div className="flex items-center justify-between gap-3 border-t border-gray-100 dark:border-gray-700 pt-2">
         <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 min-w-0">
           <FiMapPin size={12} className="shrink-0 text-[#1E3A5F] dark:text-blue-300" />
           <span className="truncate">{item.location}</span>
@@ -169,13 +169,13 @@ export default function HistoryTable({ records }: Props) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden card-hover mt-6">
-      <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] text-white px-6 py-5">
+      <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] text-white px-6 py-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h3 className="text-lg font-bold">{t("historyTable.title")}</h3>
-            <p className="text-xs text-blue-100/80 mt-1">{t("historyTable.desc")}</p>
+            <p className="text-xs text-blue-100/80 mt-0.5">{t("historyTable.desc")}</p>
           </div>
-          <span className="hidden sm:inline-flex items-center bg-white/15 text-white text-xs font-semibold px-3 py-1.5 rounded-full shrink-0">
+          <span className="hidden sm:inline-flex items-center bg-white/15 text-white text-xs font-semibold px-3 py-1 rounded-full shrink-0">
             {items.length} {t("historyTable.present")}
           </span>
         </div>
@@ -184,7 +184,7 @@ export default function HistoryTable({ records }: Props) {
       {items.length === 0 ? (
         <p className="p-8 text-center text-sm text-gray-400">{t("common.emptyData")}</p>
       ) : (
-        <div className="grid gap-5 md:grid-cols-2 p-6">
+        <div className="grid gap-4 md:grid-cols-2 p-5">
           {items.map((item) => (
             <AttendanceCard key={item.id} item={item} />
           ))}

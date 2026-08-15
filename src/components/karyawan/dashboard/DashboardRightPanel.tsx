@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiArrowLeft, FiBell, FiCalendar, FiCheck, FiChevronLeft, FiChevronRight, FiMoreVertical, FiSearch, FiSend, FiSun } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
+import { getMyProfile, type EmployeeProfile } from "@/lib/services/employee";
 import type { CurrentSchedule, LeaveQuotaBalance } from "@/lib/services/dashboard";
 
 interface Props {
   currentSchedule?: CurrentSchedule | null;
-  leaveQuota?: LeaveQuotaBalance | null;
+  leaveQuota?: number | LeaveQuotaBalance | null;
 }
 
 function toTime(value?: string | null): string {
@@ -24,10 +25,32 @@ export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Pro
   const { t } = useLanguage();
   const [index, setIndex] = useState(0);
   const [activeChat, setActiveChat] = useState(null);
+  const [profile, setProfile] = useState<EmployeeProfile | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getMyProfile()
+      .then((p) => {
+        if (!cancelled) setProfile(p);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const shiftStart = toTime(currentSchedule?.start_time);
   const shiftEnd = toTime(currentSchedule?.end_time);
-  const daysLeft = leaveQuota?.remaining ?? 0;
+  const daysLeft =
+    typeof leaveQuota === "number"
+      ? leaveQuota
+      : (leaveQuota?.remaining ?? 0);
+
+  const deptName =
+    profile?.department_name || t("dashboardPanel.chats.departmentFallback");
+  const supervisorName =
+    profile?.supervisor_name || t("dashboardPanel.chats.supervisorFallback");
+  const teamName = t("dashboardPanel.chats.teamName", { dept: deptName });
 
   const slides = [
     {
@@ -58,12 +81,27 @@ export default function DashboardRightPanel({ currentSchedule, leaveQuota }: Pro
   const next = () => setIndex((i) => (i + 1) % slides.length);
 
   const avatarBgs = ["bg-[#7B9E89]", "bg-[#9E7B7B]", "bg-[#7B8A9E]", "bg-[#8A7B9E]"];
-  const getChat = (i) => ({
-    name: t(`dashboardPanel.chats.chat${i}.name`),
-    message: t(`dashboardPanel.chats.chat${i}.message`),
-    time: t(`dashboardPanel.chats.chat${i}.time`),
-    unread: Number(t(`dashboardPanel.chats.chat${i}.unread`)) || 0,
-  });
+  const chats = [
+    {
+      name: supervisorName,
+      message: t("dashboardPanel.chats.chat1.message"),
+      time: t("dashboardPanel.chats.chat1.time"),
+      unread: Number(t("dashboardPanel.chats.chat1.unread")) || 0,
+    },
+    {
+      name: teamName,
+      message: t("dashboardPanel.chats.chat2.message", { dept: deptName }),
+      time: t("dashboardPanel.chats.chat2.time"),
+      unread: Number(t("dashboardPanel.chats.chat2.unread")) || 0,
+    },
+    {
+      name: deptName,
+      message: t("dashboardPanel.chats.chat3.message", { dept: deptName }),
+      time: t("dashboardPanel.chats.chat3.time"),
+      unread: Number(t("dashboardPanel.chats.chat3.unread")) || 0,
+    },
+  ];
+  const getChat = (i: number) => chats[i - 1] ?? chats[0];
   const initialsOf = (name) =>
     name
       .split(" ")
