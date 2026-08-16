@@ -714,7 +714,6 @@ dashAttendance: {
     hourUnit: "h",
     minuteUnit: "m",
     maxHint: "Max {max}",
-    durationValue: "2 h",
     durationWarning:
       "Overtime duration exceeds the 2-hour limit. Maximum end time is {max}.",
     category: "Overtime Category",

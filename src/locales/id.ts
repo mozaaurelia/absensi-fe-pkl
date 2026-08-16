@@ -714,7 +714,6 @@ export const id = {
     hourUnit: "j",
     minuteUnit: "m",
     maxHint: "Maks. {max}",
-    durationValue: "2 jam",
     durationWarning:
       "Durasi lembur melebihi batas maksimal 2 jam. Jam selesai maksimal {max}.",
     category: "Kategori Lembur",

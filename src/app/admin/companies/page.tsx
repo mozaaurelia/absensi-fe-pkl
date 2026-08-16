@@ -3,15 +3,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { FiEdit2, FiPlus } from "react-icons/fi";
+import { FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import Layout from "@/components/admin/layout/layout";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { ApiError } from "@/lib/api";
 import {
   getCompanies,
   createCompany,
   updateCompany,
   updateCompanyStatus,
+  deleteCompany,
   type Company,
 } from "@/lib/services/admin";
 
@@ -31,6 +33,7 @@ export default function AdminCompaniesPage() {
   const [saving, setSaving] = useState(false);
   const [modal, setModal] = useState<"create" | "edit" | null>(null);
   const [editRow, setEditRow] = useState<Company | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -115,6 +118,22 @@ export default function AdminCompaniesPage() {
     }
   };
 
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setSaving(true);
+    setError(null);
+    try {
+      await deleteCompany(deleteTarget.id);
+      setDeleteTarget(null);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t("common.saveErrorDesc"));
+      setDeleteTarget(null);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (status === "loading") {
     return <div className="flex min-h-screen bg-gray-50" />;
   }
@@ -192,13 +211,21 @@ export default function AdminCompaniesPage() {
                       </button>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center justify-end">
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => openEdit(row)}
                           className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
                           aria-label={t("adminMaster.edit")}
                         >
                           <FiEdit2 size={15} />
+                        </button>
+                        <button
+                          onClick={() => setDeleteTarget(row)}
+                          disabled={saving}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors disabled:opacity-60"
+                          aria-label={t("adminMaster.delete")}
+                        >
+                          <FiTrash2 size={15} />
                         </button>
                       </div>
                     </td>
@@ -209,6 +236,14 @@ export default function AdminCompaniesPage() {
           </div>
         )}
       </div>
+
+      {deleteTarget && (
+        <ConfirmDialog
+          description={deleteTarget.name}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
+        />
+      )}
 
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">

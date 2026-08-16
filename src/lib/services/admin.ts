@@ -397,3 +397,9 @@ export async function updateCompanyStatus(
     body: JSON.stringify({ status }),
   });
 }
+
+export async function deleteCompany(id: string): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>(`/companies/${id}`, {
+    method: "DELETE",
+  });
+}
