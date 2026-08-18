@@ -398,8 +398,13 @@ export async function updateCompanyStatus(
   });
 }
 
+<<<<<<< HEAD
 export async function deleteCompany(id: string): Promise<{ message: string }> {
   return apiFetch<{ message: string }>(`/companies/${id}`, {
     method: "DELETE",
   });
+=======
+export async function deleteCompany(id: string): Promise<void> {
+  return apiFetch<void>(`/companies/${id}`, { method: "DELETE" });
+>>>>>>> 5619ff8 (Update)
 }

@@ -80,6 +80,21 @@ export default function AdminCompaniesPage() {
     setError(null);
   };
 
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setSaving(true);
+    setError(null);
+    try {
+      await deleteCompany(deleteTarget.id);
+      setDeleteTarget(null);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t("common.deleteErrorDesc"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const submit = async () => {
     if (!name.trim()) {
       setError(t("adminCrud.nameRequired"));
@@ -221,9 +236,15 @@ export default function AdminCompaniesPage() {
                         </button>
                         <button
                           onClick={() => setDeleteTarget(row)}
+<<<<<<< HEAD
                           disabled={saving}
                           className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors disabled:opacity-60"
                           aria-label={t("adminMaster.delete")}
+=======
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                          aria-label={t("adminMaster.delete")}
+                          title={t("adminMaster.delete")}
+>>>>>>> 5619ff8 (Update)
                         >
                           <FiTrash2 size={15} />
                         </button>
@@ -284,6 +305,14 @@ export default function AdminCompaniesPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          description={deleteTarget.name}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
+        />
       )}
     </Layout>
   );

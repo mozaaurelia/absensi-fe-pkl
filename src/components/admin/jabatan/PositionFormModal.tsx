@@ -110,12 +110,19 @@ export default function PositionFormModal({
               <input
                 type="number"
                 min={0}
-                value={form.reimbursementLimit}
-                onChange={(e) =>
-                  setForm({ ...form, reimbursementLimit: Math.max(0, Number(e.target.value) || 0) })
-                }
+                step={1000}
+                value={form.reimbursementLimit || ""}
+                onChange={(e) => {
+                  const num = Math.floor(Number(e.target.value) || 0);
+                  setForm({ ...form, reimbursementLimit: Math.max(0, num) });
+                }}
+                onBlur={(e) => {
+                  const num = Math.floor(Number(e.target.value) || 0);
+                  const rounded = Math.round(num / 1000) * 1000;
+                  setForm({ ...form, reimbursementLimit: Math.max(0, rounded) });
+                }}
                 placeholder="0"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white focus:ring-2 focus:ring-[#1E3A5F]/10 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </div>
             <p className="text-xs text-gray-400 mt-1.5">
