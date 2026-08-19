@@ -1,7 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { FiSearch, FiCheckCircle, FiClock, FiXCircle } from "react-icons/fi";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiSearch,
+  FiCheckCircle,
+  FiClock,
+  FiXCircle,
+  FiUsers,
+  FiCalendar,
+  FiAlertCircle,
+} from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 
 export interface AttendanceRecord {
@@ -13,13 +21,19 @@ export interface AttendanceRecord {
   checkOut: string;
 }
 
+const inputClass =
+  "w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] transition-colors";
+
 export default function KehadiranContent() {
   const { t } = useLanguage();
 
   const [rows, setRows] = useState<AttendanceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | "present" | "late" | "absent">("all");
+  const [activeTab, setActiveTab] = useState<"history" | "leave" | "late">("history");
+  const [department, setDepartment] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -38,126 +52,294 @@ export default function KehadiranContent() {
     load();
   }, [load]);
 
-  const filtered = rows.filter((row) => {
-    const matchSearch = row.employeeName.toLowerCase().includes(search.toLowerCase());
-    const matchTab = activeTab === "all" || row.status === activeTab;
-    return matchSearch && matchTab;
-  });
+  const stats = useMemo(() => {
+    const present = rows.filter((r) => r.status === "present").length;
+    const late = rows.filter((r) => r.status === "late").length;
+    const absent = rows.filter((r) => r.status === "absent").length;
+    const total = rows.length;
+    return { present, late, absent, total };
+  }, [rows]);
+
+  const filtered = useMemo(() => {
+    return rows.filter((row) => {
+      const matchSearch =
+        !search ||
+        row.employeeName.toLowerCase().includes(search.toLowerCase());
+      const matchDate =
+        (!fromDate || row.date >= fromDate) && (!toDate || row.date <= toDate);
+
+      if (activeTab === "history") {
+        return matchSearch && matchDate;
+      }
+      if (activeTab === "late") {
+        return matchSearch && matchDate && row.status === "late";
+      }
+      if (activeTab === "leave") {
+        return matchSearch && matchDate && row.status === "absent";
+      }
+      return matchSearch && matchDate;
+    });
+  }, [rows, search, activeTab, fromDate, toDate]);
 
   const tabs = [
-    { key: "all" as const, label: t("adminAttendance.tabAll"), count: rows.length },
-    { key: "present" as const, label: t("adminAttendance.tabPresent"), count: rows.filter((r) => r.status === "present").length },
-    { key: "late" as const, label: t("adminAttendance.tabLate"), count: rows.filter((r) => r.status === "late").length },
-    { key: "absent" as const, label: t("adminAttendance.tabAbsent"), count: rows.filter((r) => r.status === "absent").length },
+    { key: "history" as const, label: t("adminAttendance.tabHistory") },
+    { key: "leave" as const, label: t("adminAttendance.tabLeave") },
+    { key: "late" as const, label: t("adminAttendance.tabLate") },
   ];
 
   const statusConfig = {
-    present: { icon: <FiCheckCircle size={14} />, color: "text-green-600 bg-green-50 dark:bg-green-500/15 dark:text-green-400" },
-    late: { icon: <FiClock size={14} />, color: "text-amber-600 bg-amber-50 dark:bg-amber-500/15 dark:text-amber-400" },
-    absent: { icon: <FiXCircle size={14} />, color: "text-red-600 bg-red-50 dark:bg-red-500/15 dark:text-red-400" },
+    present: {
+      icon: <FiCheckCircle size={14} />,
+      color: "text-green-600 bg-green-50 dark:bg-green-500/15 dark:text-green-400",
+    },
+    late: {
+      icon: <FiClock size={14} />,
+      color: "text-amber-600 bg-amber-50 dark:bg-amber-500/15 dark:text-amber-400",
+    },
+    absent: {
+      icon: <FiXCircle size={14} />,
+      color: "text-red-600 bg-red-50 dark:bg-red-500/15 dark:text-red-400",
+    },
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base">
-              {t("adminAttendance.title")}
-            </h3>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {t("adminAttendance.desc")}
-            </p>
+    <div className="space-y-6">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5">
+          <div className="flex items-start justify-between mb-4">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 text-[#1E3A5F]">
+              <FiUsers size={18} />
+            </span>
           </div>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+            {loading ? "-" : String(stats.present)}
+          </p>
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            {t("adminAttendance.totalAbsensi")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {t("adminAttendance.totalAbsensiDesc")}
+          </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="relative flex-1">
-            <FiSearch size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("adminAttendance.searchPlaceholder")}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 pl-10 pr-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
-            />
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5">
+          <div className="flex items-start justify-between mb-4">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-50 text-amber-600">
+              <FiAlertCircle size={18} />
+            </span>
           </div>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+            {loading ? "-" : String(stats.late)}
+          </p>
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            {t("adminAttendance.totalLate")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {t("adminAttendance.totalLateDesc")}
+          </p>
         </div>
 
-        <div className="flex gap-1 mt-4 overflow-x-auto">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
-                activeTab === tab.key
-                  ? "bg-[#1E3A5F] text-white"
-                  : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-              }`}
-            >
-              {tab.label}
-              <span className="ml-1.5 text-[10px] opacity-70">({tab.count})</span>
-            </button>
-          ))}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5">
+          <div className="flex items-start justify-between mb-4">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center bg-red-50 text-red-500">
+              <FiCalendar size={18} />
+            </span>
+          </div>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+            {loading ? "-" : String(stats.absent)}
+          </p>
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            {t("adminAttendance.totalLeave")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {t("adminAttendance.totalLeaveDesc")}
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5">
+          <div className="flex items-start justify-between mb-4">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center bg-purple-50 text-purple-600">
+              <FiClock size={18} />
+            </span>
+          </div>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+            {loading ? "-" : "0"}
+          </p>
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            {t("adminAttendance.totalOvertime")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {t("adminAttendance.totalOvertimeDesc")}
+          </p>
         </div>
       </div>
 
-      {loading ? (
-        <div className="p-8 text-center text-sm text-gray-400">{t("common.loading")}</div>
-      ) : filtered.length === 0 ? (
-        <div className="p-12">
-          <div className="flex flex-col items-center text-center">
-            <span className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
-              <FiCheckCircle size={24} className="text-gray-300 dark:text-gray-500" />
-            </span>
-            <p className="text-sm text-gray-400">{t("adminAttendance.empty")}</p>
+      {/* Main Table Card */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base">
+                {t("adminAttendance.title")}
+              </h3>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {t("adminAttendance.desc")}
+              </p>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex gap-1 overflow-x-auto">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                  activeTab === tab.key
+                    ? "bg-[#1E3A5F] text-white"
+                    : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-gray-100 dark:border-gray-700 text-xs uppercase text-gray-400 dark:text-gray-500">
-                <th className="px-6 py-3 font-semibold">{t("adminAttendance.date")}</th>
-                <th className="px-6 py-3 font-semibold">{t("adminAttendance.employee")}</th>
-                <th className="px-6 py-3 font-semibold">{t("adminAttendance.status")}</th>
-                <th className="px-6 py-3 font-semibold">{t("adminAttendance.checkIn")}</th>
-                <th className="px-6 py-3 font-semibold">{t("adminAttendance.checkOut")}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
-              {filtered.map((row) => {
-                const cfg = statusConfig[row.status];
-                return (
-                  <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">
-                      {new Date(row.date).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      {row.employeeName}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>
-                        {cfg.icon}
-                        {row.status === "present" ? t("adminAttendance.tabPresent") : row.status === "late" ? t("adminAttendance.tabLate") : t("adminAttendance.tabAbsent")}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                      {row.checkIn || "-"}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                      {row.checkOut || "-"}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+
+        {/* Filter Bar */}
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/30">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="relative">
+              <FiSearch
+                size={15}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+              />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t("adminAttendance.searchNameOrId")}
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 pl-10 pr-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
+              />
+            </div>
+
+            <select
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              className={inputClass}
+            >
+              <option value="">{t("adminAttendance.allDepartments")}</option>
+            </select>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                {t("adminAttendance.fromDate")}
+              </label>
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                {t("adminAttendance.toDate")}
+              </label>
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Table */}
+        {loading ? (
+          <div className="p-8 text-center text-sm text-gray-400">
+            {t("common.loading")}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12">
+            <div className="flex flex-col items-center text-center">
+              <span className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+                <FiCheckCircle
+                  size={24}
+                  className="text-gray-300 dark:text-gray-500"
+                />
+              </span>
+              <p className="text-sm text-gray-400">{t("adminAttendance.empty")}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-700 text-xs uppercase text-gray-400 dark:text-gray-500">
+                  <th className="px-6 py-3 font-semibold">
+                    {t("adminAttendance.date")}
+                  </th>
+                  <th className="px-6 py-3 font-semibold">
+                    {t("adminAttendance.employee")}
+                  </th>
+                  <th className="px-6 py-3 font-semibold">
+                    {t("adminAttendance.status")}
+                  </th>
+                  <th className="px-6 py-3 font-semibold">
+                    {t("adminAttendance.checkIn")}
+                  </th>
+                  <th className="px-6 py-3 font-semibold">
+                    {t("adminAttendance.checkOut")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
+                {filtered.map((row) => {
+                  const cfg = statusConfig[row.status];
+                  return (
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                    >
+                      <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {new Date(row.date).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                        {row.employeeName}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}
+                        >
+                          {cfg.icon}
+                          {row.status === "present"
+                            ? t("adminAttendance.tabPresent")
+                            : row.status === "late"
+                              ? t("adminAttendance.tabLate")
+                              : t("adminAttendance.tabAbsent")}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                        {row.checkIn || "-"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                        {row.checkOut || "-"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

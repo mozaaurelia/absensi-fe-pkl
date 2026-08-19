@@ -10,6 +10,8 @@ export interface Announcement {
   title: string;
   content: string;
   date: string;
+  target: string;
+  active: boolean;
 }
 
 const inputClass =
@@ -28,6 +30,8 @@ export default function PengumumanContent() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [target, setTarget] = useState("all");
+  const [active, setActive] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -50,6 +54,8 @@ export default function PengumumanContent() {
   const openCreate = () => {
     setTitle("");
     setContent("");
+    setTarget("all");
+    setActive(true);
     setEditRow(null);
     setModal("create");
   };
@@ -57,6 +63,8 @@ export default function PengumumanContent() {
   const openEdit = (row: Announcement) => {
     setTitle(row.title);
     setContent(row.content);
+    setTarget(row.target ?? "all");
+    setActive(row.active ?? true);
     setEditRow(row);
     setModal("edit");
   };
@@ -65,6 +73,8 @@ export default function PengumumanContent() {
     setModal(null);
     setTitle("");
     setContent("");
+    setTarget("all");
+    setActive(true);
   };
 
   const submit = async () => {
@@ -81,12 +91,20 @@ export default function PengumumanContent() {
           title: title.trim(),
           content: content.trim(),
           date: new Date().toISOString(),
+          target,
+          active,
         };
         data.unshift(newItem);
       } else if (modal === "edit" && editRow) {
         const idx = data.findIndex((d) => d.id === editRow.id);
         if (idx !== -1) {
-          data[idx] = { ...data[idx], title: title.trim(), content: content.trim() };
+          data[idx] = {
+            ...data[idx],
+            title: title.trim(),
+            content: content.trim(),
+            target,
+            active,
+          };
         }
       }
 
@@ -153,7 +171,9 @@ export default function PengumumanContent() {
             <thead>
               <tr className="border-b border-gray-100 dark:border-gray-700 text-xs uppercase text-gray-400 dark:text-gray-500">
                 <th className="px-6 py-3 font-semibold">{t("adminAnnouncements.titleLabel")}</th>
+                <th className="px-6 py-3 font-semibold">{t("adminAnnouncements.target")}</th>
                 <th className="px-6 py-3 font-semibold">{t("adminAnnouncements.dateLabel")}</th>
+                <th className="px-6 py-3 font-semibold">Status</th>
                 <th className="px-6 py-3 font-semibold text-right">{t("adminMaster.actions")}</th>
               </tr>
             </thead>
@@ -164,12 +184,26 @@ export default function PengumumanContent() {
                     <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">{row.title}</p>
                     <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{row.content}</p>
                   </td>
+                  <td className="px-6 py-4 text-xs text-gray-500 dark:text-gray-400">
+                    {row.target === "all" ? t("adminAnnouncements.targetAll") : row.target}
+                  </td>
                   <td className="px-6 py-4 text-xs text-gray-400">
                     {new Date(row.date).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
                     })}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                        row.active !== false
+                          ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400"
+                          : "bg-gray-100 text-gray-500 dark:bg-gray-600 dark:text-gray-300"
+                      }`}
+                    >
+                      {row.active !== false ? t("adminCompanies.active") : t("adminCompanies.inactive")}
+                    </span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-1">
@@ -200,9 +234,22 @@ export default function PengumumanContent() {
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-lg">
-            <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {modal === "create" ? t("adminAnnouncements.addTitle") : t("adminAnnouncements.editTitle")}
-            </h3>
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg">
+                  {modal === "create" ? t("adminAnnouncements.addTitle") : t("adminAnnouncements.editTitle")}
+                </h3>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                  {modal === "create" ? t("adminAnnouncements.addDesc") : t("adminAnnouncements.editDesc")}
+                </p>
+              </div>
+              <button
+                onClick={closeModal}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shrink-0"
+              >
+                &#10005;
+              </button>
+            </div>
 
             <div className="space-y-4">
               <div>
@@ -219,6 +266,19 @@ export default function PengumumanContent() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                  {t("adminAnnouncements.target")}
+                </label>
+                <select
+                  value={target}
+                  onChange={(e) => setTarget(e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="all">{t("adminAnnouncements.targetAll")}</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   {t("adminAnnouncements.contentLabel")}
                 </label>
                 <textarea
@@ -228,6 +288,25 @@ export default function PengumumanContent() {
                   rows={5}
                   className={`${inputClass} resize-none`}
                 />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActive(!active)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    active ? "bg-[#1E3A5F]" : "bg-gray-200 dark:bg-gray-600"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      active ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  {t("adminAnnouncements.active")}
+                </span>
               </div>
             </div>
 
@@ -246,7 +325,7 @@ export default function PengumumanContent() {
                 disabled={saving || !title.trim()}
                 className="flex-1 bg-[#1E3A5F] text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60"
               >
-                {saving ? t("common.saving") : t("adminMaster.save")}
+                {saving ? t("common.saving") : t("adminAnnouncements.publish")}
               </button>
             </div>
           </div>
