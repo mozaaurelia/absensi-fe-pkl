@@ -4,15 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { FiEdit2, FiPlus, FiTrash2, FiBell } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
-
-export interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  target: string;
-  active: boolean;
-}
+import {
+  getAnnouncements,
+  createAnnouncement,
+  updateAnnouncement,
+  deleteAnnouncement,
+  type Announcement,
+} from "@/lib/services/announcement";
 
 const inputClass =
   "w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors";
@@ -30,22 +28,20 @@ export default function PengumumanContent() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [target, setTarget] = useState("all");
-  const [active, setActive] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const stored = localStorage.getItem("pengumuman");
-      const data: Announcement[] = stored ? JSON.parse(stored) : [];
-      setRows(data);
-    } catch {
+      const data = await getAnnouncements();
+      setRows(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
       setRows([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     load();
@@ -54,8 +50,6 @@ export default function PengumumanContent() {
   const openCreate = () => {
     setTitle("");
     setContent("");
-    setTarget("all");
-    setActive(true);
     setEditRow(null);
     setModal("create");
   };
@@ -63,8 +57,6 @@ export default function PengumumanContent() {
   const openEdit = (row: Announcement) => {
     setTitle(row.title);
     setContent(row.content);
-    setTarget(row.target ?? "all");
-    setActive(row.active ?? true);
     setEditRow(row);
     setModal("edit");
   };
@@ -73,8 +65,6 @@ export default function PengumumanContent() {
     setModal(null);
     setTitle("");
     setContent("");
-    setTarget("all");
-    setActive(true);
   };
 
   const submit = async () => {
@@ -82,37 +72,15 @@ export default function PengumumanContent() {
     setSaving(true);
     setError(null);
     try {
-      const stored = localStorage.getItem("pengumuman");
-      const data: Announcement[] = stored ? JSON.parse(stored) : [];
-
       if (modal === "create") {
-        const newItem: Announcement = {
-          id: crypto.randomUUID(),
-          title: title.trim(),
-          content: content.trim(),
-          date: new Date().toISOString(),
-          target,
-          active,
-        };
-        data.unshift(newItem);
+        await createAnnouncement({ title: title.trim(), content: content.trim() });
       } else if (modal === "edit" && editRow) {
-        const idx = data.findIndex((d) => d.id === editRow.id);
-        if (idx !== -1) {
-          data[idx] = {
-            ...data[idx],
-            title: title.trim(),
-            content: content.trim(),
-            target,
-            active,
-          };
-        }
+        await updateAnnouncement(editRow.id, { title: title.trim(), content: content.trim() });
       }
-
-      localStorage.setItem("pengumuman", JSON.stringify(data));
-      setRows(data);
       closeModal();
-    } catch {
-      setError(t("common.saveErrorDesc"));
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("common.saveErrorDesc"));
     } finally {
       setSaving(false);
     }
@@ -120,12 +88,18 @@ export default function PengumumanContent() {
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
-    const stored = localStorage.getItem("pengumuman");
-    const data: Announcement[] = stored ? JSON.parse(stored) : [];
-    const updated = data.filter((d) => d.id !== deleteTarget.id);
-    localStorage.setItem("pengumuman", JSON.stringify(updated));
-    setRows(updated);
-    setDeleteTarget(null);
+    setSaving(true);
+    setError(null);
+    try {
+      await deleteAnnouncement(deleteTarget.id);
+      setDeleteTarget(null);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("common.deleteErrorDesc"));
+      setDeleteTarget(null);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -185,24 +159,18 @@ export default function PengumumanContent() {
                     <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{row.content}</p>
                   </td>
                   <td className="px-6 py-4 text-xs text-gray-500 dark:text-gray-400">
-                    {row.target === "all" ? t("adminAnnouncements.targetAll") : row.target}
+                    {t("adminAnnouncements.targetAll")}
                   </td>
                   <td className="px-6 py-4 text-xs text-gray-400">
-                    {new Date(row.date).toLocaleDateString("id-ID", {
+                    {new Date(row.created_at ?? new Date()).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
                     })}
                   </td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        row.active !== false
-                          ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400"
-                          : "bg-gray-100 text-gray-500 dark:bg-gray-600 dark:text-gray-300"
-                      }`}
-                    >
-                      {row.active !== false ? t("adminCompanies.active") : t("adminCompanies.inactive")}
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400">
+                      {t("adminCompanies.active")}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -266,19 +234,6 @@ export default function PengumumanContent() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                  {t("adminAnnouncements.target")}
-                </label>
-                <select
-                  value={target}
-                  onChange={(e) => setTarget(e.target.value)}
-                  className={inputClass}
-                >
-                  <option value="all">{t("adminAnnouncements.targetAll")}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   {t("adminAnnouncements.contentLabel")}
                 </label>
                 <textarea
@@ -288,25 +243,6 @@ export default function PengumumanContent() {
                   rows={5}
                   className={`${inputClass} resize-none`}
                 />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setActive(!active)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    active ? "bg-[#1E3A5F]" : "bg-gray-200 dark:bg-gray-600"
-                  }`}
-                >
-                  <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      active ? "translate-x-5" : "translate-x-0"
-                    }`}
-                  />
-                </button>
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  {t("adminAnnouncements.active")}
-                </span>
               </div>
             </div>
 

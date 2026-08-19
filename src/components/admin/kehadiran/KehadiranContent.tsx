@@ -11,15 +11,11 @@ import {
   FiAlertCircle,
 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
-
-export interface AttendanceRecord {
-  id: string;
-  employeeName: string;
-  date: string;
-  status: "present" | "late" | "absent";
-  checkIn: string;
-  checkOut: string;
-}
+import {
+  getAdminAttendanceReport,
+  type AdminAttendanceReportRow,
+} from "@/lib/services/attendance";
+import { getDepartments } from "@/lib/services/admin";
 
 const inputClass =
   "w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] transition-colors";
@@ -27,59 +23,68 @@ const inputClass =
 export default function KehadiranContent() {
   const { t } = useLanguage();
 
-  const [rows, setRows] = useState<AttendanceRecord[]>([]);
+  const [rows, setRows] = useState<AdminAttendanceReportRow[]>([]);
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"history" | "leave" | "late">("history");
   const [department, setDepartment] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [date, setDate] = useState(() => {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${m}-${day}`;
+  });
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const stored = localStorage.getItem("kehadiran");
-      const data: AttendanceRecord[] = stored ? JSON.parse(stored) : [];
-      setRows(data);
-    } catch {
-      setRows([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const load = useCallback(
+    async (targetDate: string, deptId: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getAdminAttendanceReport({
+          date: targetDate,
+          department_id: deptId || undefined,
+        });
+        setRows(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t("common.loadErrorDesc"));
+        setRows([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [t],
+  );
 
   useEffect(() => {
-    load();
-  }, [load]);
+    load(date, department);
+  }, [load, date, department]);
+
+  useEffect(() => {
+    getDepartments()
+      .then((data) => setDepartments(Array.isArray(data) ? data : []))
+      .catch(() => setDepartments([]));
+  }, []);
 
   const stats = useMemo(() => {
     const present = rows.filter((r) => r.status === "present").length;
     const late = rows.filter((r) => r.status === "late").length;
     const absent = rows.filter((r) => r.status === "absent").length;
-    const total = rows.length;
-    return { present, late, absent, total };
+    return { present, late, absent, total: rows.length };
   }, [rows]);
 
   const filtered = useMemo(() => {
     return rows.filter((row) => {
       const matchSearch =
-        !search ||
-        row.employeeName.toLowerCase().includes(search.toLowerCase());
-      const matchDate =
-        (!fromDate || row.date >= fromDate) && (!toDate || row.date <= toDate);
+        !search || row.employee_name.toLowerCase().includes(search.toLowerCase());
 
-      if (activeTab === "history") {
-        return matchSearch && matchDate;
-      }
-      if (activeTab === "late") {
-        return matchSearch && matchDate && row.status === "late";
-      }
-      if (activeTab === "leave") {
-        return matchSearch && matchDate && row.status === "absent";
-      }
-      return matchSearch && matchDate;
+      if (activeTab === "history") return matchSearch;
+      if (activeTab === "late") return matchSearch && row.status === "late";
+      if (activeTab === "leave") return matchSearch && row.status === "absent";
+      return matchSearch;
     });
-  }, [rows, search, activeTab, fromDate, toDate]);
+  }, [rows, search, activeTab]);
 
   const tabs = [
     { key: "history" as const, label: t("adminAttendance.tabHistory") },
@@ -164,7 +169,7 @@ export default function KehadiranContent() {
             </span>
           </div>
           <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-            {loading ? "-" : "0"}
+            {loading ? "-" : String(stats.total)}
           </p>
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
             {t("adminAttendance.totalOvertime")}
@@ -187,6 +192,12 @@ export default function KehadiranContent() {
                 {t("adminAttendance.desc")}
               </p>
             </div>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => e.target.value && setDate(e.target.value)}
+              className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] transition-colors"
+            />
           </div>
 
           {/* Tabs */}
@@ -209,7 +220,7 @@ export default function KehadiranContent() {
 
         {/* Filter Bar */}
         <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/30">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="relative">
               <FiSearch
                 size={15}
@@ -229,36 +240,31 @@ export default function KehadiranContent() {
               className={inputClass}
             >
               <option value="">{t("adminAttendance.allDepartments")}</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
             </select>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
-                {t("adminAttendance.fromDate")}
-              </label>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
-                {t("adminAttendance.toDate")}
-              </label>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className={inputClass}
-              />
+            <div className="text-xs text-gray-400 flex items-center">
+              {loading ? t("common.loading") : `${stats.total} ${t("adminAttendance.employee")}`}
             </div>
           </div>
         </div>
 
         {/* Table */}
-        {loading ? (
+        {error ? (
+          <div className="p-12 text-center">
+            <p className="text-sm text-gray-400">{error}</p>
+            <button
+              onClick={() => load(date, department)}
+              className="mt-3 px-4 py-2 text-sm font-semibold text-white bg-[#1E3A5F] rounded-xl hover:opacity-90"
+            >
+              {t("common.retry")}
+            </button>
+          </div>
+        ) : loading ? (
           <div className="p-8 text-center text-sm text-gray-400">
             {t("common.loading")}
           </div>
@@ -301,7 +307,7 @@ export default function KehadiranContent() {
                   const cfg = statusConfig[row.status];
                   return (
                     <tr
-                      key={row.id}
+                      key={row.employee_id + row.date}
                       className="hover:bg-gray-50 dark:hover:bg-gray-700/30"
                     >
                       <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">
@@ -311,8 +317,11 @@ export default function KehadiranContent() {
                           year: "numeric",
                         })}
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                        {row.employeeName}
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                          {row.employee_name}
+                        </p>
+                        <p className="text-xs text-gray-400">{row.department_name || "-"}</p>
                       </td>
                       <td className="px-6 py-4">
                         <span
@@ -327,10 +336,10 @@ export default function KehadiranContent() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {row.checkIn || "-"}
+                        {row.check_in || "-"}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {row.checkOut || "-"}
+                        {row.check_out || "-"}
                       </td>
                     </tr>
                   );

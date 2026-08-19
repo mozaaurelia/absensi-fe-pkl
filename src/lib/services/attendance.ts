@@ -20,6 +20,31 @@ export async function getTeamAttendance(): Promise<AttendanceRecord[]> {
   return apiFetch<AttendanceRecord[]>("/attendance/team");
 }
 
+export interface AdminAttendanceReportRow {
+  employee_id: string;
+  employee_name: string;
+  department_name: string | null;
+  date: string;
+  status: "present" | "late" | "absent";
+  check_in: string | null;
+  check_out: string | null;
+}
+
+export async function getAdminAttendanceReport(params?: {
+  date?: string;
+  department_id?: string;
+  status?: string;
+}): Promise<AdminAttendanceReportRow[]> {
+  const qs = new URLSearchParams();
+  if (params?.date) qs.set("date", params.date);
+  if (params?.department_id) qs.set("department_id", params.department_id);
+  if (params?.status) qs.set("status", params.status);
+  const query = qs.toString();
+  return apiFetch<AdminAttendanceReportRow[]>(
+    `/attendance/admin/report${query ? `?${query}` : ""}`,
+  );
+}
+
 export async function clockIn(lat: number, lng: number, faceImage?: string): Promise<AttendanceRecord> {
   return apiFetch<AttendanceRecord>("/attendance/clock-in", {
     method: "POST",
