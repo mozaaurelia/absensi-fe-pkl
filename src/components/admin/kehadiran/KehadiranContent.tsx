@@ -201,12 +201,12 @@ export default function KehadiranContent() {
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 overflow-x-auto">
+          <div className="flex justify-center gap-2">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                className={`px-6 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
                   activeTab === tab.key
                     ? "bg-[#1E3A5F] text-white"
                     : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"

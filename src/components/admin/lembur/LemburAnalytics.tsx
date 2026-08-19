@@ -28,21 +28,6 @@ export default function LemburAnalytics({ requests }: LemburAnalyticsProps) {
     [requests]
   );
 
-  const rejected = useMemo(
-    () => requests.filter((r) => r.status.toLowerCase() === "rejected"),
-    [requests]
-  );
-
-  const totalHours = useMemo(
-    () => approved.reduce((sum, r) => sum + (Number(r.total_hours) || 0), 0),
-    [approved]
-  );
-
-  const approvalRate = useMemo(() => {
-    const decided = approved.length + rejected.length;
-    return decided > 0 ? Math.round((approved.length / decided) * 100) : 0;
-  }, [approved, rejected]);
-
   const monthly = useMemo(() => {
     const now = new Date();
     const months: { key: string; label: string; jam: number; pengajuan: number }[] = [];
@@ -90,33 +75,6 @@ export default function LemburAnalytics({ requests }: LemburAnalyticsProps) {
     return { list, max };
   }, [approved]);
 
-  const tiles = [
-    {
-      label: "Total Pengajuan",
-      value: requests.length,
-      iconBg: "bg-blue-50 text-[#1E3A5F]",
-      icon: <ListIcon />,
-    },
-    {
-      label: "Pengajuan Disetujui",
-      value: approved.length,
-      iconBg: "bg-green-50 text-green-600",
-      icon: <CheckIcon />,
-    },
-    {
-      label: "Tingkat Persetujuan",
-      value: `${approvalRate}%`,
-      iconBg: "bg-purple-50 text-purple-600",
-      icon: <PercentIcon />,
-    },
-    {
-      label: "Total Jam Disetujui",
-      value: totalHours.toFixed(1),
-      iconBg: "bg-amber-50 text-amber-600",
-      icon: <HourglassIcon />,
-    },
-  ];
-
   return (
     <div className="space-y-6">
       <div>
@@ -124,22 +82,6 @@ export default function LemburAnalytics({ requests }: LemburAnalyticsProps) {
         <p className="text-xs text-gray-400 mt-0.5">
           Ringkasan statistik pengajuan lembur dari semua data yang tersedia.
         </p>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {tiles.map((tile, i) => (
-          <div
-            key={tile.label}
-            className="bg-white rounded-2xl border border-gray-100 p-5 animate-fade-slide-up"
-            style={{ animationDelay: `${i * 70}ms` }}
-          >
-            <span className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${tile.iconBg}`}>
-              {tile.icon}
-            </span>
-            <p className="text-2xl font-bold text-gray-900">{tile.value}</p>
-            <p className="text-sm font-semibold text-gray-700 mt-0.5">{tile.label}</p>
-          </div>
-        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -223,41 +165,5 @@ export default function LemburAnalytics({ requests }: LemburAnalyticsProps) {
         )}
       </div>
     </div>
-  );
-}
-
-function ListIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-      <path d="M8.5 12.5l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PercentIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M19 5L5 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="7.5" cy="7.5" r="2.5" stroke="currentColor" strokeWidth="2" />
-      <circle cx="16.5" cy="16.5" r="2.5" stroke="currentColor" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function HourglassIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M7 3h10M7 21h10M8 3v3l4 6-4 6v3M16 3v3l-4 6 4 6v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
