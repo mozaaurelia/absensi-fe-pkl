@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import {
   FiSearch,
   FiCheckCircle,
@@ -19,6 +20,36 @@ import { getDepartments } from "@/lib/services/admin";
 
 const inputClass =
   "w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-100 placeholder:text-gray-400 outline-none focus:border-[#1E3A5F] transition-colors";
+
+type SectionTab = "history" | "leave" | "late";
+
+function HistoryIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M12 8v4l3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function LeaveIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LateIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 7v5l3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 5l2 2M5 5L3 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function KehadiranContent() {
   const { t } = useLanguage();
@@ -86,10 +117,10 @@ export default function KehadiranContent() {
     });
   }, [rows, search, activeTab]);
 
-  const tabs = [
-    { key: "history" as const, label: t("adminAttendance.tabHistory") },
-    { key: "leave" as const, label: t("adminAttendance.tabLeave") },
-    { key: "late" as const, label: t("adminAttendance.tabLate") },
+  const tabs: { id: SectionTab; label: string; icon: ReactNode }[] = [
+    { id: "history", label: t("adminAttendance.tabHistory"), icon: <HistoryIcon /> },
+    { id: "leave", label: t("adminAttendance.tabLeave"), icon: <LeaveIcon /> },
+    { id: "late", label: t("adminAttendance.tabLate"), icon: <LateIcon /> },
   ];
 
   const statusConfig = {
@@ -200,19 +231,25 @@ export default function KehadiranContent() {
             />
           </div>
 
-          {/* Tabs */}
-          <div className="flex justify-center gap-2">
+          {/* Section Tabs */}
+          <div className="flex items-stretch border-b border-gray-100 dark:border-gray-700 -mx-6 mt-4">
             {tabs.map((tab) => (
               <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-6 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
-                  activeTab === tab.key
-                    ? "bg-[#1E3A5F] text-white"
-                    : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === tab.id
+                    ? "text-[#1E3A5F]"
+                    : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 }`}
               >
+                <span className="text-[#1E3A5F]">{tab.icon}</span>
                 {tab.label}
+                <span
+                  className={`absolute left-0 right-0 -bottom-px h-0.5 rounded-full transition-opacity ${
+                    activeTab === tab.id ? "opacity-100" : "opacity-0"
+                  } bg-[#1E3A5F]`}
+                />
               </button>
             ))}
           </div>
