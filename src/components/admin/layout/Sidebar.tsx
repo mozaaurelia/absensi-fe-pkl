@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { signOut } from "next-auth/react";
+import { clearAccessToken } from "@/lib/api";
 
 export default function Sidebar() {
   const { t } = useLanguage();
@@ -118,7 +119,10 @@ export default function Sidebar() {
 
       <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
         <button
-          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          onClick={() => {
+            clearAccessToken();
+            signOut({ callbackUrl: "/auth/login" });
+          }}
           title={collapsed ? t("adminSidebar.logout") : undefined}
           className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
             collapsed ? "pl-3.25 gap-0" : "px-3 gap-3"

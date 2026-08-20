@@ -8,6 +8,7 @@ export interface Profile {
   phone_number?: string | null;
   address?: string | null;
   avatar_url?: string | null;
+  image?: string | null;
   employee_id?: string | null;
   employee_number?: string | null;
   nik?: string | null;

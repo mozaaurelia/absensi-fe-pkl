@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { clearAccessToken } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageToggle from "@/components/common/LanguageToggle";
 import AttendanceShortcut from "@/components/common/AttendanceShortcut";
@@ -26,7 +27,10 @@ export default function AtasanHeader() {
         <AttendanceShortcut dark={false} />
         <LanguageToggle dark={false} />
         <button
-          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          onClick={() => {
+            clearAccessToken();
+            signOut({ callbackUrl: "/auth/login" });
+          }}
           className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">

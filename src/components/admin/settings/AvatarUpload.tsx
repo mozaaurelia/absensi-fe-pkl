@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function AvatarUpload({ initials = "AD", onImageChange }) {
+export default function AvatarUpload({ initials = "AD", onImageChange, initialImage }) {
   const { t } = useLanguage();
   const [preview, setPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +14,10 @@ export default function AvatarUpload({ initials = "AD", onImageChange }) {
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    setPreview(initialImage ?? null);
+  }, [initialImage]);
 
   useEffect(() => {
     return () => {

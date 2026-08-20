@@ -76,8 +76,8 @@ export default function ProfileForm({
     onSavingChange(true);
 
     try {
-      await updateMyProfile(name, avatar ?? undefined);
-      await update({ name, image: avatar ?? undefined });
+      const result = await updateMyProfile(name, avatar ?? undefined);
+      await update({ name, image: result.image ?? null });
       await onProfileUpdated();
       setSuccess(true);
     } catch (err) {

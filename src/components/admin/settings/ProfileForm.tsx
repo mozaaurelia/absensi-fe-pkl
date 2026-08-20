@@ -109,6 +109,7 @@ export default function ProfileForm({
           <AvatarUpload
             initials={profile?.name ? profile.name.slice(0, 2).toUpperCase() : "AD"}
             onImageChange={(dataUrl) => setAvatar(dataUrl)}
+            initialImage={profile?.image ?? null}
           />
         </div>
 

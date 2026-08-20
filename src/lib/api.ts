@@ -4,6 +4,24 @@ const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
   "http://localhost:4000/api/v1";
 
+const ACCESS_TOKEN_KEY = "sams_access_token";
+
+export function storeAccessToken(token?: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) localStorage.setItem(ACCESS_TOKEN_KEY, token);
+  else localStorage.removeItem(ACCESS_TOKEN_KEY);
+}
+
+export function clearAccessToken() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+}
+
+function getStoredAccessToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -27,9 +45,15 @@ export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const session = await getSession();
+  let accessToken: string | null = null;
+  try {
+    const session = await getSession();
+    accessToken = session?.user?.accessToken ?? null;
+  } catch {
+    accessToken = null;
+  }
+  if (!accessToken) accessToken = getStoredAccessToken();
 
-  const accessToken = session?.user?.accessToken;
   const safeEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
 
   let response: Response;

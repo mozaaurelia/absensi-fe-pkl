@@ -5,6 +5,7 @@ import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { storeAccessToken } from "@/lib/api";
 import LoginInput from "./LoginInput";
 import LoginRemember from "./LoginRemember";
 import LoginButton from "./LoginButton";
@@ -63,6 +64,8 @@ export default function LoginForm() {
       }
 
       const session = await getSession();
+
+      storeAccessToken(session?.user?.accessToken);
 
       if (session?.user?.role === "admin") {
         router.push("/admin");

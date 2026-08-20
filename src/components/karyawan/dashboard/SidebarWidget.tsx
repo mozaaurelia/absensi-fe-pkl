@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { clearAccessToken } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Sidebar() {
@@ -88,7 +89,10 @@ export default function Sidebar() {
 
       <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
         <button
-          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          onClick={() => {
+            clearAccessToken();
+            signOut({ callbackUrl: "/auth/login" });
+          }}
           className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
             open ? "px-3 gap-3" : "pl-3.25 gap-0"
           }`}

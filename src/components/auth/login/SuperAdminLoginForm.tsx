@@ -5,6 +5,7 @@ import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { storeAccessToken } from "@/lib/api";
 import LoginInput from "@/components/auth/login/LoginInput";
 import LoginButton from "@/components/auth/login/LoginButton";
 
@@ -60,6 +61,8 @@ export default function SuperAdminLoginForm() {
       }
 
       const session = await getSession();
+
+      storeAccessToken(session?.user?.accessToken);
 
       if (session?.user?.role === "superadmin") {
         router.push("/admin/companies");
