@@ -27,6 +27,20 @@ export default function DepartmentContent() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Department | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [actionBusy, setActionBusy] = useState(false);
+
+  const toErrorMessage = (err: unknown, fallback: string): string => {
+    if (err instanceof Error && "code" in err) {
+      const code = (err as { code?: string }).code;
+      if (code === "DEPARTMENT_IN_USE")
+        return "Departemen masih memiliki karyawan aktif. Pindahkan atau nonaktifkan karyawan terlebih dahulu.";
+      if (code === "NOT_FOUND")
+        return "Departemen tidak ditemukan atau sudah dihapus.";
+      if (code === "NETWORK_ERROR") return err.message;
+    }
+    return err instanceof Error ? err.message : fallback;
+  };
 
   const load = useCallback(() => {
     setLoading(true);
@@ -40,7 +54,7 @@ export default function DepartmentContent() {
             name: d.name,
             head: "",
             color: "blue",
-            status: "active",
+            status: (d.status as Department["status"]) || "active",
             workDays: DEFAULT_WORK_DAYS,
             allowOvertime: policy?.allow_overtime ?? false,
             allowWFH: policy?.allow_wfh ?? false,
@@ -68,11 +82,13 @@ export default function DepartmentContent() {
 
   const handleAdd = () => {
     setEditingDept(null);
+    setActionError(null);
     setModalOpen(true);
   };
 
   const handleEdit = (dept: Department) => {
     setEditingDept(dept);
+    setActionError(null);
     setModalOpen(true);
   };
 
@@ -83,21 +99,29 @@ export default function DepartmentContent() {
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
+    setActionBusy(true);
+    setActionError(null);
     try {
       await deleteDepartment(deleteTarget.id);
       setDepartments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
-    } catch {
-      // keep list unchanged
+    } catch (err) {
+      setActionError(toErrorMessage(err, "Gagal menghapus departemen."));
     } finally {
+      setActionBusy(false);
       setDeleteTarget(null);
     }
   };
 
   const handleSave = async (dept: Department) => {
     const exists = departments.some((d) => d.id === dept.id);
+    setActionBusy(true);
+    setActionError(null);
     try {
       if (exists) {
-        const updated = await updateDepartment(dept.id, { name: dept.name });
+        const updated = await updateDepartment(dept.id, {
+          name: dept.name,
+          status: dept.status,
+        });
         await updateDepartmentPolicy(dept.id, {
           allow_overtime: dept.allowOvertime,
           allow_wfh: dept.allowWFH,
@@ -110,7 +134,10 @@ export default function DepartmentContent() {
           )
         );
       } else {
-        const created = await createDepartment({ name: dept.name });
+        const created = await createDepartment({
+          name: dept.name,
+          status: dept.status,
+        });
         await updateDepartmentPolicy(created.id, {
           allow_overtime: dept.allowOvertime,
           allow_wfh: dept.allowWFH,
@@ -122,10 +149,11 @@ export default function DepartmentContent() {
           { ...dept, id: created.id, name: created.name },
         ]);
       }
-    } catch {
-      // keep state unchanged
-    } finally {
       setModalOpen(false);
+    } catch (err) {
+      setActionError(toErrorMessage(err, "Gagal menyimpan departemen."));
+    } finally {
+      setActionBusy(false);
     }
   };
 
@@ -155,6 +183,13 @@ export default function DepartmentContent() {
     <div>
       <DepartmentStatsCards departments={departments} />
       <DepartmentHeader count={departments.length} onAddClick={handleAdd} />
+
+      {actionError && (
+        <div className="mb-5 px-4 py-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs text-red-600 dark:text-red-400 rounded-lg">
+          {actionError}
+        </div>
+      )}
+
       <DepartmentFilter search={search} onSearchChange={setSearch} />
       <DepartmentGrid departments={filtered} onEdit={handleEdit} onDelete={handleDelete} />
 
@@ -162,6 +197,8 @@ export default function DepartmentContent() {
         <DepartmentFormModal
           initialData={editingDept}
           existingNames={departments.map((d) => d.name)}
+          saving={actionBusy}
+          saveError={actionError}
           onClose={() => setModalOpen(false)}
           onSave={handleSave}
         />

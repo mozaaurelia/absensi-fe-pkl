@@ -14,6 +14,8 @@ interface DepartmentFormModalProps {
   existingNames: string[];
   onClose: () => void;
   onSave: (department: Department) => void;
+  saving?: boolean;
+  saveError?: string | null;
 }
 
 const emptyForm: Omit<Department, "id" | "employeeCount" | "attendanceRate"> = {
@@ -33,6 +35,8 @@ export default function DepartmentFormModal({
   existingNames,
   onClose,
   onSave,
+  saving = false,
+  saveError = null,
 }: DepartmentFormModalProps) {
   const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>("info");
@@ -108,21 +112,41 @@ export default function DepartmentFormModal({
           {tab === "kebijakan" && <KebijakanTab form={form} onChange={setForm} />}
         </div>
 
+        {saveError && (
+          <div className="mx-6 mb-4 px-4 py-3 bg-red-50 border border-red-200 text-xs text-red-600 rounded-lg">
+            {saveError}
+          </div>
+        )}
+
         <div className="flex items-center gap-3 px-6 pb-6 pt-2">
           <button
             onClick={onClose}
-            className="flex-1 border border-gray-200 rounded-lg py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
+            disabled={saving}
+            className="flex-1 border border-gray-200 rounded-lg py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-60"
           >
             Batal
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#1E3A5F] to-[#2f5d94] text-white rounded-lg py-3 text-sm font-semibold hover:brightness-110 transition-all"
+            disabled={saving}
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#1E3A5F] to-[#2f5d94] text-white rounded-lg py-3 text-sm font-semibold hover:brightness-110 transition-all disabled:opacity-60"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            {t("common.save")}
+            {saving ? (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="animate-spin">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" className="opacity-30" />
+                  <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+                Menyimpan...
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {t("common.save")}
+              </>
+            )}
           </button>
         </div>
       </div>

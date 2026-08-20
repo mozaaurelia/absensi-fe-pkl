@@ -28,6 +28,8 @@ export default function Sidebar() {
 
   const isSuperadmin = session?.user?.role === "superadmin";
 
+  const SUPERADMIN_ALLOWED_HREFS = ["/admin/companies"];
+
   const menus = [
     { label: t("adminSidebar.dashboard"), href: "/admin", icon: DashboardIcon, superadminOnly: false },
     { label: t("adminSidebar.employees"), href: "/admin/karyawan", icon: EmployeeIcon, superadminOnly: false },
@@ -48,7 +50,7 @@ export default function Sidebar() {
   ];
 
   const visibleMenus = isSuperadmin
-    ? menus
+    ? menus.filter((m) => SUPERADMIN_ALLOWED_HREFS.includes(m.href))
     : menus.filter((m) => !m.superadminOnly);
 
   return (

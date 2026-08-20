@@ -241,6 +241,7 @@ export const en = {
     attendance: "Attendance",
     announcements: "Announcements",
     settings: "Settings",
+    companies: "Companies",
     collapse: "Collapse Sidebar",
     logout: "Logout",
   },
@@ -752,7 +753,6 @@ dashAttendance: {
     statusInactive: "Inactive",
     statusResigned: "Resigned",
     device: "Registered Device",
-    deviceValue: "iPhone 13 · Verified",
   },
 
   avatarUpload: {
@@ -826,8 +826,6 @@ dashAttendance: {
     desc: "Update your password and enable additional protection.",
     oldPassword: "Old Password",
     newPassword: "New Password",
-    twoFA: "Enable Two-Factor Authentication (2FA)",
-    twoFADesc: "Add an extra layer of security when logging into the system.",
     comingSoon: "This feature will be available soon.",
     changePassword: "Change Password",
     changeSuccess: "Password changed successfully.",

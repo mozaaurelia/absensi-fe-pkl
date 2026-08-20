@@ -9,7 +9,6 @@ export default function SecurityForm() {
   const { t } = useLanguage();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [twoFA, setTwoFA] = useState(true);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -101,31 +100,10 @@ export default function SecurityForm() {
         type="button"
         onClick={handleChangePassword}
         disabled={isSaving || !oldPassword || !newPassword}
-        className="mb-6 bg-[#1E3A5F] text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#16304f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-[#1E3A5F] text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#16304f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSaving ? t("securityForm.saving") : t("securityForm.changePassword")}
       </button>
-
-      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 rounded-lg px-4 py-4">
-        <div>
-          <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-            {t("securityForm.twoFA")}
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            {t("securityForm.twoFADesc")}
-          </p>
-        </div>
-        <button
-          type="button"
-          disabled
-          onClick={() => setTwoFA((v) => !v)}
-          className={`w-12 h-7 rounded-full flex items-center px-1 transition-colors shrink-0 disabled:opacity-60 ${
-            twoFA ? "bg-[#1E3A5F] justify-end" : "bg-gray-300 dark:bg-gray-600 justify-start"
-          }`}
-        >
-          <span className="w-5 h-5 rounded-full bg-white block" />
-        </button>
-      </div>
     </div>
   );
 }

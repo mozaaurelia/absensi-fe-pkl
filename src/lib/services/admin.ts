@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/api";
 export interface Department {
   id: string;
   name: string;
+  status?: string | null;
 }
 
 export interface Position {
@@ -47,10 +48,10 @@ export interface AdminEmployee {
 export function getDepartments(): Promise<Department[]> {
   return apiFetch<Department[]>("/departments");
 }
-export function createDepartment(body: { name: string }): Promise<Department> {
+export function createDepartment(body: { name: string; status?: string }): Promise<Department> {
   return apiFetch<Department>("/departments", { method: "POST", body: JSON.stringify(body) });
 }
-export function updateDepartment(id: string, body: { name: string }): Promise<Department> {
+export function updateDepartment(id: string, body: { name: string; status?: string }): Promise<Department> {
   return apiFetch<Department>(`/departments/${id}`, { method: "PUT", body: JSON.stringify(body) });
 }
 export function deleteDepartment(id: string): Promise<{ id: string }> {

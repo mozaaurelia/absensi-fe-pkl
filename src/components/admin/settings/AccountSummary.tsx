@@ -15,8 +15,8 @@ export default function AccountSummary({ profile }: Props) {
 
   const rows = [
     { label: t("accountSummary.role"), value: profile?.role ? profile.role.charAt(0).toUpperCase() + profile.role.slice(1) : (user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Administrator") },
-    { label: t("accountSummary.department"), value: profile?.department || "Operasional" },
-    { label: t("accountSummary.device"), value: t("accountSummary.deviceValue") },
+    { label: t("accountSummary.department"), value: profile?.department || "-" },
+    { label: t("accountSummary.device"), value: "-" },
   ];
 
   return (

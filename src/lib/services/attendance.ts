@@ -45,6 +45,35 @@ export async function getAdminAttendanceReport(params?: {
   );
 }
 
+export interface AdminAttendanceRow {
+  id: string;
+  employee_id: string;
+  employee_name: string;
+  department_id: string | null;
+  department_name: string | null;
+  status: string | null;
+  clock_in_time: string | null;
+  clock_out_time: string | null;
+  late_minutes?: number | null;
+}
+
+export async function getAdminAllAttendance(params?: {
+  start_date?: string;
+  end_date?: string;
+  department_id?: string;
+  status?: string;
+}): Promise<AdminAttendanceRow[]> {
+  const qs = new URLSearchParams();
+  if (params?.start_date) qs.set("start_date", params.start_date);
+  if (params?.end_date) qs.set("end_date", params.end_date);
+  if (params?.department_id) qs.set("department_id", params.department_id);
+  if (params?.status) qs.set("status", params.status);
+  const query = qs.toString();
+  return apiFetch<AdminAttendanceRow[]>(
+    `/attendance/admin/all${query ? `?${query}` : ""}`,
+  );
+}
+
 export async function clockIn(lat: number, lng: number, faceImage?: string): Promise<AttendanceRecord> {
   return apiFetch<AttendanceRecord>("/attendance/clock-in", {
     method: "POST",

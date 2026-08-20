@@ -26,7 +26,6 @@ export default function ProfileForm({
   const { t } = useLanguage();
   const [form, setForm] = useState({
     nama: "",
-    nik: "",
     email: "",
     jabatan: "",
   });
@@ -44,7 +43,6 @@ export default function ProfileForm({
     if (profile) {
       setForm({
         nama: profile.name || "",
-        nik: profile.nik || "",
         email: profile.email || "",
         jabatan: profile.position || "",
       });
@@ -56,7 +54,6 @@ export default function ProfileForm({
     if (current) {
       setForm({
         nama: current.name || "",
-        nik: current.nik || "",
         email: current.email || "",
         jabatan: current.position || "",
       });
@@ -86,8 +83,8 @@ export default function ProfileForm({
     try {
       await updateMyProfile({
         name,
-        nik: form.nik.trim() || undefined,
         position: form.jabatan.trim() || undefined,
+        image: avatar ?? undefined,
       });
       await onProfileUpdated();
       setSuccess(true);
@@ -146,10 +143,9 @@ export default function ProfileForm({
             </label>
             <input
               type="text"
-              value={form.nik}
-              onChange={handleChange("nik")}
-              disabled={isLoading || isSaving}
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-colors disabled:opacity-60"
+              value={profile?.employee_id ? profile.employee_id.slice(0, 8).toUpperCase() : "-"}
+              readOnly
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none opacity-60 cursor-not-allowed"
             />
           </div>
         </div>

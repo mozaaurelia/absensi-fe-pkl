@@ -1,3 +1,5 @@
+import type { AdminAttendanceRow } from "@/lib/services/attendance";
+
 interface LaporanStat {
   label: string;
   value: string;
@@ -17,29 +19,52 @@ function StatTile({ stat }: { stat: LaporanStat }) {
   );
 }
 
-export default function LaporanStatsCards() {
+function toMinutes(iso: string | null): number | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d.getHours() * 60 + d.getMinutes();
+}
+
+export default function LaporanStatsCards({ rows }: { rows: AdminAttendanceRow[] }) {
+  const present = rows.filter((r) => r.status === "hadir").length;
+  const absent = rows.filter((r) => r.status === "alpha").length;
+  const late = rows.filter((r) => r.status === "telat").length;
+
+  let totalMinutes = 0;
+  let withDuration = 0;
+  for (const r of rows) {
+    if (r.status !== "hadir" && r.status !== "telat") continue;
+    const cin = toMinutes(r.clock_in_time);
+    const cout = toMinutes(r.clock_out_time);
+    if (cin !== null && cout !== null && cout >= cin) {
+      totalMinutes += cout - cin;
+      withDuration += 1;
+    }
+  }
+  const avgHours = withDuration > 0 ? (totalMinutes / withDuration / 60).toFixed(1) : "0";
+
   const stats: LaporanStat[] = [
     {
       label: "Total Kehadiran",
-      value: "0",
+      value: String(present),
       iconBg: "bg-green-50 text-green-600",
       icon: <UserCheckIcon />,
     },
     {
       label: "Ketidakhadiran",
-      value: "0",
+      value: String(absent),
       iconBg: "bg-red-50 text-red-500",
       icon: <UserXIcon />,
     },
     {
       label: "Rata-rata Jam Kerja",
-      value: "0h",
+      value: `${avgHours}h`,
       iconBg: "bg-purple-50 text-purple-600",
       icon: <ClockIcon />,
     },
     {
       label: "Keterlambatan",
-      value: "0",
+      value: String(late),
       iconBg: "bg-amber-50 text-amber-600",
       icon: <LateIcon />,
     },

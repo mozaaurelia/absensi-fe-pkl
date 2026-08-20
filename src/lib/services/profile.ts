@@ -28,6 +28,7 @@ export async function updateMyProfile(body: {
   address?: string;
   position?: string;
   nik?: string;
+  image?: string;
 }): Promise<Profile> {
   return apiFetch<Profile>("/employees/me/profile", {
     method: "PUT",

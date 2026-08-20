@@ -90,7 +90,7 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
         <div className="flex items-center gap-4">
           <LanguageToggle />
           <Notification />
-          <AttendanceShortcut />
+          {user?.role !== "superadmin" && <AttendanceShortcut />}
           <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
             {user?.image ? (
               <img

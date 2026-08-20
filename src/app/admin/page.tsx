@@ -22,7 +22,10 @@ export default function AdminDashboardPage() {
     if (status === "unauthenticated") {
       router.replace("/auth/login");
     }
-  }, [status, router]);
+    if (status === "authenticated" && user?.role === "superadmin") {
+      router.replace("/admin/companies");
+    }
+  }, [status, router, user]);
 
   const loadData = useCallback(async () => {
     if (status !== "authenticated" || !user) return;
@@ -45,7 +48,7 @@ export default function AdminDashboardPage() {
     }
   }, [status, user, loadData]);
 
-  if (status === "loading") {
+  if (status === "loading" || user?.role === "superadmin") {
     return <div className="flex min-h-screen bg-gray-50" />;
   }
 

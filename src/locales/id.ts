@@ -241,6 +241,7 @@ export const id = {
     attendance: "Kehadiran",
     announcements: "Pengumuman",
     settings: "Pengaturan",
+    companies: "Perusahaan",
     collapse: "Tutup Sidebar",
     logout: "Keluar",
   },
@@ -752,7 +753,6 @@ export const id = {
     statusInactive: "Nonaktif",
     statusResigned: "Berhenti",
     device: "Device Terdaftar",
-    deviceValue: "iPhone 13 · Verified",
   },
 
   avatarUpload: {
@@ -826,8 +826,6 @@ export const id = {
     desc: "Perbarui kata sandi dan aktifkan perlindungan tambahan.",
     oldPassword: "Kata Sandi Lama",
     newPassword: "Kata Sandi Baru",
-    twoFA: "Aktifkan Autentikasi Dua Faktor (2FA)",
-    twoFADesc: "Tambahkan lapisan keamanan saat login ke sistem.",
     comingSoon: "Fitur ini akan tersedia segera.",
     changePassword: "Ubah Kata Sandi",
     changeSuccess: "Kata sandi berhasil diubah.",
