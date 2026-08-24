@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import AdminCrudPage from "@/components/admin/master/AdminCrudPage";
 import LaporanStatsCards from "@/components/admin/laporan/LaporanStatsCards";
 import LaporanFilter from "@/components/admin/laporan/LaporanFilter";
+import { downloadCsv, printTablePdf } from "@/lib/exportUtils";
 import {
   getDepartments,
   type Department,
@@ -25,6 +26,19 @@ const REPORT_STATUS: Record<string, string | undefined> = {
   attendance: undefined,
   late: "telat",
   absent: "alpha",
+};
+
+const PERIOD_LABELS: Record<string, string> = {
+  today: "Hari Ini",
+  week: "Minggu Ini",
+  month: "Bulan Ini",
+  year: "Tahun Ini",
+};
+
+const REPORT_TYPE_LABELS: Record<string, string> = {
+  attendance: "Kehadiran",
+  late: "Keterlambatan",
+  absent: "Ketidakhadiran",
 };
 
 function ymd(d: Date): string {
@@ -137,6 +151,31 @@ export default function AdminReportPage() {
   }
   const deptRows = Array.from(byDept.values()).sort((a, b) => a.name.localeCompare(b.name));
 
+  const periodLabel = PERIOD_LABELS[period] ?? period;
+  const typeLabel = REPORT_TYPE_LABELS[reportType] ?? reportType;
+  const fileStamp = `${typeLabel}_${periodLabel}`.replace(/\s+/g, "_");
+
+  const exportHeaders =
+    section === "overview"
+      ? ["Karyawan", "Departemen", "Hadir", "Telat", "Alpha"]
+      : ["Departemen", "Hadir", "Telat", "Alpha"];
+  const exportRows =
+    section === "overview"
+      ? employeeRows.map((e) => [e.name, e.dept, e.hadir, e.telat, e.alpha])
+      : deptRows.map((d) => [d.name, d.hadir, d.telat, d.alpha]);
+  const exportSubtitle = `Laporan ${typeLabel} — ${periodLabel} — Dicetak ${new Date().toLocaleDateString("id-ID")}`;
+
+  const handleExportCsv = () =>
+    downloadCsv(`Laporan_${fileStamp}`, exportHeaders, exportRows);
+
+  const handleExportPdf = () =>
+    printTablePdf({
+      title: `Laporan ${typeLabel}`,
+      subtitle: exportSubtitle,
+      headers: exportHeaders,
+      rows: exportRows,
+    });
+
   return (
     <AdminCrudPage titleKey="adminReport.title">
       <LaporanStatsCards rows={rows} />
@@ -150,6 +189,25 @@ export default function AdminReportPage() {
         onPeriodChange={setPeriod}
         onDepartmentChange={setDepartmentId}
       />
+
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <button
+          onClick={handleExportCsv}
+          disabled={loading || exportRows.length === 0}
+          className="flex items-center gap-2 border border-gray-200 rounded-lg px-4 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FileCsvIcon />
+          Export Excel (CSV)
+        </button>
+        <button
+          onClick={handleExportPdf}
+          disabled={loading || exportRows.length === 0}
+          className="flex items-center gap-2 bg-[#1E3A5F] text-white rounded-lg px-4 py-2.5 text-xs font-semibold hover:bg-[#16304f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FilePdfIcon />
+          Export PDF
+        </button>
+      </div>
 
       <div className="flex items-stretch border-b border-gray-200 mb-6">
         {SECTION_TABS.map((tab) => (
@@ -252,8 +310,25 @@ export default function AdminReportPage() {
   );
 }
 
-function EyeIcon() {
+function FileCsvIcon() {
   return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5zM14 3v5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 13h8M8 17h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function FilePdfIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5zM14 3v5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 12v6m0-6c1.5 0 2.5-.7 2.5-2S13.5 8 12 8v4zm-3 4h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function EyeIcon() {  return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
       <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
       <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="2" />
