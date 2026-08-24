@@ -476,6 +476,9 @@ dashAttendance: {
       departmentFallback: "My Department",
       teamName: "{dept} Team",
       companyGroup: "Company Group",
+      directMessages: "Direct Messages",
+      people: "People",
+      noColleagues: "No colleagues yet",
       noMessages: "No messages yet",
       loadingMessages: "Loading messages...",
       sendFailed: "Failed to send message",
@@ -487,6 +490,7 @@ dashAttendance: {
         online: "online",
         typeMessage: "Type a message...",
         empty: "No messages yet. Say hi to your team!",
+        dmEmpty: "No messages yet. Say hi!",
         messages: [
           { text: "Good morning! Ready to work today?", time: "09:00", mine: false },
           { text: "Yes, I've received the task.", time: "09:02", mine: true },

@@ -476,6 +476,9 @@ export const id = {
       departmentFallback: "Departemen Saya",
       teamName: "Tim {dept}",
       companyGroup: "Grup Perusahaan",
+      directMessages: "Pesan Langsung",
+      people: "Karyawan",
+      noColleagues: "Belum ada rekan kerja",
       noMessages: "Belum ada pesan",
       loadingMessages: "Memuat pesan...",
       sendFailed: "Gagal mengirim pesan",
@@ -487,6 +490,7 @@ export const id = {
         online: "online",
         typeMessage: "Ketik pesan...",
         empty: "Belum ada pesan. Sapa timmu!",
+        dmEmpty: "Belum ada pesan. Sapa rekan kerjamu!",
         messages: [
           { text: "Pagi! Sudah siap buat kerja hari ini?", time: "09:00", mine: false },
           { text: "Siap kak, tugasnya sudah saya terima.", time: "09:02", mine: true },
