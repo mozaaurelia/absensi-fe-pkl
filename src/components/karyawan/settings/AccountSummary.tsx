@@ -14,19 +14,6 @@ function formatDate(value?: string | null): string {
   return date || "-";
 }
 
-function statusLabel(t: (key: string) => string, status?: string | null): string {
-  switch (status) {
-    case "active":
-      return t("accountSummary.statusActive");
-    case "inactive":
-      return t("accountSummary.statusInactive");
-    case "resigned":
-      return t("accountSummary.statusResigned");
-    default:
-      return "-";
-  }
-}
-
 export default function AccountSummary({ profile, isLoading }: Props) {
   const { t } = useLanguage();
 
@@ -62,9 +49,9 @@ export default function AccountSummary({ profile, isLoading }: Props) {
       value: formatDate(profile?.join_date),
     },
     {
-      id: "status",
-      label: t("accountSummary.status"),
-      value: statusLabel(t, profile?.status),
+      id: "marital-status",
+      label: t("accountSummary.maritalStatus"),
+      value: t("accountSummary.notMarried"),
     },
   ];
 

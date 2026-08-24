@@ -812,10 +812,9 @@ export const id = {
     supervisor: "Supervisor",
     company: "Perusahaan",
     joinDate: "Tanggal Bergabung",
-    status: "Status",
-    statusActive: "Aktif",
-    statusInactive: "Nonaktif",
-    statusResigned: "Berhenti",
+    maritalStatus: "Status Pernikahan",
+    married: "Sudah Menikah",
+    notMarried: "Belum Menikah",
     device: "Device Terdaftar",
   },
 

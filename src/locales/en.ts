@@ -812,10 +812,9 @@ dashAttendance: {
     supervisor: "Supervisor",
     company: "Company",
     joinDate: "Join Date",
-    status: "Status",
-    statusActive: "Active",
-    statusInactive: "Inactive",
-    statusResigned: "Resigned",
+    maritalStatus: "Marital Status",
+    married: "Married",
+    notMarried: "Single",
     device: "Registered Device",
   },
 
