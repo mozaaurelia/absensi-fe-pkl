@@ -59,7 +59,7 @@ export default function DepartmentContent() {
             allowOvertime: policy?.allow_overtime ?? false,
             allowWFH: policy?.allow_wfh ?? false,
             minAttendance: policy?.min_attendance_percentage ?? 80,
-            employeeCount: 0,
+            employeeCount: Number(d.employee_count ?? 0),
             attendanceRate: 0,
           });
         }

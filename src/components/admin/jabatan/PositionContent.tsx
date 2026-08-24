@@ -34,7 +34,7 @@ export default function PositionContent() {
             name: p.name,
             description: "",
             reimbursementLimit: 0,
-            employeeCount: 0,
+            employeeCount: Number(p.employee_count ?? 0),
           })),
         );
         setError(null);

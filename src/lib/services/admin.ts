@@ -4,11 +4,13 @@ export interface Department {
   id: string;
   name: string;
   status?: string | null;
+  employee_count?: number | string;
 }
 
 export interface Position {
   id: string;
   name: string;
+  employee_count?: number | string;
 }
 
 export interface OfficeLocation {
@@ -324,10 +326,10 @@ export function assignEmployeeSchedule(body: {
     body: JSON.stringify(body),
   });
 }
-export function endEmployeeSchedule(id: string, endDate: string): Promise<EmployeeSchedule> {
+export function endEmployeeSchedule(id: string, endDate?: string): Promise<EmployeeSchedule> {
   return apiFetch<EmployeeSchedule>(`/schedules/${id}/end`, {
     method: "PUT",
-    body: JSON.stringify({ end_date: endDate }),
+    body: JSON.stringify({ end_date: endDate ?? null }),
   });
 }
 

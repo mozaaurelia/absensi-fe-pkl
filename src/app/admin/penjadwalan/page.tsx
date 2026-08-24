@@ -123,7 +123,7 @@ export default function AdminSchedulingPage() {
     setSuccess(null);
     try {
       const { endEmployeeSchedule } = await import("@/lib/services/admin");
-      await endEmployeeSchedule(currentSchedule.id, new Date().toISOString().slice(0, 10));
+      await endEmployeeSchedule(currentSchedule.id);
       setSuccess(t("adminScheduling.ended"));
       await loadEmployeeSchedule(selectedEmployee);
     } catch (err) {
