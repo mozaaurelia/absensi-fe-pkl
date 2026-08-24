@@ -33,7 +33,7 @@ export default function PositionContent() {
             id: p.id,
             name: p.name,
             description: "",
-            reimbursementLimit: 0,
+            reimbursementLimit: Number(p.reimbursement_limit ?? 0),
             employeeCount: Number(p.employee_count ?? 0),
           })),
         );
@@ -89,14 +89,24 @@ export default function PositionContent() {
       if (exists) {
         const updated = await updatePosition(position.id, {
           name: position.name,
+          reimbursement_limit: position.reimbursementLimit,
         });
         setPositions((prev) =>
           prev.map((p) =>
-            p.id === updated.id ? { ...p, name: updated.name } : p
+            p.id === updated.id
+              ? {
+                  ...p,
+                  name: updated.name,
+                  reimbursementLimit: Number(updated.reimbursement_limit ?? p.reimbursementLimit),
+                }
+              : p
           )
         );
       } else {
-        const created = await createPosition({ name: position.name });
+        const created = await createPosition({
+          name: position.name,
+          reimbursement_limit: position.reimbursementLimit,
+        });
         setPositions((prev) => [
           ...prev,
           { ...position, id: created.id, name: created.name },

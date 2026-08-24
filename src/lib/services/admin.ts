@@ -11,6 +11,7 @@ export interface Position {
   id: string;
   name: string;
   employee_count?: number | string;
+  reimbursement_limit?: number | string;
 }
 
 export interface OfficeLocation {
@@ -63,10 +64,16 @@ export function deleteDepartment(id: string): Promise<{ id: string }> {
 export function getPositions(): Promise<Position[]> {
   return apiFetch<Position[]>("/positions");
 }
-export function createPosition(body: { name: string }): Promise<Position> {
+export function createPosition(body: {
+  name: string;
+  reimbursement_limit?: number;
+}): Promise<Position> {
   return apiFetch<Position>("/positions", { method: "POST", body: JSON.stringify(body) });
 }
-export function updatePosition(id: string, body: { name: string }): Promise<Position> {
+export function updatePosition(
+  id: string,
+  body: { name: string; reimbursement_limit?: number }
+): Promise<Position> {
   return apiFetch<Position>(`/positions/${id}`, { method: "PUT", body: JSON.stringify(body) });
 }
 export function deletePosition(id: string): Promise<{ id: string }> {
