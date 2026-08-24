@@ -426,6 +426,10 @@ dashAttendance: {
       supervisorFallback: "My Supervisor",
       departmentFallback: "My Department",
       teamName: "{dept} Team",
+      companyGroup: "Company Group",
+      noMessages: "No messages yet",
+      loadingMessages: "Loading messages...",
+      sendFailed: "Failed to send message",
       chat1: { message: "Good morning! The task has been sent.", time: "09:41", unread: 2 },
       chat2: { message: "OK, I'll review it later.", time: "08:15", unread: 0 },
       chat3: { message: "The {dept} meeting continues at 01:00 PM.", time: "Yesterday", unread: 5 },
@@ -433,6 +437,7 @@ dashAttendance: {
         back: "Back",
         online: "online",
         typeMessage: "Type a message...",
+        empty: "No messages yet. Say hi to your team!",
         messages: [
           { text: "Good morning! Ready to work today?", time: "09:00", mine: false },
           { text: "Yes, I've received the task.", time: "09:02", mine: true },

@@ -426,6 +426,10 @@ export const id = {
       supervisorFallback: "Atasan Saya",
       departmentFallback: "Departemen Saya",
       teamName: "Tim {dept}",
+      companyGroup: "Grup Perusahaan",
+      noMessages: "Belum ada pesan",
+      loadingMessages: "Memuat pesan...",
+      sendFailed: "Gagal mengirim pesan",
       chat1: { message: "Pagi! Tugas sudah dikirim ya.", time: "09:41", unread: 2 },
       chat2: { message: "OK, nanti saya review.", time: "08:15", unread: 0 },
       chat3: { message: "Rapat {dept} lanjut jam 13.00.", time: "Kemarin", unread: 5 },
@@ -433,6 +437,7 @@ export const id = {
         back: "Kembali",
         online: "online",
         typeMessage: "Ketik pesan...",
+        empty: "Belum ada pesan. Sapa timmu!",
         messages: [
           { text: "Pagi! Sudah siap buat kerja hari ini?", time: "09:00", mine: false },
           { text: "Siap kak, tugasnya sudah saya terima.", time: "09:02", mine: true },

@@ -22,6 +22,18 @@ function getStoredAccessToken(): string | null {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
+export async function getApiToken(): Promise<string | null> {
+  try {
+    const session = await getSession();
+    if (session?.user?.accessToken) {
+      return session.user.accessToken as string;
+    }
+  } catch {
+    // fall through to stored token
+  }
+  return getStoredAccessToken();
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data: T;
