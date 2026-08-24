@@ -36,7 +36,6 @@ export default function Sidebar() {
     { label: t("adminSidebar.employees"), href: "/admin/karyawan", icon: EmployeeIcon, superadminOnly: false },
     { label: t("adminSidebar.departments"), href: "/admin/departemen", icon: DeptIcon, superadminOnly: false },
     { label: t("adminSidebar.positions"), href: "/admin/jabatan", icon: PositionIcon, superadminOnly: false },
-    { label: t("adminSidebar.workSchedule"), href: "/admin/jadwal-kerja", icon: ScheduleIcon, superadminOnly: false },
     { label: t("adminSidebar.scheduling"), href: "/admin/penjadwalan", icon: AssignmentIcon, superadminOnly: false },
     { label: t("adminSidebar.locations"), href: "/admin/lokasi", icon: LocationIcon, superadminOnly: false },
     { label: t("adminSidebar.permits"), href: "/admin/perizinan", icon: PermitIcon, superadminOnly: false },

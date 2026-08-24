@@ -1068,6 +1068,17 @@ dashAttendance: {
     active: "Active",
     hours: "Hours",
     endSchedule: "End Schedule",
+    dailyTitle: "Daily Schedule",
+    dailyDesc: "Employee schedule per date — use the carousel to move between days.",
+    today: "Today",
+    prevDay: "Previous day",
+    nextDay: "Next day",
+    colDepartment: "Department",
+    colStatus: "Status",
+    statusWork: "Working",
+    statusOff: "Off",
+    searchPlaceholder: "Search name or department...",
+    noData: "No active employees yet.",
   },
 
   adminKalender: {

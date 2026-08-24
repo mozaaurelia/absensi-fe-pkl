@@ -1067,6 +1067,17 @@ export const id = {
     active: "Aktif",
     hours: "Jam",
     endSchedule: "Akhiri Jadwal",
+    dailyTitle: "Jadwal Harian",
+    dailyDesc: "Jadwal karyawan per tanggal — navigasikan dengan carousel.",
+    today: "Hari Ini",
+    prevDay: "Hari sebelumnya",
+    nextDay: "Hari berikutnya",
+    colDepartment: "Departemen",
+    colStatus: "Status",
+    statusWork: "Masuk",
+    statusOff: "Libur",
+    searchPlaceholder: "Cari nama atau departemen...",
+    noData: "Belum ada karyawan aktif.",
   },
 
   adminKalender: {
