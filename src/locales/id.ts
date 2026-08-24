@@ -455,6 +455,12 @@ export const id = {
     defaultTask1: "Review laporan bulanan",
     defaultTask2: "Kirim dokumen ke HRD",
     defaultTask3: "Meeting dengan tim",
+    prevDay: "Hari sebelumnya",
+    nextDay: "Hari berikutnya",
+    todayLabel: "Hari ini",
+    overdueBanner: "{count} tugas belum selesai dari hari sebelumnya",
+    overdueDay: "{date}: {count} tugas",
+    doneAt: "Selesai {time}",
   },
 
   dashboardPanel: {

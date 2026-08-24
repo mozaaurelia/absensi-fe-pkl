@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FiCheckSquare, FiPlus, FiAlertTriangle } from "react-icons/fi";
+import { FiCheckSquare, FiPlus, FiAlertTriangle, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   getMyTasks,
@@ -18,10 +18,18 @@ function formatDateKey(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+function startOfToday() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export default function Todolist() {
   const { daysFull, months, t } = useLanguage();
-  const today = new Date();
-  const dateKey = formatDateKey(today);
+  const [selectedDate, setSelectedDate] = useState(() => startOfToday());
+  const dateKey = formatDateKey(selectedDate);
+  const todayKey = formatDateKey(startOfToday());
+
   const [items, setItems] = useState<TaskItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [input, setInput] = useState("");
@@ -30,8 +38,11 @@ export default function Todolist() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [confetti, setConfetti] = useState([]);
   const [busyIds, setBusyIds] = useState<string[]>([]);
+  const [overdue, setOverdue] = useState<{ date: string; count: number }[]>([]);
   const warnedRef = useRef(false);
   const prevPendingRef = useRef(null);
+
+  const isToday = dateKey === todayKey;
 
   useEffect(() => {
     let cancelled = false;
@@ -41,7 +52,7 @@ export default function Todolist() {
       try {
         let rows = await getMyTasks(dateKey);
 
-        if (rows.length === 0) {
+        if (isToday && rows.length === 0) {
           const yesterdayKey = formatDateKey(
             new Date(Date.now() - 86400000),
           );
@@ -49,7 +60,7 @@ export default function Todolist() {
             const prevItems = await getMyTasks(yesterdayKey);
             if (prevItems.length > 0 && !cancelled) {
               const created: TaskItem[] = [];
-              for (const item of prevItems) {
+              for (const item of prevItems.filter((p) => !p.done)) {
                 try {
                   created.push(await createTask(item.title, dateKey));
                 } catch {
@@ -63,7 +74,7 @@ export default function Todolist() {
           }
         }
 
-        if (rows.length === 0 && !cancelled) {
+        if (isToday && rows.length === 0 && !cancelled) {
           const defaults = [
             t("todolist.defaultTask1"),
             t("todolist.defaultTask2"),
@@ -95,6 +106,36 @@ export default function Todolist() {
   }, [dateKey]);
 
   useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const all = await getMyTasks();
+        if (cancelled) return;
+        const grouped = new Map<string, number>();
+        for (const task of all) {
+          if (!task.done && task.task_date < todayKey) {
+            grouped.set(
+              task.task_date,
+              (grouped.get(task.task_date) ?? 0) + 1,
+            );
+          }
+        }
+        setOverdue(
+          Array.from(grouped.entries())
+            .map(([date, count]) => ({ date, count }))
+            .sort((a, b) => b.date.localeCompare(a.date)),
+        );
+      } catch {
+        // overdue summary is best effort
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const checkTime = () => {
       const now = new Date();
       const h = now.getHours();
@@ -119,6 +160,7 @@ export default function Todolist() {
   useEffect(() => {
     const pending = items.filter((item) => !item.done).length;
     if (
+      isToday &&
       prevPendingRef.current !== null &&
       prevPendingRef.current > 0 &&
       pending === 0 &&
@@ -135,12 +177,22 @@ export default function Todolist() {
       );
     }
     prevPendingRef.current = pending;
-  }, [items]);
+  }, [items, isToday]);
 
   const markBusy = (id: string, busy: boolean) =>
     setBusyIds((prev) =>
       busy ? [...prev, id] : prev.filter((x) => x !== id),
     );
+
+  const shiftDay = (delta: number) => {
+    setSelectedDate((prev) => {
+      const next = new Date(prev);
+      next.setDate(next.getDate() + delta);
+      const floor = startOfToday();
+      if (next > floor) return prev;
+      return next;
+    });
+  };
 
   const addItem = async () => {
     const title = input.trim();
@@ -160,7 +212,11 @@ export default function Todolist() {
     markBusy(id, true);
     const nextDone = !target.done;
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, done: nextDone } : item)),
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, done: nextDone, done_at: nextDone ? new Date().toISOString() : null }
+          : item,
+      ),
     );
     try {
       await updateTask(id, { done: nextDone });
@@ -192,19 +248,42 @@ export default function Todolist() {
   };
 
   const pendingCount = items.filter((item) => !item.done).length;
+  const totalOverdue = overdue.reduce((sum, o) => sum + o.count, 0);
 
   return (
     <div className="bg-white/80 dark:bg-gray-800/80 rounded-[28px] border border-slate-200/80 dark:border-gray-700 p-5 shadow-[0_12px_28px_rgba(15,23,42,0.06)] h-full flex flex-col backdrop-blur-sm">
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl bg-[#EAF1FF] dark:bg-[#1E3A5F] text-[#1E3A5F] dark:text-[#EAF1FF] flex items-center justify-center shadow-sm">
             <FiCheckSquare size={20} />
           </div>
           <div>
             <h3 className="font-bold text-[1.05rem] text-slate-900 dark:text-gray-100 leading-none">{t("todolist.title")}</h3>
-            <p className="text-[11px] text-slate-500 dark:text-gray-400 mt-1.5">
-              {daysFull[today.getDay()]}, {today.getDate()} {months[today.getMonth()]} {today.getFullYear()}
-            </p>
+            <div className="flex items-center gap-1 mt-1.5">
+              <button
+                onClick={() => shiftDay(-1)}
+                aria-label={t("todolist.prevDay")}
+                className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-[#1E3A5F] hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <FiChevronLeft size={13} />
+              </button>
+              <p className="text-[11px] text-slate-500 dark:text-gray-400 min-w-[110px] text-center">
+                {isToday && (
+                  <span className="font-semibold text-[#1E3A5F] dark:text-blue-300 mr-1">
+                    {t("todolist.todayLabel")} ·
+                  </span>
+                )}
+                {daysFull[selectedDate.getDay()]}, {selectedDate.getDate()} {months[selectedDate.getMonth()]} {selectedDate.getFullYear()}
+              </p>
+              <button
+                onClick={() => shiftDay(1)}
+                disabled={isToday}
+                aria-label={t("todolist.nextDay")}
+                className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-[#1E3A5F] hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+              >
+                <FiChevronRight size={13} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -226,6 +305,29 @@ export default function Todolist() {
           >
             &times;
           </button>
+        </div>
+      )}
+
+      {isToday && totalOverdue > 0 && (
+        <div className="mb-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl px-4 py-3 shadow-sm">
+          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 text-xs font-semibold">
+            <FiAlertTriangle size={14} className="shrink-0" />
+            <span>{t("todolist.overdueBanner", { count: totalOverdue })}</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {overdue.map((o) => (
+              <button
+                key={o.date}
+                onClick={() => setSelectedDate(new Date(`${o.date}T00:00:00`))}
+                className="text-[11px] font-medium text-amber-800 dark:text-amber-200 bg-white dark:bg-gray-700 border border-amber-200 dark:border-amber-500/30 rounded-full px-2.5 py-1 hover:border-amber-400 transition-colors"
+              >
+                {t("todolist.overdueDay", {
+                  date: o.date.split("-").reverse().join("/"),
+                  count: o.count,
+                })}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -262,7 +364,7 @@ export default function Todolist() {
             const isDone = item.done;
             const tone = isDone
               ? "bg-emerald-100/80 border-emerald-200/80 dark:bg-emerald-500/10 dark:border-emerald-500/30"
-              : warning
+              : warning && isToday
                 ? "bg-amber-100/80 border-amber-200/80 dark:bg-amber-500/10 dark:border-amber-500/30"
                 : "bg-slate-100/80 border-slate-200/80 dark:bg-gray-700/50 dark:border-gray-600";
 
@@ -292,6 +394,13 @@ export default function Todolist() {
                   <p className={`text-sm font-medium ${isDone ? "line-through text-slate-500 dark:text-gray-400" : "text-slate-800 dark:text-gray-100"}`}>
                     {item.title}
                   </p>
+                  {isDone && item.done_at && !Number.isNaN(new Date(item.done_at).getTime()) && (
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      {t("todolist.doneAt", {
+                        time: `${String(new Date(item.done_at).getHours()).padStart(2, "0")}:${String(new Date(item.done_at).getMinutes()).padStart(2, "0")}`,
+                      })}
+                    </p>
+                  )}
                 </div>
 
                 <button

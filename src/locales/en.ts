@@ -455,6 +455,12 @@ dashAttendance: {
     defaultTask1: "Review monthly report",
     defaultTask2: "Send documents to HRD",
     defaultTask3: "Team meeting",
+    prevDay: "Previous day",
+    nextDay: "Next day",
+    todayLabel: "Today",
+    overdueBanner: "{count} unfinished tasks from previous days",
+    overdueDay: "{date}: {count} tasks",
+    doneAt: "Done at {time}",
   },
 
   dashboardPanel: {

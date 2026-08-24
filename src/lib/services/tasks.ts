@@ -8,6 +8,7 @@ export interface TaskItem {
   title: string;
   done: boolean;
   created_at?: string;
+  done_at?: string | null;
 }
 
 export async function getMyTasks(date?: string): Promise<TaskItem[]> {
