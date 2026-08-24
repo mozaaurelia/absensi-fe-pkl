@@ -13,6 +13,7 @@ import { getSupervisorDashboard, type DashboardSupervisorData } from "@/lib/serv
 import { getTeamAttendance, type AttendanceRecord } from "@/lib/services/attendance";
 import { getTeamLeaveRequests, type LeaveRequest } from "@/lib/services/leave";
 import { getTeamOvertimeRequests, type OvertimeTeamRequest } from "@/lib/services/attendance";
+import CompanyChat from "@/components/common/CompanyChat";
 
 export default function DashboardAtasanPage() {
   const { data: session, status } = useSession();
@@ -119,8 +120,9 @@ export default function DashboardAtasanPage() {
         <LeaveApproval requests={requests} onProcessed={loadData} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <OvertimeApproval requests={overtime} onProcessed={loadData} />
+        <CompanyChat />
       </div>
     </div>
   );
