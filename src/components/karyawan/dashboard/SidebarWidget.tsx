@@ -6,11 +6,13 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { clearAccessToken } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
   const pathname = usePathname();
   const { t } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => () => clearTimeout(closeTimer.current), []);
@@ -89,6 +91,23 @@ export default function Sidebar() {
       </nav>
 
       <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-white/10">
+        <button
+          onClick={toggleTheme}
+          aria-label={isDark ? t("common.lightMode") : t("common.darkMode")}
+          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-blue-100/80 hover:bg-white/10 hover:text-white transition-all duration-300 ease-in-out ${
+            open ? "px-3 gap-3" : "pl-3.25 gap-0"
+          }`}
+          title={!open ? (isDark ? t("common.lightMode") : t("common.darkMode")) : undefined}
+        >
+          {isDark ? <SunIcon /> : <MoonIcon />}
+          <span
+            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+              open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+            }`}
+          >
+            {isDark ? t("common.lightMode") : t("common.darkMode")}
+          </span>
+        </button>
         <button
           onClick={() => {
             clearAccessToken();
@@ -196,6 +215,23 @@ function LogoutIcon() {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }

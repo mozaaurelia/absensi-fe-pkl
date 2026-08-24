@@ -21,13 +21,13 @@ export default function PermitPage() {
   }, [status, user, router]);
 
   if (status === "loading") {
-    return <div className="flex min-h-screen bg-gray-50" />;
+    return <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950" />;
   }
 
   if (!user || user.role !== "employee") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <p className="text-gray-500 text-sm">{t("accessDenied")}</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{t("accessDenied")}</p>
       </div>
     );
   }
