@@ -1171,6 +1171,18 @@ export const id = {
     status: "Status",
     active: "Aktif",
     inactive: "Nonaktif",
+    picCol: "PIC / Onboarding",
+    picName: "Nama PIC",
+    picNamePlaceholder: "Contoh: Budi Santoso",
+    picEmail: "Email PIC",
+    onboarded: "Sudah onboard",
+    notOnboarded: "Belum onboard",
+    inviteTitle: "Kirim Undangan Admin",
+    inviteDesc: "Kirim link setup akun admin perusahaan ke email PIC",
+    inviteSend: "Kirim Undangan",
+    inviteSuccess: "Undangan berhasil dikirim ke {email}. Berlaku 24 jam.",
+    inviteQueued: "Undangan dibuat, namun pengiriman email gagal. Gunakan link dari log backend.",
+    invalidEmail: "Masukkan alamat email yang valid.",
   },
 
   adminPolicy: {

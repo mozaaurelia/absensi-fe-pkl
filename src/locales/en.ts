@@ -1172,6 +1172,18 @@ dashAttendance: {
     status: "Status",
     active: "Active",
     inactive: "Inactive",
+    picCol: "PIC / Onboarding",
+    picName: "PIC Name",
+    picNamePlaceholder: "e.g. John Doe",
+    picEmail: "PIC Email",
+    onboarded: "Onboarded",
+    notOnboarded: "Not onboarded",
+    inviteTitle: "Send Admin Invite",
+    inviteDesc: "Send the company admin setup link to the PIC's email",
+    inviteSend: "Send Invite",
+    inviteSuccess: "Invite sent to {email}. Valid for 24 hours.",
+    inviteQueued: "Invite created, but email delivery failed. Use the link from backend logs.",
+    invalidEmail: "Enter a valid email address.",
   },
 
   adminPolicy: {

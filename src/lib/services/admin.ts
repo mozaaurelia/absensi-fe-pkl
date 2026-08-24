@@ -373,6 +373,9 @@ export interface Company {
   id: string;
   name: string;
   status: "active" | "inactive";
+  pic_name?: string | null;
+  pic_email?: string | null;
+  onboarded_at?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -381,20 +384,36 @@ export async function getCompanies(): Promise<Company[]> {
   return apiFetch<Company[]>("/companies");
 }
 
-export async function createCompany(name: string): Promise<Company> {
+export async function createCompany(
+  name: string,
+  picName?: string,
+  picEmail?: string,
+): Promise<Company> {
   return apiFetch<Company>("/companies", {
     method: "POST",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, pic_name: picName, pic_email: picEmail }),
   });
 }
 
 export async function updateCompany(
   id: string,
   name: string,
+  picName?: string,
+  picEmail?: string,
 ): Promise<Company> {
   return apiFetch<Company>(`/companies/${id}`, {
     method: "PUT",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, pic_name: picName, pic_email: picEmail }),
+  });
+}
+
+export async function inviteCompanyAdmin(
+  id: string,
+  email: string,
+): Promise<{ message: string; expiresAt?: string; emailSent?: boolean }> {
+  return apiFetch(`/companies/${id}/invite`, {
+    method: "POST",
+    body: JSON.stringify({ email }),
   });
 }
 

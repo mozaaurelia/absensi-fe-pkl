@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiPlus, FiSend, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import Layout from "@/components/admin/layout/layout";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
@@ -14,6 +14,7 @@ import {
   updateCompany,
   updateCompanyStatus,
   deleteCompany,
+  inviteCompanyAdmin,
   type Company,
 } from "@/lib/services/admin";
 
@@ -35,6 +36,14 @@ export default function AdminCompaniesPage() {
   const [editRow, setEditRow] = useState<Company | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
   const [name, setName] = useState("");
+  const [picName, setPicName] = useState("");
+  const [picEmail, setPicEmail] = useState("");
+
+  const [inviteTarget, setInviteTarget] = useState<Company | null>(null);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteMsg, setInviteMsg] = useState<string | null>(null);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [inviteSending, setInviteSending] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated" || (status === "authenticated" && user?.role !== "superadmin")) {
@@ -63,6 +72,8 @@ export default function AdminCompaniesPage() {
 
   const openCreate = () => {
     setName("");
+    setPicName("");
+    setPicEmail("");
     setError(null);
     setEditRow(null);
     setModal("create");
@@ -70,9 +81,18 @@ export default function AdminCompaniesPage() {
 
   const openEdit = (row: Company) => {
     setName(row.name);
+    setPicName(row.pic_name ?? "");
+    setPicEmail(row.pic_email ?? "");
     setError(null);
     setEditRow(row);
     setModal("edit");
+  };
+
+  const openInvite = (row: Company) => {
+    setInviteTarget(row);
+    setInviteEmail(row.pic_email ?? "");
+    setInviteMsg(null);
+    setInviteError(null);
   };
 
   const closeModal = () => {
@@ -89,9 +109,9 @@ export default function AdminCompaniesPage() {
     setError(null);
     try {
       if (modal === "create") {
-        await createCompany(name.trim());
+        await createCompany(name.trim(), picName.trim() || undefined, picEmail.trim() || undefined);
       } else if (modal === "edit" && editRow) {
-        await updateCompany(editRow.id, name.trim());
+        await updateCompany(editRow.id, name.trim(), picName.trim() || undefined, picEmail.trim() || undefined);
       }
       closeModal();
       await load();
@@ -99,6 +119,30 @@ export default function AdminCompaniesPage() {
       setError(err instanceof ApiError ? err.message : t("common.saveErrorDesc"));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const sendInvite = async () => {
+    if (!inviteTarget) return;
+    const email = inviteEmail.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setInviteError(t("adminCompanies.invalidEmail"));
+      return;
+    }
+    setInviteSending(true);
+    setInviteError(null);
+    try {
+      const res = await inviteCompanyAdmin(inviteTarget.id, email);
+      setInviteMsg(
+        res.emailSent === false
+          ? t("adminCompanies.inviteQueued") + (res.message ? ` (${res.message})` : "")
+          : t("adminCompanies.inviteSuccess").replace("{email}", email),
+      );
+      await load();
+    } catch (err) {
+      setInviteError(err instanceof ApiError ? err.message : t("common.saveErrorDesc"));
+    } finally {
+      setInviteSending(false);
     }
   };
 
@@ -185,6 +229,7 @@ export default function AdminCompaniesPage() {
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-700 text-xs uppercase text-gray-400 dark:text-gray-500">
                   <th className="px-6 py-3 font-semibold">{t("adminCompanies.name")}</th>
+                  <th className="px-6 py-3 font-semibold">{t("adminCompanies.picCol")}</th>
                   <th className="px-6 py-3 font-semibold">{t("adminCompanies.status")}</th>
                   <th className="px-6 py-3 font-semibold text-right">{t("adminMaster.actions")}</th>
                 </tr>
@@ -192,8 +237,30 @@ export default function AdminCompaniesPage() {
               <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
                 {rows.map((row) => (
                   <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                    <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-200">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">
                       {row.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      {row.pic_email ? (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-sm text-gray-700 dark:text-gray-200">
+                            {row.pic_email}
+                          </span>
+                          <span
+                            className={`w-fit text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
+                              row.onboarded_at
+                                ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400"
+                                : "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
+                            }`}
+                          >
+                            {row.onboarded_at
+                              ? t("adminCompanies.onboarded")
+                              : t("adminCompanies.notOnboarded")}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">-</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <button
@@ -212,6 +279,15 @@ export default function AdminCompaniesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => openInvite(row)}
+                          disabled={saving}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors disabled:opacity-60"
+                          aria-label={t("adminCompanies.inviteSend")}
+                          title={t("adminCompanies.inviteSend")}
+                        >
+                          <FiSend size={15} />
+                        </button>
                         <button
                           onClick={() => openEdit(row)}
                           className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
@@ -246,6 +322,59 @@ export default function AdminCompaniesPage() {
         />
       )}
 
+      {inviteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-md">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">
+              {t("adminCompanies.inviteTitle")}
+            </h3>
+            <p className="text-xs text-gray-400 mb-5">
+              {t("adminCompanies.inviteDesc")} — <span className="font-semibold">{inviteTarget.name}</span>
+            </p>
+
+            <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+              {t("adminCompanies.picEmail")} *
+            </label>
+            <input
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              placeholder="pic@perusahaan.com"
+              className={inputClass}
+            />
+
+            {inviteMsg && (
+              <p className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 rounded-lg px-4 py-3 mt-4">
+                {inviteMsg}
+              </p>
+            )}
+            {inviteError && (
+              <p className="text-xs text-red-500 bg-red-50 dark:bg-red-500/10 rounded-lg px-4 py-3 mt-4">
+                {inviteError}
+              </p>
+            )}
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setInviteTarget(null)}
+                disabled={inviteSending}
+                className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-60"
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={sendInvite}
+                disabled={inviteSending}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#1E3A5F] text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60"
+              >
+                <FiSend size={14} />
+                {inviteSending ? t("common.saving") : t("adminCompanies.inviteSend")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-md">
@@ -261,6 +390,31 @@ export default function AdminCompaniesPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("adminCrud.placeholder")}
+                className={inputClass}
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                {t("adminCompanies.picName")}
+              </label>
+              <input
+                value={picName}
+                onChange={(e) => setPicName(e.target.value)}
+                placeholder={t("adminCompanies.picNamePlaceholder")}
+                className={inputClass}
+              />
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                {t("adminCompanies.picEmail")}
+              </label>
+              <input
+                type="email"
+                value={picEmail}
+                onChange={(e) => setPicEmail(e.target.value)}
+                placeholder="pic@perusahaan.com"
                 className={inputClass}
               />
             </div>

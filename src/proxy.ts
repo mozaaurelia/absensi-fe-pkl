@@ -8,6 +8,7 @@ const publicPaths = [
   "/auth/superadmin",
   "/auth/forgot-password",
   "/auth/reset-password",
+  "/onboarding",
 ];
 
 export async function proxy(request: NextRequest) {
