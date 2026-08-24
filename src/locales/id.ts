@@ -1110,6 +1110,9 @@ export const id = {
     emptyHint: "Klik tanggal di kalender untuk menambah agenda.",
     prev: "Sebelumnya",
     next: "Berikutnya",
+    today: "Hari Ini",
+    past: "Telah Lewat",
+    upcoming: "Akan Datang",
   },
 
   adminCompanies: {

@@ -1111,6 +1111,9 @@ dashAttendance: {
     emptyHint: "Click a date on the calendar to add an agenda.",
     prev: "Previous",
     next: "Next",
+    today: "Today",
+    past: "Past",
+    upcoming: "Upcoming",
   },
 
   adminCompanies: {

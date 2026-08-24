@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -77,11 +77,22 @@ function AgendaItem({
             {ev.title}
           </span>
         </div>
-        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-          {ev.start_time || ev.end_time
-            ? `${formatTime(ev.start_time) || "--"} - ${formatTime(ev.end_time) || "--"}`
-            : t("adminKalender.allDay")}
-        </p>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+            {ev.start_time || ev.end_time
+              ? `${formatTime(ev.start_time) || "--"} - ${formatTime(ev.end_time) || "--"}`
+              : t("adminKalender.allDay")}
+          </p>
+          <span
+            className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
+              isPast
+                ? "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
+                : "bg-green-50 dark:bg-green-500/15 text-green-600 dark:text-green-300"
+            }`}
+          >
+            {t(isPast ? "adminKalender.past" : "adminKalender.upcoming")}
+          </span>
+        </div>
         {ev.location && (
           <p className="text-[11px] text-gray-400 dark:text-gray-500 truncate">{ev.location}</p>
         )}
@@ -106,32 +117,40 @@ export default function AdminKalenderContent() {
   const [viewMonth, setViewMonth] = useState(now.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [holidayKeys, setHolidayKeys] = useState<Record<string, boolean>>({});
+  const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [evs, holidays] = await Promise.all([getCalendarEvents(), getHolidays()]);
-      setEvents(Array.isArray(evs) ? evs : []);
-      const map: Record<string, boolean> = {};
-      (Array.isArray(holidays) ? holidays : []).forEach((h) => {
-        map[String(h.date).slice(0, 10)] = true;
-      });
-      setHolidayKeys(map);
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : t("adminMaster.failed"));
-    } finally {
-      setLoading(false);
-    }
-  }, [t]);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    let active = true;
+    const run = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [evs, holidays] = await Promise.all([getCalendarEvents(), getHolidays()]);
+        if (!active) return;
+        setEvents(Array.isArray(evs) ? evs : []);
+        const map: Record<string, string> = {};
+        (Array.isArray(holidays) ? holidays : []).forEach((h) => {
+          map[String(h.date).slice(0, 10)] = h.name;
+        });
+        setHolidayMap(map);
+      } catch (err) {
+        if (!active) return;
+        setError(err instanceof ApiError ? err.message : t("adminMaster.failed"));
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    run();
+    return () => {
+      active = false;
+    };
+  }, [reloadToken, t]);
+
+  const refresh = () => setReloadToken((n) => n + 1);
 
   const sortedEvents = useMemo(() => {
     const today = todayKey();
@@ -188,11 +207,20 @@ export default function AdminKalenderContent() {
     }
   };
 
+  const goToday = () => {
+    const now = new Date();
+    setViewYear(now.getFullYear());
+    setViewMonth(now.getMonth());
+  };
+
+  const isViewingCurrentMonth =
+    viewYear === now.getFullYear() && viewMonth === now.getMonth();
+
   const handleDelete = async (id: string) => {
     setError(null);
     try {
       await deleteCalendarEvent(id);
-      await load();
+      refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t("adminMaster.deleteFailed"));
     }
@@ -202,7 +230,14 @@ export default function AdminKalenderContent() {
   const canNext = page < pages.length - 1;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+    <>
+      {error && (
+        <div className="w-full mb-4 px-5 py-3 bg-red-50 dark:bg-red-500/10 text-xs text-red-600 dark:text-red-400 rounded-xl">
+          {error}
+        </div>
+      )}
+
+      <div className="flex flex-col lg:flex-row gap-6 items-stretch">
       <div className="flex-1 min-w-0 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -214,6 +249,14 @@ export default function AdminKalenderContent() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {!isViewingCurrentMonth && (
+              <button
+                onClick={goToday}
+                className="px-3 py-1.5 text-[11px] font-semibold rounded-lg border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+              >
+                {t("adminKalender.today")}
+              </button>
+            )}
             <button
               onClick={goPrevMonth}
               className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#1E3A5F] hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
@@ -246,40 +289,84 @@ export default function AdminKalenderContent() {
           {calendarDays.map((day, index) => {
             const key = day ? dateKey(viewYear, viewMonth, day) : "";
             const isToday = key === today;
+            const isSelected = key !== "" && key === selectedDate;
             const dayEvents = day ? eventsByDate[key] ?? [] : [];
-            const isHoliday = day ? !!holidayKeys[key] : false;
-            const dots = [
-              ...(isHoliday ? ["#EF4444"] : []),
-              ...dayEvents.map((e) => eventTypeColor(e.event_type)),
-            ].slice(0, 3);
-            const extra = (isHoliday ? 1 : 0) + dayEvents.length - 3;
+            const holidayName = day ? holidayMap[key] : undefined;
+            const isHoliday = !!holidayName;
+            const isWeekend = index % 7 === 0 || index % 7 === 6;
+            const col = index % 7;
+            const visibleEvents = dayEvents.slice(0, 2);
+            const extraCount = dayEvents.length - visibleEvents.length;
 
             return (
               <button
                 key={`${day ?? "blank"}-${index}`}
                 disabled={!day}
                 onClick={() => day && setSelectedDate(key)}
-                className={`relative h-14 rounded-lg flex flex-col items-center justify-start pt-1.5 transition-colors ${
+                title={
+                  day
+                    ? [
+                        holidayName ? `${t("adminKalender.holiday")}: ${holidayName}` : null,
+                        ...dayEvents.map((e) => e.title),
+                      ]
+                        .filter(Boolean)
+                        .join("\n")
+                    : undefined
+                }
+                className={`relative min-h-[64px] rounded-lg flex flex-col items-stretch px-1 pt-1.5 pb-1 transition-colors ${
                   !day
                     ? "bg-transparent cursor-default"
-                    : isToday
-                      ? "bg-[#1E3A5F] text-white shadow-sm"
-                      : "bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-500/10"
+                    : isSelected
+                      ? "bg-blue-50 dark:bg-blue-500/15 ring-2 ring-[#1E3A5F] dark:ring-blue-300"
+                      : isToday
+                        ? "bg-[#1E3A5F] text-white shadow-sm hover:bg-[#16304f]"
+                        : "bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-500/10"
                 }`}
               >
                 {day && (
                   <>
-                    <span className="font-semibold leading-none">{day}</span>
-                    <span className="flex items-center gap-1 mt-1.5">
-                      {dots.map((color, i) => (
+                    <span
+                      className={`font-semibold leading-none text-center ${
+                        isToday
+                          ? "text-white"
+                          : isHoliday || (isWeekend && col === 0)
+                            ? "text-red-500 dark:text-red-400"
+                            : ""
+                      }`}
+                    >
+                      {day}
+                    </span>
+                    <span className="flex flex-col gap-0.5 mt-1 overflow-hidden">
+                      {visibleEvents.map((e) => {
+                        const c = eventTypeColor(e.event_type);
+                        return (
+                          <span
+                            key={e.id}
+                            className={`text-[9px] leading-snug font-semibold truncate rounded px-1 py-px ${
+                              isToday
+                                ? "bg-white/20 text-white"
+                                : ""
+                            }`}
+                            style={
+                              isToday
+                                ? undefined
+                                : { backgroundColor: `${c}1A`, color: c }
+                            }
+                          >
+                            {e.title}
+                          </span>
+                        );
+                      })}
+                      {(extraCount > 0 || isHoliday) && (
                         <span
-                          key={i}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                      {extra > 0 && (
-                        <span className="text-[9px] font-bold text-gray-400">+{extra}</span>
+                          className={`text-[9px] font-bold leading-none truncate px-1 ${
+                            isToday ? "text-white/80" : "text-gray-400 dark:text-gray-500"
+                          }`}
+                        >
+                          {extraCount > 0 && `+${extraCount}`}
+                          {extraCount > 0 && isHoliday ? " · " : ""}
+                          {isHoliday && holidayName}
+                        </span>
                       )}
                     </span>
                   </>
@@ -350,29 +437,24 @@ export default function AdminKalenderContent() {
           )}
         </div>
 
-        <button
-          onClick={() => canNext && setPage((p) => p + 1)}
-          disabled={!canNext}
-          className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-md flex items-center justify-center text-gray-600 dark:text-gray-200 hover:text-[#1E3A5F] hover:border-[#1E3A5F] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label={t("adminKalender.next")}
-        >
-          <FiChevronRight size={18} />
-        </button>
-      </div>
-
-      {error && (
-        <div className="w-full px-5 py-3 bg-red-50 dark:bg-red-500/10 text-xs text-red-600 dark:text-red-400 rounded-xl">
-          {error}
+          <button
+            onClick={() => canNext && setPage((p) => p + 1)}
+            disabled={!canNext}
+            className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-md flex items-center justify-center text-gray-600 dark:text-gray-200 hover:text-[#1E3A5F] hover:border-[#1E3A5F] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label={t("adminKalender.next")}
+          >
+            <FiChevronRight size={18} />
+          </button>
         </div>
-      )}
 
       {selectedDate && (
         <EventModal
           selectedDate={selectedDate}
           onClose={() => setSelectedDate(null)}
-          onSaved={load}
+          onSaved={refresh}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 }
