@@ -309,7 +309,7 @@ export default function AdminCompaniesPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table>  
           </div>
         )}
       </div>
