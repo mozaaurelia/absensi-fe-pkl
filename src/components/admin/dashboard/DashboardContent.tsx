@@ -5,6 +5,7 @@ import DisciplineLeaderboard from "./DisciplineLeaderboard";
 import PendingApprovals from "./PendingApprovals";
 import RecentActivity from "./RecentActivity";
 import DepartmentBreakdown from "./DepartmentBreakdown";
+import CompanyChat from "@/components/common/CompanyChat";
 import type { DashboardAdminData } from "@/lib/services/dashboard";
 
 interface Props {
@@ -30,11 +31,12 @@ export default function DashboardContent({ data }: Props) {
         <DisciplineLeaderboard />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         <div className="lg:col-span-2">
           <RecentActivity />
         </div>
         <DepartmentBreakdown />
+        <CompanyChat />
       </div>
     </div>
   );
