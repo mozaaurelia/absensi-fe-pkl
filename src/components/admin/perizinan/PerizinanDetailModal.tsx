@@ -2,6 +2,7 @@
 
 import type { Perizinan } from "./types";
 import { STATUS_MAP, getInitials } from "./types";
+import { generateOfficialLetter } from "@/lib/exportUtils";
 
 interface PerizinanDetailModalProps {
   request: Perizinan;
@@ -173,7 +174,28 @@ export default function PerizinanDetailModal({ request, onClose }: PerizinanDeta
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 shrink-0">
+        <div className="px-6 py-4 border-t border-gray-100 shrink-0 space-y-2">
+          {request.status === "approved" && (
+            <button
+              onClick={() =>
+                generateOfficialLetter({
+                  companyName: "",
+                  requestType: "leave",
+                  employeeName: request.employeeName,
+                  departmentName: request.department,
+                  dateStart: request.startDate,
+                  dateEnd: request.endDate,
+                  reason: request.reason,
+                })
+              }
+              className="w-full flex items-center justify-center gap-2 bg-[#1E3A5F] text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-[#16304f] transition-colors"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5zM14 3v5h5M9 13h6M9 17h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Unduh Surat Resmi
+            </button>
+          )}
           <button
             onClick={onClose}
             className="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"

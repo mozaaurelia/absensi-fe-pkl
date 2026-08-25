@@ -796,6 +796,7 @@ export const id = {
     required: "Isi tanggal, jam mulai, dan jam selesai terlebih dahulu.",
     success: "Pengajuan lembur berhasil dikirim. Menunggu persetujuan atasan.",
     failed: "Gagal mengirim pengajuan lembur. Silakan coba lagi.",
+    holidayWarning: "Tanggal ini adalah hari libur ({name}).",
   },
 
   statusBadge: {
@@ -976,6 +977,16 @@ export const id = {
     employeeNumber: "Nomor Karyawan",
     email: "Email",
     whatsapp: "WhatsApp",
+    personalData: "Data Diri",
+    birthDate: "Tanggal Lahir",
+    gender: "Jenis Kelamin",
+    male: "Laki-laki",
+    female: "Perempuan",
+    maritalStatus: "Status Pernikahan",
+    single: "Belum Menikah",
+    married: "Menikah",
+    divorced: "Cerai",
+    address: "Alamat",
     organization: "Organisasi",
     department: "Departemen",
     position: "Jabatan",
@@ -1192,6 +1203,8 @@ export const id = {
     inviteSuccess: "Undangan berhasil dikirim ke {email}. Berlaku 24 jam.",
     inviteQueued: "Undangan dibuat, namun pengiriman email gagal. Gunakan link dari log backend.",
     invalidEmail: "Masukkan alamat email yang valid.",
+    officeLocationOptional: "Lokasi Kantor (Opsional)",
+    locName: "Nama Lokasi",
   },
 
   adminPolicy: {

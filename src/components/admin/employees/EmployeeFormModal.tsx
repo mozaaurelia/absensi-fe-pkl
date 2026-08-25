@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiBriefcase, FiCreditCard, FiFileText, FiKey, FiX } from "react-icons/fi";
+import { FiBriefcase, FiCreditCard, FiFileText, FiKey, FiUser, FiX } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import type { AdminEmployee, Department, Position } from "@/lib/services/admin";
 
@@ -127,6 +127,56 @@ export default function EmployeeFormModal({
                     className={inputClass}
                   />
                 </Field>
+              </div>
+            </section>
+
+            <section>
+              <SectionTitle icon={<FiUser size={14} />}>
+                {t("adminEmployeeForm.personalData")}
+              </SectionTitle>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                <Field label={t("adminEmployeeForm.birthDate")}>
+                  <input
+                    type="date"
+                    value={values.birth_date ?? ""}
+                    onChange={(e) => onChange({ birth_date: e.target.value })}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label={t("adminEmployeeForm.gender")}>
+                  <select
+                    value={values.gender ?? ""}
+                    onChange={(e) => onChange({ gender: e.target.value })}
+                    className={inputClass}
+                  >
+                    <option value="">{t("adminEmployeeForm.selectManager").split(" ").slice(1).join(" ") || "-- Pilih --"}</option>
+                    <option value="male">{t("adminEmployeeForm.male")}</option>
+                    <option value="female">{t("adminEmployeeForm.female")}</option>
+                  </select>
+                </Field>
+                <Field label={t("adminEmployeeForm.maritalStatus")}>
+                  <select
+                    value={values.marital_status ?? ""}
+                    onChange={(e) => onChange({ marital_status: e.target.value })}
+                    className={inputClass}
+                  >
+                    <option value="">{t("adminEmployeeForm.selectManager").split(" ").slice(1).join(" ") || "-- Pilih --"}</option>
+                    <option value="single">{t("adminEmployeeForm.single")}</option>
+                    <option value="married">{t("adminEmployeeForm.married")}</option>
+                    <option value="divorced">{t("adminEmployeeForm.divorced")}</option>
+                  </select>
+                </Field>
+                <div className="md:col-span-2 xl:col-span-1" />
+                <div className="md:col-span-2">
+                  <Field label={t("adminEmployeeForm.address")}>
+                    <input
+                      type="text"
+                      value={values.address ?? ""}
+                      onChange={(e) => onChange({ address: e.target.value })}
+                      className={inputClass}
+                    />
+                  </Field>
+                </div>
               </div>
             </section>
 

@@ -105,6 +105,11 @@ export default function EmployeeManager() {
       name: row.name,
       department_id: row.department_id ?? "",
       position_id: row.position_id ?? "",
+      phone: row.phone ?? "",
+      address: row.address ?? "",
+      birth_date: row.birth_date ?? "",
+      gender: row.gender ?? "",
+      marital_status: row.marital_status ?? "",
     });
     setError(null);
     setModal({ mode: "edit", row });
@@ -142,6 +147,11 @@ export default function EmployeeManager() {
           position_id: values.position_id || null,
           supervisor_id: values.supervisor_id || null,
           join_date: values.start_contract || null,
+          phone: values.whatsapp || null,
+          address: values.address || null,
+          birth_date: values.birth_date || null,
+          gender: values.gender || null,
+          marital_status: values.marital_status || null,
         });
         closeModal();
         await load();
@@ -161,6 +171,11 @@ export default function EmployeeManager() {
           name: values.name,
           department_id: values.department_id || undefined,
           position_id: values.position_id || undefined,
+          phone: values.phone || undefined,
+          address: values.address || undefined,
+          birth_date: values.birth_date || undefined,
+          gender: values.gender || undefined,
+          marital_status: values.marital_status || undefined,
         });
         closeModal();
         await load();

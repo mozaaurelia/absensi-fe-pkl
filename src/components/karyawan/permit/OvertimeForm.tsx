@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { FiAlignLeft, FiAlertTriangle, FiCalendar, FiClock, FiList, FiSend, FiUserCheck } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
+import { getHolidays } from "@/lib/services/admin";
 
 const MAX_OVERTIME_HOURS = 2;
 
@@ -36,10 +37,22 @@ export default function OvertimeForm() {
   const [info, setInfo] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    getHolidays()
+      .then((list) => {
+        const map: Record<string, string> = {};
+        list.forEach((h) => { map[h.date] = h.name; });
+        setHolidayMap(map);
+      })
+      .catch(() => {});
+  }, []);
 
   const maxEnd = jamMulai ? addHours(jamMulai, MAX_OVERTIME_HOURS) : "";
   const durationMinutes = diffMinutes(jamMulai, jamSelesai);
   const overLimit = durationMinutes > MAX_OVERTIME_HOURS * 60;
+  const holidayName = tanggalLembur ? holidayMap[tanggalLembur] ?? null : null;
 
   const formatDuration = (minutes: number): string => {
     if (minutes <= 0) return "-";
@@ -141,6 +154,12 @@ export default function OvertimeForm() {
             required
             className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
+          {holidayName && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+              <FiAlertTriangle size={12} className="shrink-0" />
+              {t("overtimeForm.holidayWarning", { name: holidayName })}
+            </p>
+          )}
         </div>
         <div>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">

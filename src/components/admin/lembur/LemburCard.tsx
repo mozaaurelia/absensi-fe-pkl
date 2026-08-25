@@ -1,4 +1,5 @@
 import type { OvertimeTeamRequest } from "@/lib/services/attendance";
+import { generateOfficialLetter } from "@/lib/exportUtils";
 
 interface LemburCardProps {
   request: OvertimeTeamRequest;
@@ -131,20 +132,42 @@ export default function LemburCard({ request, onApprove, onReject }: LemburCardP
           </button>
         </div>
       ) : (
-        <div className="text-xs">
-          <span
-            className={`font-semibold ${
-              request.status.toLowerCase() === "approved" ? "text-green-600" : "text-red-500"
-            }`}
-          >
-            {request.status.toLowerCase() === "approved"
-              ? "Lembur disetujui"
-              : "Lembur ditolak"}
-          </span>
-          {request.rejection_note && (
-            <p className="text-gray-400 mt-1 leading-relaxed line-clamp-2">
-              {request.rejection_note}
-            </p>
+        <div className="space-y-3">
+          <div className="text-xs">
+            <span
+              className={`font-semibold ${
+                request.status.toLowerCase() === "approved" ? "text-green-600" : "text-red-500"
+              }`}
+            >
+              {request.status.toLowerCase() === "approved"
+                ? "Lembur disetujui"
+                : "Lembur ditolak"}
+            </span>
+            {request.rejection_note && (
+              <p className="text-gray-400 mt-1 leading-relaxed line-clamp-2">
+                {request.rejection_note}
+              </p>
+            )}
+          </div>
+          {request.status.toLowerCase() === "approved" && (
+            <button
+              onClick={() =>
+                generateOfficialLetter({
+                  companyName: "",
+                  requestType: "overtime",
+                  employeeName: request.employee_name ?? "",
+                  departmentName: request.department_name ?? "",
+                  dateStart: request.overtime_date ?? "",
+                  reason: request.reason ?? undefined,
+                })
+              }
+              className="w-full flex items-center justify-center gap-2 border border-[#1E3A5F] text-[#1E3A5F] text-xs font-semibold py-2 rounded-xl hover:bg-blue-50 transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5zM14 3v5h5M9 13h6M9 17h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Unduh Surat Resmi
+            </button>
           )}
         </div>
       )}

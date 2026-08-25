@@ -43,9 +43,16 @@ export interface AdminEmployee {
   name: string;
   email: string;
   status: string;
-  role_name?: string | null;
+  role_name?: string;
   department_id?: string | null;
   position_id?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  birth_date?: string | null;
+  gender?: "male" | "female" | null;
+  marital_status?: "single" | "married" | "divorced" | null;
+  join_date?: string | null;
+  image?: string | null;
 }
 
 export function getDepartments(): Promise<Department[]> {
@@ -145,6 +152,11 @@ export function createEmployee(body: {
   position_id?: string | null;
   supervisor_id?: string | null;
   join_date?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  birth_date?: string | null;
+  gender?: string | null;
+  marital_status?: string | null;
 }): Promise<AdminEmployee> {
   return apiFetch<AdminEmployee>("/employees", { method: "POST", body: JSON.stringify(body) });
 }
@@ -154,6 +166,11 @@ export function updateEmployee(
     name: string;
     department_id?: string | null;
     position_id?: string | null;
+    phone?: string | null;
+    address?: string | null;
+    birth_date?: string | null;
+    gender?: string | null;
+    marital_status?: string | null;
   }
 ): Promise<AdminEmployee> {
   return apiFetch<AdminEmployee>(`/employees/${id}`, { method: "PUT", body: JSON.stringify(body) });
@@ -388,10 +405,21 @@ export async function createCompany(
   name: string,
   picName?: string,
   picEmail?: string,
+  officeLocation?: {
+    name: string;
+    latitude: number;
+    longitude: number;
+    radius_meters: number;
+  },
 ): Promise<Company> {
   return apiFetch<Company>("/companies", {
     method: "POST",
-    body: JSON.stringify({ name, pic_name: picName, pic_email: picEmail }),
+    body: JSON.stringify({
+      name,
+      pic_name: picName,
+      pic_email: picEmail,
+      office_location: officeLocation ?? null,
+    }),
   });
 }
 

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { FiEdit2, FiPlus, FiSend, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiMapPin, FiPlus, FiSend, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import Layout from "@/components/admin/layout/layout";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
@@ -38,6 +38,10 @@ export default function AdminCompaniesPage() {
   const [name, setName] = useState("");
   const [picName, setPicName] = useState("");
   const [picEmail, setPicEmail] = useState("");
+  const [locName, setLocName] = useState("");
+  const [locLat, setLocLat] = useState("");
+  const [locLng, setLocLng] = useState("");
+  const [locRadius, setLocRadius] = useState("150");
 
   const [inviteTarget, setInviteTarget] = useState<Company | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -74,6 +78,10 @@ export default function AdminCompaniesPage() {
     setName("");
     setPicName("");
     setPicEmail("");
+    setLocName("");
+    setLocLat("");
+    setLocLng("");
+    setLocRadius("150");
     setError(null);
     setEditRow(null);
     setModal("create");
@@ -109,7 +117,22 @@ export default function AdminCompaniesPage() {
     setError(null);
     try {
       if (modal === "create") {
-        await createCompany(name.trim(), picName.trim() || undefined, picEmail.trim() || undefined);
+        const lat = parseFloat(locLat);
+        const lng = parseFloat(locLng);
+        const radius = parseFloat(locRadius);
+        await createCompany(
+          name.trim(),
+          picName.trim() || undefined,
+          picEmail.trim() || undefined,
+          !isNaN(lat) && !isNaN(lng)
+            ? {
+                name: locName.trim() || name.trim(),
+                latitude: lat,
+                longitude: lng,
+                radius_meters: !isNaN(radius) && radius > 0 ? radius : 150,
+              }
+            : undefined,
+        );
       } else if (modal === "edit" && editRow) {
         await updateCompany(editRow.id, name.trim(), picName.trim() || undefined, picEmail.trim() || undefined);
       }
@@ -418,6 +441,67 @@ export default function AdminCompaniesPage() {
                 className={inputClass}
               />
             </div>
+
+            {modal === "create" && (
+              <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-600">
+                <div className="flex items-center gap-1.5 mb-3">
+                  <FiMapPin size={13} className="text-gray-400" />
+                  <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    {t("adminCompanies.officeLocationOptional") ?? "Lokasi Kantor (Opsional)"}
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                      {t("adminCompanies.locName") ?? "Nama Lokasi"}
+                    </label>
+                    <input
+                      value={locName}
+                      onChange={(e) => setLocName(e.target.value)}
+                      placeholder={t("adminCompanies.name")}
+                      className={inputClass}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                        Latitude
+                      </label>
+                      <input
+                        value={locLat}
+                        onChange={(e) => setLocLat(e.target.value)}
+                        placeholder="-6.2088"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                        Longitude
+                      </label>
+                      <input
+                        value={locLng}
+                        onChange={(e) => setLocLng(e.target.value)}
+                        placeholder="106.8456"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                      Radius (meter)
+                    </label>
+                    <input
+                      value={locRadius}
+                      onChange={(e) => setLocRadius(e.target.value)}
+                      placeholder="150"
+                      type="number"
+                      min="50"
+                      className={inputClass}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             {error && <p className="text-xs text-red-500 mt-4">{error}</p>}
 

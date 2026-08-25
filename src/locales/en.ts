@@ -796,6 +796,7 @@ dashAttendance: {
     required: "Please fill in the date, start time, and end time.",
     success: "Overtime request submitted successfully. Waiting for supervisor approval.",
     failed: "Failed to submit overtime request. Please try again.",
+    holidayWarning: "This date is a public holiday ({name}).",
   },
 
   statusBadge: {
@@ -976,6 +977,16 @@ dashAttendance: {
     employeeNumber: "Employee Number",
     email: "Email",
     whatsapp: "WhatsApp",
+    personalData: "Personal Data",
+    birthDate: "Birth Date",
+    gender: "Gender",
+    male: "Male",
+    female: "Female",
+    maritalStatus: "Marital Status",
+    single: "Single",
+    married: "Married",
+    divorced: "Divorced",
+    address: "Address",
     organization: "Organization",
     department: "Department",
     position: "Position",
@@ -1193,6 +1204,8 @@ dashAttendance: {
     inviteSuccess: "Invite sent to {email}. Valid for 24 hours.",
     inviteQueued: "Invite created, but email delivery failed. Use the link from backend logs.",
     invalidEmail: "Enter a valid email address.",
+    officeLocationOptional: "Office Location (Optional)",
+    locName: "Location Name",
   },
 
   adminPolicy: {
