@@ -12,10 +12,19 @@ export default function KaryawanLayout({
   contentClassName = "flex-1 p-4 md:p-8",
 }: KaryawanLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-white">
-      <Sidebar />
+    <div className="min-h-screen bg-white">
+      {/* Inline critical CSS: sidebar MUST hide below 768px, independent of Tailwind */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            "@media (max-width:767.98px){aside[data-karyawan-sidebar]{display:none!important}}",
+        }}
+      />
       <MobileHeader />
-      <main className={contentClassName}>{children}</main>
+      <div className="flex min-h-screen pt-14 md:pt-0">
+        <Sidebar />
+        <main className={contentClassName}>{children}</main>
+      </div>
     </div>
   );
 }

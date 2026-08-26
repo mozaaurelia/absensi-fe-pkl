@@ -7,6 +7,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { getStaticHolidayMap } from "@/lib/holidays";
 import { createPersonalAgenda } from "@/lib/services/agenda";
+import { getHolidays } from "@/lib/services/admin";
+import { getStaticHolidayMap } from "@/lib/holidays";
 import DatePicker from "../common/DatePicker";
 import { getStaticHolidayMap } from "@/lib/holidays";
 import { getHolidays } from "@/lib/services/admin";

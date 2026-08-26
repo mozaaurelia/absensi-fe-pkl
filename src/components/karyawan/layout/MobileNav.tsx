@@ -118,7 +118,7 @@ export function MobileHeader() {
 
   return (
     <>
-      <header className="md:hidden sticky top-0 z-40 bg-[#1E3A5F] pt-[env(safe-area-inset-top)]">
+      <header className="md:hidden fixed top-0 inset-x-0 z-40 bg-[#1E3A5F] pt-[env(safe-area-inset-top)]">
         <div className="flex items-center justify-between px-4 h-14">
           <button
             onClick={() => setDrawerOpen(true)}
