@@ -51,6 +51,12 @@ export const en = {
     ],
   },
 
+  datePicker: {
+    today: "Today",
+    holidayLegend: "Public Holiday",
+    selected: "Selected",
+  },
+
   nav: {
     home: "Home",
     features: "Features",

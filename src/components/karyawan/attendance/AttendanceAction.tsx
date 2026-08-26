@@ -125,7 +125,7 @@ export default function AttendanceAction({
             {t("attendanceAction.schedule")}: {scheduleStart} - {scheduleEnd}
           </span>
         </div>
-        <div className="flex items-center justify-center gap-14">
+        <div className="flex items-center justify-center gap-6 sm:gap-14">
           <CheckInButton disabled={hasCheckedIn} clockOpen={clockOpen} onClick={() => handleClick("in")} />
           <CheckOutButton checkedOut={hasCheckedOut} clockOpen={checkOutOpen} onClick={() => handleClick("out")} />
         </div>

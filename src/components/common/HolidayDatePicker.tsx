@@ -40,9 +40,9 @@ export default function HolidayDatePicker({
   placeholder = "Pilih tanggal",
   className = "",
 }: Props) {
-  const today = new Date();
   const { months } = useLanguage();
-  const holidayMap = useMemo(() => getStaticHolidayMap(today.getFullYear()), [today.getFullYear()]);
+  const today = new Date();
+  const holidayMap = useMemo(() => getStaticHolidayMap(today.getFullYear()), [today]);
   const todayKey = toKey(today.getFullYear(), today.getMonth() + 1, today.getDate());
 
   const parsed = value ? new Date(value + "T00:00:00") : null;

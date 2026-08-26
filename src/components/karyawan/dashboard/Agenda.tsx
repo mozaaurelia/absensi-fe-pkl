@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FiAlertTriangle, FiCalendar, FiSend, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
+import { getStaticHolidayMap } from "@/lib/holidays";
 import {
   createPersonalAgenda,
   deletePersonalAgenda,
