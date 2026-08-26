@@ -6,6 +6,7 @@ import { FiAlignLeft, FiCalendar, FiClipboard, FiFileText, FiList, FiSend } from
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createLeaveRequest, type LeaveType } from "@/lib/services/leave";
+import HolidayDatePicker from "@/components/common/HolidayDatePicker";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -156,32 +157,18 @@ export default function PermitForm({ leaveTypes, onSubmitted }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-5">
-        <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-            <FiCalendar size={14} className="text-[#1E3A5F] dark:text-blue-300" />
-            {t("leaveForm.startDate")}
-          </label>
-          <input
-            type="date"
-            value={tanggalMulai}
-            onChange={(e) => setTanggalMulai(e.target.value)}
-            required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
-          />
-        </div>
-        <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-            <FiCalendar size={14} className="text-[#1E3A5F] dark:text-blue-300" />
-            {t("leaveForm.endDate")}
-          </label>
-          <input
-            type="date"
-            value={tanggalSelesai}
-            onChange={(e) => setTanggalSelesai(e.target.value)}
-            required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
-          />
-        </div>
+        <HolidayDatePicker
+          value={tanggalMulai}
+          onChange={setTanggalMulai}
+          label={t("leaveForm.startDate")}
+          required
+        />
+        <HolidayDatePicker
+          value={tanggalSelesai}
+          onChange={setTanggalSelesai}
+          label={t("leaveForm.endDate")}
+          required
+        />
       </div>
 
       <div className="mb-5">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { FiCalendar, FiSend, FiTrash2 } from "react-icons/fi";
+import { FiAlertTriangle, FiCalendar, FiSend, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import {
@@ -10,6 +10,9 @@ import {
   getUpcomingAgendas,
   type PersonalAgenda,
 } from "@/lib/services/agenda";
+import { getHolidays } from "@/lib/services/admin";
+import { getStaticHolidayMap } from "@/lib/holidays";
+import HolidayDatePicker from "@/components/common/HolidayDatePicker";
 
 function formatDateLabel(iso: string, locale: string) {
   const ts = new Date(iso + "T00:00:00");
@@ -30,6 +33,23 @@ export default function Agenda() {
   const [agendaTime, setAgendaTime] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const staticMap = getStaticHolidayMap(new Date().getFullYear());
+    const merged: Record<string, string> = {};
+    Object.entries(staticMap).forEach(([k, v]) => { merged[k] = v.name; });
+    getHolidays()
+      .then((list) => {
+        list.forEach((h) => { merged[h.date] = h.name; });
+        setHolidayMap(merged);
+      })
+      .catch(() => {
+        setHolidayMap(merged);
+      });
+  }, []);
+
+  const holidayName = agendaDate ? holidayMap[agendaDate] ?? null : null;
 
   const load = useCallback(async () => {
     try {
@@ -47,6 +67,10 @@ export default function Agenda() {
   const handleAdd = async () => {
     if (!agendaDate || !agendaTitle.trim()) {
       setErrorMsg(t("agenda.addRequired"));
+      return;
+    }
+    if (holidayMap[agendaDate]) {
+      setErrorMsg(t("scheduleForm.holidayBlocked"));
       return;
     }
     setSubmitting(true);
@@ -94,12 +118,18 @@ export default function Agenda() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <input
-          type="date"
-          value={agendaDate}
-          onChange={(e) => setAgendaDate(e.target.value)}
-          className="w-full sm:w-40 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] transition-colors"
-        />
+        <div className="w-full sm:w-40">
+          <HolidayDatePicker
+            value={agendaDate}
+            onChange={setAgendaDate}
+          />
+          {holidayName && (
+            <p className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+              <FiAlertTriangle size={10} className="shrink-0" />
+              {t("scheduleForm.holidayWarning", { name: holidayName })}
+            </p>
+          )}
+        </div>
         <input
           type="time"
           value={agendaTime}

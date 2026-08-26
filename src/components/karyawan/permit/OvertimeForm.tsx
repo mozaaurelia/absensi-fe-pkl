@@ -7,6 +7,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 import { getHolidays } from "@/lib/services/admin";
+import { getStaticHolidayMap } from "@/lib/holidays";
+import HolidayDatePicker from "@/components/common/HolidayDatePicker";
 
 const MAX_OVERTIME_HOURS = 2;
 
@@ -40,13 +42,17 @@ export default function OvertimeForm() {
   const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    const staticMap = getStaticHolidayMap(new Date().getFullYear());
+    const merged: Record<string, string> = {};
+    Object.entries(staticMap).forEach(([k, v]) => { merged[k] = v.name; });
     getHolidays()
       .then((list) => {
-        const map: Record<string, string> = {};
-        list.forEach((h) => { map[h.date] = h.name; });
-        setHolidayMap(map);
+        list.forEach((h) => { merged[h.date] = h.name; });
+        setHolidayMap(merged);
       })
-      .catch(() => {});
+      .catch(() => {
+        setHolidayMap(merged);
+      });
   }, []);
 
   const maxEnd = jamMulai ? addHours(jamMulai, MAX_OVERTIME_HOURS) : "";
@@ -143,19 +149,14 @@ export default function OvertimeForm() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-            <FiCalendar size={14} className="text-purple-600 dark:text-purple-300" />
-            {t("overtimeForm.date")}
-          </label>
-          <input
-            type="date"
+          <HolidayDatePicker
             value={tanggalLembur}
-            onChange={(e) => setTanggalLembur(e.target.value)}
+            onChange={setTanggalLembur}
+            label={t("overtimeForm.date")}
             required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
           />
           {holidayName && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600">
               <FiAlertTriangle size={12} className="shrink-0" />
               {t("overtimeForm.holidayWarning", { name: holidayName })}
             </p>

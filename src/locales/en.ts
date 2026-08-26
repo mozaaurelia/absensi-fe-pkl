@@ -731,6 +731,7 @@ dashAttendance: {
     titleLabel: "Agenda Title",
     titlePlaceholder: "Example: Project Evaluation Meeting",
     dateLabel: "Date",
+    datePlaceholder: "Pick a date",
     timeLabel: "Start Time",
     categoryLabel: "Category",
     categoryPlaceholder: "Select category",
@@ -744,6 +745,9 @@ dashAttendance: {
     failed: "Failed to save agenda. Please try again.",
     activeShift: "Active Shift",
     noSchedule: "No active work schedule assigned yet.",
+    holidayLegend: "Public Holiday",
+    holidayWarning: "This date is a public holiday ({name}).",
+    holidayBlocked: "This date is a public holiday and cannot be used to create an agenda.",
   },
 
   leaveSummary: {
