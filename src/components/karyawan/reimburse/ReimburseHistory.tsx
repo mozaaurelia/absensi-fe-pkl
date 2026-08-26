@@ -52,7 +52,7 @@ export default function ReimburseHistory({ requests }: Props) {
   }, [requests, locale]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
       <div className="flex items-start justify-between mb-1">
         <h3 className="font-bold text-gray-900 dark:text-gray-100">
           {t("karyawanReimburse.historyTitle")}

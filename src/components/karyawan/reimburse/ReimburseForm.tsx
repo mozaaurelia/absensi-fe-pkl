@@ -111,11 +111,11 @@ export default function ReimburseForm({ onSubmitted }: Props) {
       onSubmit={handleSubmit}
       className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6"
     >
-      <div className="flex items-start justify-between mb-1">
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <h3 className="font-bold text-gray-900 dark:text-gray-100 min-w-0 truncate">
           {t("karyawanReimburse.formTitle")}
         </h3>
-        <span className="bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+        <span className="bg-blue-50 dark:bg-blue-500/15 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap shrink-0">
           {t("karyawanReimburse.formBadge")}
         </span>
       </div>

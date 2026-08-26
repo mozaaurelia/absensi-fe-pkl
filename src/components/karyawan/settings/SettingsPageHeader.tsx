@@ -38,7 +38,7 @@ export default function SettingsPageHeader({ avatar }: Props) {
 
   return (
     <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-4 md:px-8 py-4 md:py-6 text-white shadow-lg mb-5 md:mb-8">
-      <div className="flex items-center justify-between gap-6">
+      <div className="flex items-center justify-between gap-2 md:gap-6">
         <div className="space-y-1.5 min-w-0">
           <h1 className="text-xl md:text-2xl font-bold tracking-tight truncate">
             {t("settingsHeader.heading")}, {firstName}!
@@ -68,7 +68,7 @@ export default function SettingsPageHeader({ avatar }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <LanguageToggle />
           <Notification />
           <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">

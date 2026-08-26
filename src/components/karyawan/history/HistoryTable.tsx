@@ -101,7 +101,7 @@ function AttendanceCard({ item }: { item: AttendanceCardData }) {
       : t("historyTable.notAvailable");
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 card-hover">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-3 sm:p-4 card-hover">
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-3 min-w-0">
           <div

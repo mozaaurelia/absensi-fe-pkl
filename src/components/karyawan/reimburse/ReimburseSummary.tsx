@@ -89,7 +89,7 @@ export default function ReimburseSummary({ requests }: Props) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 flex items-start justify-between gap-3"
+          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-3 sm:p-5 flex items-start justify-between gap-3"
         >
           <div className="min-w-0">
             <p className="text-xs text-gray-400 dark:text-gray-400 truncate">{card.label}</p>

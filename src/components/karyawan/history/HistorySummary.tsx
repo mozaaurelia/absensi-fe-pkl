@@ -75,7 +75,7 @@ export default function HistorySummary({ records }: Props) {
       {statsList.map((stat) => (
         <div
           key={stat.label}
-          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5"
+          className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-3 sm:p-5"
         >
           <div className="flex items-center gap-2.5 mb-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${stat.iconBox}`}>
