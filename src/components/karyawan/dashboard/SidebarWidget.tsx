@@ -40,6 +40,7 @@ export default function Sidebar() {
 
   return (
     <aside
+      data-karyawan-sidebar
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`hidden md:flex md:flex-col bg-[#1E3A5F] h-screen px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${open ? "w-64" : "w-17"

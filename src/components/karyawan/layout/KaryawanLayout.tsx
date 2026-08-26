@@ -13,6 +13,13 @@ export default function KaryawanLayout({
 }: KaryawanLayoutProps) {
   return (
     <div className="flex min-h-screen bg-white">
+      {/* Inline critical CSS: sidebar MUST hide below 768px, independent of Tailwind */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            "@media (max-width:767.98px){aside[data-karyawan-sidebar]{display:none!important}}",
+        }}
+      />
       <Sidebar />
       <MobileHeader />
       <main className={contentClassName}>{children}</main>
