@@ -42,15 +42,13 @@ export default function Sidebar() {
     <aside
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`max-md:!hidden bg-[#1E3A5F] h-screen flex flex-col px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${
-        open ? "w-64" : "w-17"
-      }`}
+      className={`hidden md:flex md:flex-col bg-[#1E3A5F] h-screen px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${open ? "w-64" : "w-17"
+        }`}
     >
       <div className={`flex items-center mb-8 ${open ? "px-2 justify-between" : "justify-center"}`}>
         <div
-          className={`min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
-            open ? "opacity-100 max-w-45" : "opacity-0 max-w-0"
-          }`}
+          className={`min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${open ? "opacity-100 max-w-45" : "opacity-0 max-w-0"
+            }`}
         >
           <p className="text-white font-bold text-base">E-Absensi</p>
           <p className="text-blue-200/70 text-xs mt-0.5">{t("sidebar.tagline")}</p>
@@ -70,18 +68,16 @@ export default function Sidebar() {
             <Link
               key={menu.label}
               href={menu.href}
-              className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
-                active
+              className={`flex items-center py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${active
                   ? "bg-white/10 text-white"
                   : "text-blue-100/80 hover:bg-white/10 hover:text-white"
-              } ${open ? "px-3 gap-3" : "pl-3.25 gap-0"}`}
+                } ${open ? "px-3 gap-3" : "pl-3.25 gap-0"}`}
               title={!open ? menu.label : undefined}
             >
               <Icon />
               <span
-                className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
-                  open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
-                }`}
+                className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+                  }`}
               >
                 {menu.label}
               </span>
@@ -94,16 +90,14 @@ export default function Sidebar() {
         <button
           onClick={toggleTheme}
           aria-label={isDark ? t("common.lightMode") : t("common.darkMode")}
-          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-blue-100/80 hover:bg-white/10 hover:text-white transition-all duration-300 ease-in-out ${
-            open ? "px-3 gap-3" : "pl-3.25 gap-0"
-          }`}
+          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-blue-100/80 hover:bg-white/10 hover:text-white transition-all duration-300 ease-in-out ${open ? "px-3 gap-3" : "pl-3.25 gap-0"
+            }`}
           title={!open ? (isDark ? t("common.lightMode") : t("common.darkMode")) : undefined}
         >
           {isDark ? <SunIcon /> : <MoonIcon />}
           <span
-            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
-              open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
-            }`}
+            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+              }`}
           >
             {isDark ? t("common.lightMode") : t("common.darkMode")}
           </span>
@@ -113,16 +107,14 @@ export default function Sidebar() {
             clearAccessToken();
             signOut({ callbackUrl: "/auth/login" });
           }}
-          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${
-            open ? "px-3 gap-3" : "pl-3.25 gap-0"
-          }`}
+          className={`flex items-center py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-500/20 transition-all duration-300 ease-in-out ${open ? "px-3 gap-3" : "pl-3.25 gap-0"
+            }`}
           title={!open ? t("sidebar.logout") : undefined}
         >
           <LogoutIcon />
           <span
-            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
-              open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
-            }`}
+            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${open ? "opacity-100 max-w-40" : "opacity-0 max-w-0"
+              }`}
           >
             {t("sidebar.logout")}
           </span>

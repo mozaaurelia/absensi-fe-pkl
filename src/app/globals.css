@@ -66,11 +66,6 @@ body {
   animation: drawerIn 0.25s ease-out forwards;
 }
 
-@media (max-width: 767.98px) {
-  .desktop-sidebar {
-    display: none !important;
-  }
-}
 
 .animate-fade-slide-in {
   animation: fadeSlideIn 0.4s ease-out forwards;
