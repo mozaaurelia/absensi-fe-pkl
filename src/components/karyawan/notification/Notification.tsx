@@ -255,7 +255,7 @@ export default function Notification({ dark = true, className = "" }: Props) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
+        <div className="absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700">
             <div>
               <h4 className="font-bold text-gray-900 dark:text-gray-100 text-sm">{t("notification.title")}</h4>

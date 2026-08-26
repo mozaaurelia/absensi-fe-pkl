@@ -4,6 +4,7 @@ export const id = {
     tagline: "Sistem Absensi Elektronik",
     taglineInternal: "Sistem Absensi Elektronik Internal",
     close: "Tutup",
+    menu: "Menu",
     cancel: "Batal",
     previous: "Sebelumnya",
     next: "Berikutnya",

@@ -100,7 +100,7 @@ export default function ScheduleForm({ onCreated }: Props) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <div>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             <FiCalendar size={14} className="text-rose-500 dark:text-rose-400" />
