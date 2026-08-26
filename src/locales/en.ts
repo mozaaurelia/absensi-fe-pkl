@@ -4,6 +4,7 @@ export const en = {
     tagline: "Electronic Attendance System",
     taglineInternal: "Internal Electronic Attendance System",
     close: "Close",
+    menu: "Menu",
     cancel: "Cancel",
     previous: "Previous",
     next: "Next",

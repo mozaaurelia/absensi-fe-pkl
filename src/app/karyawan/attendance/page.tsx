@@ -52,7 +52,7 @@ export default function AttendancePage() {
   };
 
   return (
-    <KaryawanLayout contentClassName="flex-1 p-8 space-y-6">
+    <KaryawanLayout contentClassName="flex-1 p-4 md:p-8 pb-24 md:pb-8 space-y-6">
       <AttendanceHeader
         selectedDate={selectedDate}
         onPrevDay={handlePrevDay}
