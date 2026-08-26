@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { FiAlertTriangle, FiCalendar, FiChevronLeft, FiChevronRight, FiClock, FiPlusCircle, FiSend, FiTag, FiType } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
+import { getStaticHolidayMap } from "@/lib/holidays";
 import { createPersonalAgenda } from "@/lib/services/agenda";
 import DatePicker from "../common/DatePicker";
 import { getStaticHolidayMap } from "@/lib/holidays";
@@ -191,7 +192,7 @@ export default function ScheduleForm({ onCreated }: Props) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <div className="relative" ref={calRef}>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 mb-2">
             <FiCalendar size={14} className="text-rose-500" />

@@ -51,6 +51,12 @@ export const id = {
     ],
   },
 
+  datePicker: {
+    today: "Hari Ini",
+    holidayLegend: "Hari Libur",
+    selected: "Dipilih",
+  },
+
   nav: {
     home: "Beranda",
     features: "Fitur",

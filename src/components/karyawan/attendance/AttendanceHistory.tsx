@@ -126,7 +126,7 @@ export default function AttendanceHistory({ selectedDate }) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl bg-white border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+      <div className="hidden md:block overflow-x-auto rounded-2xl bg-white border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
         <table className="w-full text-sm text-gray-700 dark:text-gray-200">
           <thead>
             <tr className="text-left text-xs text-white bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a]">
@@ -176,6 +176,47 @@ export default function AttendanceHistory({ selectedDate }) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="md:hidden flex flex-col gap-3">
+        {logs.map((log, i) => (
+          <div
+            key={log.date}
+            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 opacity-0 animate-fade-slide-in"
+            style={{ animationDelay: `${0.2 + i * 0.08}s` }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-400">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-gray-800 dark:text-gray-100">{log.date.split(",")[0]}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500">{log.date.split(",")[1]?.trim()}</p>
+                </div>
+              </div>
+              <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${log.color}`}>
+                {log.statusKey === "-" ? "-" : t(`attendanceHistory.${log.statusKey}`)}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2">
+                <p className="text-[10px] text-gray-400 dark:text-gray-500">{t("attendanceHistory.checkIn")}</p>
+                <p className="text-sm font-bold text-[#1E3A5F] dark:text-blue-300">{log.masuk}</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2">
+                <p className="text-[10px] text-gray-400 dark:text-gray-500">{t("attendanceHistory.checkOut")}</p>
+                <p className="text-sm font-bold text-[#1E3A5F] dark:text-blue-300">{log.pulang}</p>
+              </div>
+            </div>
+            {log.lokasi && (
+              <p className="text-[11px] text-gray-400 dark:text-gray-500 truncate">📍 {log.lokasi}</p>
+            )}
+          </div>
+        ))}
       </div>
 
       {(loading || error) && (

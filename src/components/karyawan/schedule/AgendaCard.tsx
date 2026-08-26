@@ -33,7 +33,7 @@ export default function AgendaCard({ judul, tanggal, jam, kategori, statusKey }:
         </span>
       </div>
 
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-gray-500">
         <span className="inline-flex items-center gap-1.5">
           <FiCalendar size={13} className="text-[#1E3A5F]" />
           {tanggal}
@@ -42,7 +42,7 @@ export default function AgendaCard({ judul, tanggal, jam, kategori, statusKey }:
           <FiClock size={13} className="text-[#1E3A5F]" />
           {jam}
         </span>
-        <span className="inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+        <span className="inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full self-start">
           {kategori}
         </span>
       </div>

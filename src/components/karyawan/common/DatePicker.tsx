@@ -4,31 +4,35 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FiCalendar, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
+import { getStaticHolidayMap } from "@/lib/holidays";
 
-type Holiday = { id: string; date: string; name: string };
+type ApiHoliday = { id: string; date: string; name: string };
 
-let holidaysCache: Record<string, string> | null = null;
-let holidaysPromise: Promise<Record<string, string>> | null = null;
+let apiHolidaysCache: Record<string, string> | null = null;
+let apiHolidaysPromise: Promise<Record<string, string>> | null = null;
 
-function fetchHolidays(): Promise<Record<string, string>> {
-  if (holidaysCache) return Promise.resolve(holidaysCache);
-  if (!holidaysPromise) {
-    holidaysPromise = apiFetch<Holiday[]>("/holidays")
+function fetchApiHolidays(): Promise<Record<string, string>> {
+  if (apiHolidaysCache) return Promise.resolve(apiHolidaysCache);
+  if (!apiHolidaysPromise) {
+    apiHolidaysPromise = apiFetch<ApiHoliday[]>("/holidays")
       .then((rows) => {
         const map: Record<string, string> = {};
-        rows.forEach((h) => { map[String(h.date).slice(0, 10)] = h.name; });
-        holidaysCache = map;
+        rows.forEach((h) => {
+          map[String(h.date).slice(0, 10)] = h.name;
+        });
+        apiHolidaysCache = map;
         return map;
       })
       .catch(() => {
-        holidaysPromise = null;
+        apiHolidaysPromise = null;
         return {};
       });
   }
-  return holidaysPromise;
+  return apiHolidaysPromise;
 }
 
-function key(y: number, m: number, d: number): string {
+function dateKey(y: number, m: number, d: number): string {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
@@ -41,17 +45,32 @@ interface Props {
 }
 
 export default function DatePicker({ value, onChange, placeholder, min }: Props) {
-  const { months, daysShort, locale } = useLanguage();
+  const { months, daysShort, locale, t } = useLanguage();
+  const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
-  const [holidays, setHolidays] = useState<Record<string, string>>(holidaysCache ?? {});
+  const [apiHolidays, setApiHolidays] = useState<Record<string, string>>(apiHolidaysCache ?? {});
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const [view, setView] = useState(() => {
     const base = value ? new Date(value + "T00:00:00") : new Date();
     return { y: base.getFullYear(), m: base.getMonth() };
   });
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const staticMap = useMemo(() => getStaticHolidayMap(view.y), [view.y]);
+
+  const mergedHolidays = useMemo(() => {
+    const merged: Record<string, string> = {};
+    Object.entries(staticMap).forEach(([k, v]) => {
+      merged[k] = locale === "en" ? v.nameEn : v.name;
+    });
+    Object.entries(apiHolidays).forEach(([k, v]) => {
+      merged[k] = v;
+    });
+    return merged;
+  }, [staticMap, apiHolidays, locale]);
+
   useEffect(() => {
-    fetchHolidays().then(setHolidays);
+    fetchApiHolidays().then(setApiHolidays);
   }, []);
 
   useEffect(() => {
@@ -79,11 +98,13 @@ export default function DatePicker({ value, onChange, placeholder, min }: Props)
 
   const grid = useMemo(() => {
     const firstDow = new Date(view.y, view.m, 1).getDay();
-    const offset = (firstDow + 6) % 7; // Monday-first
+    const offset = (firstDow + 6) % 7;
     const daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
     const cells: ({ day: number; dateKey: string } | null)[] = [];
     for (let i = 0; i < offset; i++) cells.push(null);
-    for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, dateKey: key(view.y, view.m, d) });
+    for (let d = 1; d <= daysInMonth; d++) {
+      cells.push({ day: d, dateKey: dateKey(view.y, view.m, d) });
+    }
     return cells;
   }, [view]);
 
@@ -93,16 +114,31 @@ export default function DatePicker({ value, onChange, placeholder, min }: Props)
       return { y: y + Math.floor(nm / 12), m: ((nm % 12) + 12) % 12 };
     });
 
-  const todayKeyVal = key(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-  const mondayFirstDays = [daysShort[1], daysShort[2], daysShort[3], daysShort[4], daysShort[5], daysShort[6], daysShort[0]];
+  const todayKeyVal = dateKey(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate()
+  );
+  const mondayFirstDays = [
+    daysShort[1],
+    daysShort[2],
+    daysShort[3],
+    daysShort[4],
+    daysShort[5],
+    daysShort[6],
+    daysShort[0],
+  ];
 
   const displayLabel = value
-    ? new Date(value + "T00:00:00").toLocaleDateString(locale === "id" ? "id-ID" : "en-GB", {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+    ? new Date(value + "T00:00:00").toLocaleDateString(
+        locale === "id" ? "id-ID" : "en-GB",
+        {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }
+      )
     : "";
 
   return (
@@ -135,10 +171,12 @@ export default function DatePicker({ value, onChange, placeholder, min }: Props)
               </button>
               <button
                 type="button"
-                onClick={() => setView({ y: new Date().getFullYear(), m: new Date().getMonth() })}
+                onClick={() =>
+                  setView({ y: new Date().getFullYear(), m: new Date().getMonth() })
+                }
                 className="text-[9px] font-semibold text-[#1E3A5F] dark:text-blue-300 px-1.5 py-0.5 rounded hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
               >
-                Hari Ini
+                {t("datePicker.today")}
               </button>
               <button
                 type="button"
@@ -155,7 +193,9 @@ export default function DatePicker({ value, onChange, placeholder, min }: Props)
             {mondayFirstDays.map((d, i) => (
               <div
                 key={d}
-                className={`text-center text-[9px] font-semibold uppercase ${i === 6 ? "text-red-400" : "text-gray-400 dark:text-gray-500"}`}
+                className={`text-center text-[9px] font-semibold uppercase ${
+                  i === 6 ? "text-red-400" : "text-gray-400 dark:text-gray-500"
+                }`}
               >
                 {d}
               </div>
@@ -167,50 +207,76 @@ export default function DatePicker({ value, onChange, placeholder, min }: Props)
               if (!cell) return <div key={`b-${i}`} />;
               const dow = new Date(cell.dateKey + "T00:00:00").getDay();
               const isSunday = dow === 0;
-              const holidayName = holidays[cell.dateKey];
-              const isRed = isSunday || !!holidayName;
+              const holidayName = mergedHolidays[cell.dateKey];
+              const isHoliday = !!holidayName;
               const isToday = cell.dateKey === todayKeyVal;
               const isSelected = cell.dateKey === value;
-              const disabled = !!min && cell.dateKey < min;
+              const isDisabledByMin = !!min && cell.dateKey < min;
+              const isDisabled = isDisabledByMin || isHoliday;
+
               return (
-                <button
-                  key={cell.dateKey}
-                  type="button"
-                  disabled={disabled}
-                  title={[holidayName].filter(Boolean).join("") || undefined}
-                  onClick={() => {
-                    onChange(cell.dateKey);
-                    setOpen(false);
-                  }}
-                  className={`relative h-8 rounded-md flex items-center justify-center text-xs font-medium transition-colors ${
-                    isSelected
-                      ? "bg-[#1E3A5F] text-white font-bold"
-                      : disabled
-                        ? "text-gray-300 dark:text-gray-600 cursor-not-allowed"
-                        : isRed
-                          ? "bg-red-50 dark:bg-red-500/10 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20"
-                          : isToday
-                            ? "ring-1 ring-[#1E3A5F] dark:ring-blue-400 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/60"
-                            : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/60"
-                  }`}
-                >
-                  {cell.day}
-                  {holidayName && !isSelected && (
-                    <span className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-red-400" />
+                <div key={cell.dateKey} className="relative flex justify-center">
+                  <button
+                    type="button"
+                    disabled={isDisabled}
+                    onMouseEnter={() => isHoliday && setHoveredKey(cell.dateKey)}
+                    onMouseLeave={() => setHoveredKey(null)}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      onChange(cell.dateKey);
+                      setOpen(false);
+                    }}
+                    className={`relative h-8 w-8 rounded-md flex items-center justify-center text-xs font-medium transition-colors ${
+                      isSelected && !isHoliday
+                        ? "bg-[#1E3A5F] text-white font-bold"
+                        : isDisabled
+                          ? isHoliday
+                            ? "text-red-400 dark:text-red-400 cursor-not-allowed"
+                            : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                          : isSunday
+                            ? "text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
+                            : isToday
+                              ? "ring-1 ring-[#1E3A5F] dark:ring-blue-400 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/60"
+                              : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/60"
+                    }`}
+                  >
+                    {cell.day}
+                    {isHoliday && !isSelected && (
+                      <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-red-500" />
+                    )}
+                  </button>
+
+                  {isHoliday && hoveredKey === cell.dateKey && (
+                    <div
+                      className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-[11px] font-semibold whitespace-nowrap pointer-events-none shadow-md ${
+                        isDark
+                          ? "bg-gray-700 text-gray-100 border border-gray-600"
+                          : "bg-white text-[#1E3A5F] border border-gray-200"
+                      }`}
+                    >
+                      {holidayName}
+                      <div
+                        className={`absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 -mt-1 ${
+                          isDark
+                            ? "bg-gray-700 border-b border-r border-gray-600"
+                            : "bg-white border-b border-r border-gray-200"
+                        }`}
+                      />
+                    </div>
                   )}
-                </button>
+                </div>
               );
             })}
           </div>
 
           <div className="flex items-center gap-3 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 text-[9px] text-gray-400">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-sm bg-red-100 dark:bg-red-500/20 border border-red-300 dark:border-red-500/40" />
-              Tanggal Merah
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+              {t("datePicker.holidayLegend")}
             </span>
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-sm bg-[#1E3A5F]" />
-              Dipilih
+              {t("datePicker.selected")}
             </span>
           </div>
         </div>
