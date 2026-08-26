@@ -14,6 +14,7 @@ import { getTeamAttendance, type AttendanceRecord } from "@/lib/services/attenda
 import { getTeamLeaveRequests, type LeaveRequest } from "@/lib/services/leave";
 import { getTeamOvertimeRequests, type OvertimeTeamRequest } from "@/lib/services/attendance";
 import CompanyChat from "@/components/common/CompanyChat";
+import AtasanLayout from "@/components/atasan/AtasanLayout";
 
 export default function DashboardAtasanPage() {
   const { data: session, status } = useSession();
@@ -29,6 +30,9 @@ export default function DashboardAtasanPage() {
   const [error, setError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
+    if (status !== "authenticated" || !user || (user.role !== "supervisor" && user.role !== "admin")) {
+      return;
+    }
     setIsLoading(true);
     setError(null);
     try {
@@ -47,11 +51,13 @@ export default function DashboardAtasanPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [t]);
+  }, [status, user, t]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (status === "authenticated" && user && (user.role === "supervisor" || user.role === "admin")) {
+      loadData();
+    }
+  }, [loadData, status, user]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -111,19 +117,19 @@ export default function DashboardAtasanPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
+    <AtasanLayout>
       <AtasanHeader />
       <AtasanSummary summary={summary?.team_today ?? null} pendingLeaveCount={summary?.pending_leave_count} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div id="attendance" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <TeamAttendance records={attendance} />
-        <LeaveApproval requests={requests} onProcessed={loadData} />
+        <div id="leave"><LeaveApproval requests={requests} onProcessed={loadData} /></div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        <OvertimeApproval requests={overtime} onProcessed={loadData} />
-        <CompanyChat />
+        <div id="overtime"><OvertimeApproval requests={overtime} onProcessed={loadData} /></div>
+        <div id="chat"><CompanyChat /></div>
       </div>
-    </div>
+    </AtasanLayout>
   );
 }
