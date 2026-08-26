@@ -4,6 +4,7 @@ export const id = {
     tagline: "Sistem Absensi Elektronik",
     taglineInternal: "Sistem Absensi Elektronik Internal",
     close: "Tutup",
+    menu: "Menu",
     cancel: "Batal",
     previous: "Sebelumnya",
     next: "Berikutnya",
@@ -1207,8 +1208,9 @@ export const id = {
     inviteSuccess: "Undangan berhasil dikirim ke {email}. Berlaku 24 jam.",
     inviteQueued: "Undangan dibuat, namun pengiriman email gagal. Gunakan link dari log backend.",
     invalidEmail: "Masukkan alamat email yang valid.",
-    officeLocationOptional: "Lokasi Kantor (Opsional)",
+    officeLocationOptional: "Lokasi Kantor",
     locName: "Nama Lokasi",
+    locationRequired: "Pilih lokasi kantor terlebih dahulu (cari lalu klik hasilnya).",
   },
 
   adminPolicy: {

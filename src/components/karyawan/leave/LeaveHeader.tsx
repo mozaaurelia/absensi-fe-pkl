@@ -31,10 +31,10 @@ export default function LeaveHeader() {
   });
 
   return (
-    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-8 py-6 text-white shadow-lg mb-8">
+    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-4 md:px-8 py-4 md:py-6 text-white shadow-lg mb-5 md:mb-8">
       <div className="flex items-center justify-between gap-6">
         <div className="space-y-1.5 min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight truncate">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight truncate">
             {firstName}, {t("leaveHeader.heading")}!
           </h1>
           <p className="text-blue-200/90 text-sm">{dateStr}</p>

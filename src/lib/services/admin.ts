@@ -403,9 +403,9 @@ export async function getCompanies(): Promise<Company[]> {
 
 export async function createCompany(
   name: string,
-  picName?: string,
-  picEmail?: string,
-  officeLocation?: {
+  picName: string | undefined,
+  picEmail: string | undefined,
+  officeLocation: {
     name: string;
     latitude: number;
     longitude: number;

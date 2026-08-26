@@ -218,7 +218,7 @@ export default function OvertimeForm() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <div>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             <FiList size={14} className="text-purple-600 dark:text-purple-300" />

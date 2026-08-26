@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import PermitForm from "./PermitForm";
 import PermitHistory from "./PermitHistory";
 import OvertimeForm from "./OvertimeForm";
+import RiwayatLembur from "./RiwayatLembur";
 import LeaveSummary from "@/components/karyawan/leave/LeaveSummary";
 import {
   getLeaveTypes,
@@ -108,6 +109,7 @@ export default function PermitContent() {
         <div className="lg:col-span-2 space-y-6">
           <PermitForm leaveTypes={leaveTypes} onSubmitted={loadData} />
           <OvertimeForm />
+          <RiwayatLembur />
         </div>
         <div>
           <PermitHistory requests={izinRequests} />

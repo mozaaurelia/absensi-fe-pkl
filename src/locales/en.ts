@@ -4,6 +4,7 @@ export const en = {
     tagline: "Electronic Attendance System",
     taglineInternal: "Internal Electronic Attendance System",
     close: "Close",
+    menu: "Menu",
     cancel: "Cancel",
     previous: "Previous",
     next: "Next",
@@ -1208,8 +1209,9 @@ dashAttendance: {
     inviteSuccess: "Invite sent to {email}. Valid for 24 hours.",
     inviteQueued: "Invite created, but email delivery failed. Use the link from backend logs.",
     invalidEmail: "Enter a valid email address.",
-    officeLocationOptional: "Office Location (Optional)",
+    officeLocationOptional: "Office Location",
     locName: "Location Name",
+    locationRequired: "Please select the office location first (search and click a result).",
   },
 
   adminPolicy: {

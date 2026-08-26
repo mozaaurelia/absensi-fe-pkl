@@ -57,6 +57,16 @@ body {
   animation: fadeSlideUp 0.5s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
 }
 
+@keyframes drawerIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-drawer-in {
+  animation: drawerIn 0.25s ease-out forwards;
+}
+
+
 .animate-fade-slide-in {
   animation: fadeSlideIn 0.4s ease-out forwards;
 }

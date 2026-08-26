@@ -283,9 +283,9 @@ export default function ScheduleForm({ onCreated }: Props) {
                         )}
                       </button>
                       {isHoliday && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-white text-gray-900 border border-gray-200 shadow-md text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
                           {holidayMap[key]}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-0.5 w-2 h-2 bg-gray-900 rotate-45" />
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-0.5 w-2 h-2 bg-white border-b border-r border-gray-200 rotate-45" />
                         </div>
                       )}
                     </div>

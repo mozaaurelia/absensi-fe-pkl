@@ -42,6 +42,10 @@ export default function AdminCompaniesPage() {
   const [locLat, setLocLat] = useState("");
   const [locLng, setLocLng] = useState("");
   const [locRadius, setLocRadius] = useState("150");
+  const [locQuery, setLocQuery] = useState("");
+  const [locResults, setLocResults] = useState<{ display_name: string; lat: string; lon: string }[]>([]);
+  const [locSearching, setLocSearching] = useState(false);
+  const [locSelected, setLocSelected] = useState(false);
 
   const [inviteTarget, setInviteTarget] = useState<Company | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -82,9 +86,38 @@ export default function AdminCompaniesPage() {
     setLocLat("");
     setLocLng("");
     setLocRadius("150");
+    setLocQuery("");
+    setLocResults([]);
+    setLocSelected(false);
     setError(null);
     setEditRow(null);
     setModal("create");
+  };
+
+  const searchLocation = async () => {
+    const q = locQuery.trim();
+    if (q.length < 3) return;
+    setLocSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=id&q=${encodeURIComponent(q)}`,
+      );
+      const data = await res.json();
+      setLocResults(Array.isArray(data) ? data : []);
+    } catch {
+      setLocResults([]);
+    } finally {
+      setLocSearching(false);
+    }
+  };
+
+  const selectLocation = (r: { display_name: string; lat: string; lon: string }) => {
+    setLocName(r.display_name.split(",")[0]?.trim() ?? "");
+    setLocLat(r.lat);
+    setLocLng(r.lon);
+    setLocSelected(true);
+    setLocResults([]);
+    setLocQuery(r.display_name.split(",").slice(0, 3).join(",").trim());
   };
 
   const openEdit = (row: Company) => {
@@ -113,25 +146,27 @@ export default function AdminCompaniesPage() {
       setError(t("adminCrud.nameRequired"));
       return;
     }
+    const lat = parseFloat(locLat);
+    const lng = parseFloat(locLng);
+    const radius = parseFloat(locRadius);
+    if (modal === "create" && (isNaN(lat) || isNaN(lng))) {
+      setError(t("adminCompanies.locationRequired"));
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
       if (modal === "create") {
-        const lat = parseFloat(locLat);
-        const lng = parseFloat(locLng);
-        const radius = parseFloat(locRadius);
         await createCompany(
           name.trim(),
           picName.trim() || undefined,
           picEmail.trim() || undefined,
-          !isNaN(lat) && !isNaN(lng)
-            ? {
-                name: locName.trim() || name.trim(),
-                latitude: lat,
-                longitude: lng,
-                radius_meters: !isNaN(radius) && radius > 0 ? radius : 150,
-              }
-            : undefined,
+          {
+            name: locName.trim() || name.trim(),
+            latitude: lat,
+            longitude: lng,
+            radius_meters: !isNaN(radius) && radius > 0 ? radius : 150,
+          },
         );
       } else if (modal === "edit" && editRow) {
         await updateCompany(editRow.id, name.trim(), picName.trim() || undefined, picEmail.trim() || undefined);
@@ -447,13 +482,60 @@ export default function AdminCompaniesPage() {
                 <div className="flex items-center gap-1.5 mb-3">
                   <FiMapPin size={13} className="text-gray-400" />
                   <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                    {t("adminCompanies.officeLocationOptional") ?? "Lokasi Kantor (Opsional)"}
+                    {t("adminCompanies.officeLocationOptional") ?? "Lokasi Kantor"} *
                   </span>
                 </div>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                      {t("adminCompanies.locName") ?? "Nama Lokasi"}
+                      Cari Lokasi
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        value={locQuery}
+                        onChange={(e) => setLocQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            searchLocation();
+                          }
+                        }}
+                        placeholder="Ketik nama tempat / alamat..."
+                        className={inputClass}
+                      />
+                      <button
+                        type="button"
+                        onClick={searchLocation}
+                        disabled={locSearching || locQuery.trim().length < 3}
+                        className="shrink-0 bg-[#1E3A5F] text-white text-xs font-semibold px-4 rounded-lg hover:bg-[#16304f] transition-colors disabled:opacity-60"
+                      >
+                        {locSearching ? "..." : "Cari"}
+                      </button>
+                    </div>
+                    {locResults.length > 0 && (
+                      <div className="mt-2 border border-gray-200 dark:border-gray-600 rounded-lg divide-y divide-gray-50 dark:divide-gray-700/50 max-h-44 overflow-y-auto bg-white dark:bg-gray-800">
+                        {locResults.map((r, i) => (
+                          <button
+                            key={`${r.lat}-${r.lon}-${i}`}
+                            type="button"
+                            onClick={() => selectLocation(r)}
+                            className="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                          >
+                            {r.display_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {locSelected && (
+                      <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-green-600 dark:text-green-400">
+                        <FiMapPin size={12} />
+                        {locName} ({Number(locLat).toFixed(5)}, {Number(locLng).toFixed(5)})
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                      Nama Lokasi
                     </label>
                     <input
                       value={locName}
@@ -461,30 +543,6 @@ export default function AdminCompaniesPage() {
                       placeholder={t("adminCompanies.name")}
                       className={inputClass}
                     />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                        Latitude
-                      </label>
-                      <input
-                        value={locLat}
-                        onChange={(e) => setLocLat(e.target.value)}
-                        placeholder="-6.2088"
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                        Longitude
-                      </label>
-                      <input
-                        value={locLng}
-                        onChange={(e) => setLocLng(e.target.value)}
-                        placeholder="106.8456"
-                        className={inputClass}
-                      />
-                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
