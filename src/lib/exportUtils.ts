@@ -160,8 +160,8 @@ export function generateOfficialLetter(data: LetterData): void {
 
   <div class="content">
     <p>Yang bertanda tangan di bawah ini,</p>
-    <p><span class="label">Nama</span>: ${escapeHtml(data.approvedByName ?? "...")}</p>
-    <p><span class="label">Jabatan</span>: ${escapeHtml(data.approvedByRole ?? "...")}</p>
+    <p><span class="label">Nama</span>: ${escapeHtml(data.approvedByName ?? "Manajemen Perusahaan")}</p>
+    <p><span class="label">Jabatan</span>: ${escapeHtml(data.approvedByRole ?? "Pemberi Persetujuan")}</p>
     <p style="margin-top:14px">
       Dengan ini menerangkan bahwa karyawan yang tersebut di bawah ini:
     </p>
@@ -188,8 +188,8 @@ export function generateOfficialLetter(data: LetterData): void {
   <div class="sig-section">
     <div class="sig-box">
       <div class="line"></div>
-      <p class="name">${escapeHtml(data.approvedByName ?? "...")}</p>
-      <p>${escapeHtml(data.approvedByRole ?? "...")}</p>
+      <p class="name">${escapeHtml(data.approvedByName ?? "Manajemen Perusahaan")}</p>
+      <p>${escapeHtml(data.approvedByRole ?? "Pemberi Persetujuan")}</p>
     </div>
   </div>
 

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   approveLeaveRequest,
   rejectLeaveRequest,
   type LeaveRequest,
 } from "@/lib/services/leave";
+import { getMyProfile } from "@/lib/services/employee";
+import { generateOfficialLetter } from "@/lib/exportUtils";
 
 interface Props {
   requests: LeaveRequest[];
@@ -36,6 +38,30 @@ export default function LeaveApproval({ requests, onProcessed }: Props) {
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [tab, setTab] = useState<"pending" | "approved">("pending");
+  const [profile, setProfile] = useState<{ company_name?: string; name?: string; role_name?: string } | null>(null);
+
+  useEffect(() => {
+    getMyProfile()
+      .then(setProfile)
+      .catch(() => {});
+  }, []);
+
+  const downloadLetter = async (req: LeaveRequest) => {
+    generateOfficialLetter({
+      companyName: profile?.company_name ?? "",
+      requestType: (req.leave_type_name ?? "").toLowerCase().includes("cuti")
+        ? "leave"
+        : "izin",
+      employeeName: req.employee_name ?? "",
+      departmentName: req.department_name ?? "",
+      dateStart: req.start_date ?? "",
+      dateEnd: req.end_date ?? undefined,
+      reason: req.reason ?? undefined,
+      approvedByName: profile?.name,
+      approvedByRole: profile?.role_name,
+    });
+  };
 
   const openAction = (id: string, mode: "approve" | "reject") => {
     setAction({ id, mode });
@@ -77,19 +103,49 @@ export default function LeaveApproval({ requests, onProcessed }: Props) {
   const pending = requests.filter(
     (r) => (r.status ?? "").toLowerCase() === "pending",
   );
+  const approved = requests.filter(
+    (r) => (r.status ?? "").toLowerCase() === "approved",
+  );
+  const visible = tab === "pending" ? pending : approved;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("atasan.teamLeave")}</h3>
-        <p className="text-xs text-gray-400 mt-0.5">{t("atasan.teamLeaveDesc")}</p>
+      <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-bold text-gray-900 dark:text-gray-100">{t("atasan.teamLeave")}</h3>
+          <p className="text-xs text-gray-400 mt-0.5">{t("atasan.teamLeaveDesc")}</p>
+        </div>
+        <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 shrink-0">
+          <button
+            onClick={() => setTab("pending")}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-colors ${
+              tab === "pending"
+                ? "bg-white dark:bg-gray-800 text-[#1E3A5F] dark:text-blue-300 shadow-sm"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            Menunggu ({pending.length})
+          </button>
+          <button
+            onClick={() => setTab("approved")}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-colors ${
+              tab === "approved"
+                ? "bg-white dark:bg-gray-800 text-green-600 shadow-sm"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            Disetujui ({approved.length})
+          </button>
+        </div>
       </div>
 
-      {pending.length === 0 ? (
-        <p className="p-8 text-center text-sm text-gray-400">{t("atasan.emptyRequests")}</p>
+      {visible.length === 0 ? (
+        <p className="p-8 text-center text-sm text-gray-400">
+          {tab === "pending" ? t("atasan.emptyRequests") : "Belum ada pengajuan yang disetujui."}
+        </p>
       ) : (
         <div className="divide-y divide-gray-50 dark:divide-gray-700/50">
-          {pending.map((req) => (
+          {visible.map((req) => (
             <div key={req.id} className="px-6 py-4">
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
@@ -104,20 +160,31 @@ export default function LeaveApproval({ requests, onProcessed }: Props) {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => openAction(req.id, "approve")}
-                    disabled={processing}
-                    className="bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60"
-                  >
-                    {t("atasan.approve")}
-                  </button>
-                  <button
-                    onClick={() => openAction(req.id, "reject")}
-                    disabled={processing}
-                    className="bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-60"
-                  >
-                    {t("atasan.reject")}
-                  </button>
+                  {tab === "pending" ? (
+                    <>
+                      <button
+                        onClick={() => openAction(req.id, "approve")}
+                        disabled={processing}
+                        className="bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60"
+                      >
+                        {t("atasan.approve")}
+                      </button>
+                      <button
+                        onClick={() => openAction(req.id, "reject")}
+                        disabled={processing}
+                        className="bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-60"
+                      >
+                        {t("atasan.reject")}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => downloadLetter(req)}
+                      className="border border-[#1E3A5F] dark:border-blue-400/40 text-[#1E3A5F] dark:text-blue-300 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                    >
+                      Unduh Surat
+                    </button>
+                  )}
                 </div>
               </div>
               {req.reason && (

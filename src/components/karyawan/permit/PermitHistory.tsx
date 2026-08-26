@@ -5,6 +5,8 @@ import { FiFileText, FiList } from "react-icons/fi";
 import LeaveCard from "./LeaveCard";
 import { useLanguage } from "@/context/LanguageContext";
 import type { LeaveRequest } from "@/lib/services/leave";
+import { getMyProfile } from "@/lib/services/employee";
+import { generateOfficialLetter } from "@/lib/exportUtils";
 
 interface Props {
   requests: LeaveRequest[];
@@ -34,9 +36,32 @@ export default function PermitHistory({ requests }: Props) {
           req.total_days != null
             ? `${req.total_days} ${t("leaveHistory.daysUnit")}`
             : "-",
+        startDate: req.start_date,
+        endDate: req.end_date,
+        reason: req.reason,
       })),
     [requests, t],
   );
+
+  const downloadLetter = async (item: (typeof items)[number]) => {
+    let companyName = "";
+    let employeeName = "";
+    try {
+      const profile = await getMyProfile();
+      companyName = profile?.company_name ?? "";
+      employeeName = profile?.name ?? "";
+    } catch {
+      /* ignore */
+    }
+    generateOfficialLetter({
+      companyName,
+      requestType: "izin",
+      employeeName,
+      dateStart: item.startDate ?? "",
+      dateEnd: item.endDate ?? undefined,
+      reason: item.reason ?? undefined,
+    });
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
@@ -65,7 +90,16 @@ export default function PermitHistory({ requests }: Props) {
       ) : (
         <div className="flex flex-col gap-3">
           {items.slice(0, 3).map((item) => (
-            <LeaveCard key={item.id} {...item} />
+            <LeaveCard
+              key={item.id}
+              tipe={item.tipe}
+              statusKey={item.statusKey}
+              tanggal={item.tanggal}
+              durasi={item.durasi}
+              onRequestLetter={
+                item.statusKey === "approved" ? () => downloadLetter(item) : undefined
+              }
+            />
           ))}
         </div>
       )}
