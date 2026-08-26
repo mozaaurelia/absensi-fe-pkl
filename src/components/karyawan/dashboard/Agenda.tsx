@@ -10,6 +10,7 @@ import {
   getUpcomingAgendas,
   type PersonalAgenda,
 } from "@/lib/services/agenda";
+import DatePicker from "@/components/karyawan/common/DatePicker";
 
 function formatDateLabel(iso: string, locale: string) {
   const ts = new Date(iso + "T00:00:00");
@@ -94,12 +95,13 @@ export default function Agenda() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <input
-          type="date"
-          value={agendaDate}
-          onChange={(e) => setAgendaDate(e.target.value)}
-          className="w-full sm:w-40 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] transition-colors"
-        />
+        <div className="w-full sm:w-40">
+          <DatePicker
+            value={agendaDate}
+            onChange={setAgendaDate}
+            placeholder="Pilih tanggal"
+          />
+        </div>
         <input
           type="time"
           value={agendaTime}

@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 import { getHolidays } from "@/lib/services/admin";
+import DatePicker from "../common/DatePicker";
 
 const MAX_OVERTIME_HOURS = 2;
 
@@ -147,12 +148,10 @@ export default function OvertimeForm() {
             <FiCalendar size={14} className="text-purple-600 dark:text-purple-300" />
             {t("overtimeForm.date")}
           </label>
-          <input
-            type="date"
+          <DatePicker
             value={tanggalLembur}
-            onChange={(e) => setTanggalLembur(e.target.value)}
-            required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            onChange={setTanggalLembur}
+            placeholder={t("overtimeForm.date")}
           />
           {holidayName && (
             <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">

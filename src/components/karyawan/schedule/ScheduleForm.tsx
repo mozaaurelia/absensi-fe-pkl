@@ -6,6 +6,7 @@ import { FiCalendar, FiClock, FiPlusCircle, FiSend, FiTag, FiType } from "react-
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createPersonalAgenda } from "@/lib/services/agenda";
+import DatePicker from "../common/DatePicker";
 
 interface Props {
   onCreated?: () => void;
@@ -106,11 +107,10 @@ export default function ScheduleForm({ onCreated }: Props) {
             <FiCalendar size={14} className="text-rose-500 dark:text-rose-400" />
             {t("scheduleForm.dateLabel")}
           </label>
-          <input
-            type="date"
+          <DatePicker
             value={tanggal}
-            onChange={(e) => setTanggal(e.target.value)}
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            onChange={setTanggal}
+            placeholder={t("scheduleForm.dateLabel")}
           />
         </div>
         <div>
