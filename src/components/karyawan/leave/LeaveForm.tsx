@@ -5,6 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createLeaveRequest, type LeaveType } from "@/lib/services/leave";
+import DatePicker from "@/components/karyawan/common/DatePicker";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -149,24 +150,21 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
           <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             {t("leaveForm.startDate")}
           </label>
-          <input
-            type="date"
+          <DatePicker
             value={tanggalMulai}
-            onChange={(e) => setTanggalMulai(e.target.value)}
-            required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            onChange={setTanggalMulai}
+            placeholder={t("leaveForm.startDate")}
           />
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
             {t("leaveForm.endDate")}
           </label>
-          <input
-            type="date"
+          <DatePicker
             value={tanggalSelesai}
-            onChange={(e) => setTanggalSelesai(e.target.value)}
-            required
-            className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-100 outline-none focus:border-[#1E3A5F] focus:bg-white dark:focus:bg-gray-700 transition-colors"
+            onChange={setTanggalSelesai}
+            min={tanggalMulai || undefined}
+            placeholder={t("leaveForm.endDate")}
           />
         </div>
       </div>
