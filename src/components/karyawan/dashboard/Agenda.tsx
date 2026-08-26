@@ -10,9 +10,7 @@ import {
   getUpcomingAgendas,
   type PersonalAgenda,
 } from "@/lib/services/agenda";
-import { getHolidays } from "@/lib/services/admin";
-import { getStaticHolidayMap } from "@/lib/holidays";
-import HolidayDatePicker from "@/components/common/HolidayDatePicker";
+import DatePicker from "@/components/karyawan/common/DatePicker";
 
 function formatDateLabel(iso: string, locale: string) {
   const ts = new Date(iso + "T00:00:00");
@@ -119,16 +117,11 @@ export default function Agenda() {
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <div className="w-full sm:w-40">
-          <HolidayDatePicker
+          <DatePicker
             value={agendaDate}
             onChange={setAgendaDate}
+            placeholder="Pilih tanggal"
           />
-          {holidayName && (
-            <p className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-              <FiAlertTriangle size={10} className="shrink-0" />
-              {t("scheduleForm.holidayWarning", { name: holidayName })}
-            </p>
-          )}
         </div>
         <input
           type="time"

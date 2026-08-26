@@ -5,7 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createLeaveRequest, type LeaveType } from "@/lib/services/leave";
-import HolidayDatePicker from "@/components/common/HolidayDatePicker";
+import DatePicker from "@/components/karyawan/common/DatePicker";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -145,19 +145,28 @@ export default function LeaveForm({ leaveTypes, onSubmitted }: Props) {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-5">
-        <HolidayDatePicker
-          value={tanggalMulai}
-          onChange={setTanggalMulai}
-          label={t("leaveForm.startDate")}
-          required
-        />
-        <HolidayDatePicker
-          value={tanggalSelesai}
-          onChange={setTanggalSelesai}
-          label={t("leaveForm.endDate")}
-          required
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            {t("leaveForm.startDate")}
+          </label>
+          <DatePicker
+            value={tanggalMulai}
+            onChange={setTanggalMulai}
+            placeholder={t("leaveForm.startDate")}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            {t("leaveForm.endDate")}
+          </label>
+          <DatePicker
+            value={tanggalSelesai}
+            onChange={setTanggalSelesai}
+            min={tanggalMulai || undefined}
+            placeholder={t("leaveForm.endDate")}
+          />
+        </div>
       </div>
 
       <div className="mb-5">

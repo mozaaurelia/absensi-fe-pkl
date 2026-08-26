@@ -5,7 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createReimburseRequest } from "@/lib/services/reimburse";
-import HolidayDatePicker from "@/components/common/HolidayDatePicker";
+import DatePicker from "../common/DatePicker";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -164,12 +164,16 @@ export default function ReimburseForm({ onSubmitted }: Props) {
             ))}
           </select>
         </div>
-        <HolidayDatePicker
-          value={expenseDate}
-          onChange={setExpenseDate}
-          label={t("karyawanReimburse.dateLabel")}
-          required
-        />
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            {t("karyawanReimburse.dateLabel")}
+          </label>
+          <DatePicker
+            value={expenseDate}
+            onChange={setExpenseDate}
+            placeholder={t("karyawanReimburse.dateLabel")}
+          />
+        </div>
       </div>
 
       <div className="mb-5">

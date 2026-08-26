@@ -7,8 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 import { getHolidays } from "@/lib/services/admin";
-import { getStaticHolidayMap } from "@/lib/holidays";
-import HolidayDatePicker from "@/components/common/HolidayDatePicker";
+import DatePicker from "../common/DatePicker";
 
 const MAX_OVERTIME_HOURS = 2;
 
@@ -149,11 +148,14 @@ export default function OvertimeForm() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         <div>
-          <HolidayDatePicker
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            <FiCalendar size={14} className="text-purple-600 dark:text-purple-300" />
+            {t("overtimeForm.date")}
+          </label>
+          <DatePicker
             value={tanggalLembur}
             onChange={setTanggalLembur}
-            label={t("overtimeForm.date")}
-            required
+            placeholder={t("overtimeForm.date")}
           />
           {holidayName && (
             <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600">

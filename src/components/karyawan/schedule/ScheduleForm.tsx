@@ -6,8 +6,7 @@ import { FiAlertTriangle, FiCalendar, FiChevronLeft, FiChevronRight, FiClock, Fi
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createPersonalAgenda } from "@/lib/services/agenda";
-import { getHolidays } from "@/lib/services/admin";
-import { isHoliday as checkIsHoliday, getHolidayName as getHolidayLabel, getStaticHolidayMap } from "@/lib/holidays";
+import DatePicker from "../common/DatePicker";
 
 interface Props {
   onCreated?: () => void;
@@ -196,118 +195,11 @@ export default function ScheduleForm({ onCreated }: Props) {
             <FiCalendar size={14} className="text-rose-500" />
             {t("scheduleForm.dateLabel")}
           </label>
-          <button
-            type="button"
-            onClick={() => setCalOpen((o) => !o)}
-            className={`w-full text-left rounded-lg border bg-gray-50 px-4 py-3 text-sm outline-none transition-colors ${
-              calOpen
-                ? "border-[#1E3A5F] bg-white"
-                : "border-gray-200 focus:border-[#1E3A5F]"
-            } ${tanggal ? "text-gray-700" : "text-gray-400"}`}
-          >
-            {tanggal
-              ? new Date(tanggal + "T00:00:00").toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
-              : t("scheduleForm.datePlaceholder")}
-          </button>
-
-          {calOpen && (
-            <div className="absolute z-50 mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <button
-                  type="button"
-                  onClick={goToPrevMonth}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
-                >
-                  <FiChevronLeft size={16} />
-                </button>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-gray-900">
-                    {months[calMonth]} {calYear}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={goToToday}
-                    className="text-[10px] font-semibold text-[#1E3A5F] bg-blue-50 px-2 py-0.5 rounded-full hover:bg-blue-100 transition-colors"
-                  >
-                    {t("calendarCard.todayLabel")}
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={goToNextMonth}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
-                >
-                  <FiChevronRight size={16} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase text-gray-400 mb-1">
-                {daysShort.map((d) => (
-                  <div key={d} className="py-1">{d}</div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-7 gap-1">
-                {calDays.map((day, index) => {
-                  if (day === null) return <div key={`blank-${index}`} />;
-                  const key = toDateKey(calYear, calMonth, day);
-                  const isHoliday = !!holidayMap[key];
-                  const isPast = isBeforeToday(calYear, calMonth, day);
-                  const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === day;
-                  const isSelected = tanggal === key;
-                  const isDisabled = isHoliday || isPast;
-
-                  return (
-                    <div key={key} className="relative group">
-                      <button
-                        type="button"
-                        disabled={isDisabled}
-                        onClick={() => handleDateSelect(calYear, calMonth, day)}
-                        className={`relative h-9 rounded-lg flex flex-col items-center justify-center text-xs transition-colors w-full ${
-                          isSelected
-                            ? "bg-[#1E3A5F] text-white font-bold shadow-sm"
-                            : isToday && !isDisabled
-                            ? "bg-blue-50 text-[#1E3A5F] font-bold"
-                            : isHoliday
-                            ? "text-red-500 font-semibold cursor-not-allowed"
-                            : isDisabled
-                            ? "text-gray-300 cursor-not-allowed"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
-                      >
-                        {day}
-                        {isHoliday && (
-                          <span className={`absolute bottom-0.5 w-1 h-1 rounded-full ${
-                            isSelected ? "bg-white" : "bg-red-500"
-                          }`} />
-                        )}
-                      </button>
-                      {isHoliday && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-white text-gray-900 border border-gray-200 shadow-md text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
-                          {holidayMap[key]}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-0.5 w-2 h-2 bg-white border-b border-r border-gray-200 rotate-45" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center gap-3 mt-3 pt-2 border-t border-gray-100">
-                <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                  {t("scheduleForm.holidayLegend")}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {selectedHolidayName && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600">
-              <FiAlertTriangle size={12} className="shrink-0" />
-              {t("scheduleForm.holidayWarning", { name: selectedHolidayName })}
-            </p>
-          )}
+          <DatePicker
+            value={tanggal}
+            onChange={setTanggal}
+            placeholder={t("scheduleForm.dateLabel")}
+          />
         </div>
 
         <div>
