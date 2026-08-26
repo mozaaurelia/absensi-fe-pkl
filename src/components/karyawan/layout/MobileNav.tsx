@@ -89,50 +89,6 @@ function LogoutIcon() {
   );
 }
 
-const BOTTOM_ITEMS = [
-  { href: "/karyawan", labelKey: "sidebar.dashboard", Icon: HomeIcon },
-  { href: "/karyawan/attendance", labelKey: "sidebar.clockInOut", Icon: ClockIcon },
-  { href: "/karyawan/history", labelKey: "sidebar.history", Icon: HistoryIcon },
-  { href: "/karyawan/permit", labelKey: "sidebar.permit", Icon: PermitIcon },
-  { href: "/karyawan/settings", labelKey: "sidebar.settings", Icon: SettingsIcon },
-];
-
-export function BottomNav() {
-  const pathname = usePathname();
-  const { t } = useLanguage();
-
-  return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pb-[env(safe-area-inset-bottom)]">
-      <div className="grid grid-cols-5">
-        {BOTTOM_ITEMS.map(({ href, labelKey, Icon }) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              aria-label={t(labelKey)}
-              className={`flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors ${
-                active
-                  ? "text-[#1E3A5F] dark:text-blue-300"
-                  : "text-gray-400 dark:text-gray-500"
-              }`}
-            >
-              <span
-                className={`flex items-center justify-center w-10 h-7 rounded-full transition-colors ${
-                  active ? "bg-blue-50 dark:bg-blue-500/15" : ""
-                }`}
-              >
-                <Icon />
-              </span>
-              <span className="truncate max-w-full px-0.5">{t(labelKey)}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
-
 export function MobileHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();

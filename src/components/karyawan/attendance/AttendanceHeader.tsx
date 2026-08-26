@@ -46,7 +46,7 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
     }
 
     let cancelled = false;
-    fetch(`https://api-hari-libur.vercel.app/api?year=${weekYear}`)
+    fetch(`/api/external-holidays?year=${weekYear}`)
       .then((res) => res.json())
       .then((data) => {
         if (cancelled) return;
