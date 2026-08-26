@@ -116,11 +116,11 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
     : "--:--:--";
 
   return (
-    <div className="rounded-2xl bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] p-6 shadow-lg">
+    <div className="rounded-2xl bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] p-4 sm:p-6 shadow-lg">
       <div className="flex items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <h3 className="text-lg font-semibold text-white">{t("attendanceHeader.title")}</h3>
-          <p className="mt-1 text-sm text-blue-200/80">{rangeText}</p>
+          <p className="mt-1 text-sm text-blue-200/80 truncate">{rangeText}</p>
         </div>
         <div className="flex items-center gap-4">
           <LanguageToggle />
@@ -142,15 +142,15 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-4 mt-5 mb-6">
+      <div className="flex items-center justify-center gap-2 sm:gap-4 mt-5 mb-6">
         <button
           onClick={onPrevDay}
-          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition"
+          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition shrink-0"
         >
           &lt;
         </button>
-        <p className="text-xl font-semibold text-white">{dateStr}</p>
-        <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5">
+        <p className="text-base sm:text-xl font-semibold text-white truncate">{dateStr}</p>
+        <div className="hidden sm:flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 shrink-0">
           <svg
             width="14"
             height="14"
@@ -174,13 +174,13 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
         </div>
         <button
           onClick={onNextDay}
-          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition"
+          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition shrink-0"
         >
           &gt;
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-3">
+      <div className="grid grid-cols-7 gap-1.5 sm:gap-3">
         {weekDays.map((item) => (
           <div
             key={item.name + item.date}
@@ -191,7 +191,7 @@ export default function AttendanceHeader({ selectedDate, onPrevDay, onNextDay })
                   ? `🔴 ${t("attendanceHeader.dayOff")}`
                   : undefined
             }
-            className={`rounded-2xl border p-3 text-center transition-colors ${
+            className={`rounded-xl sm:rounded-2xl border p-2 sm:p-3 text-center transition-colors ${
               item.isRed
                 ? item.active
                   ? "border-red-400/40 bg-red-500/20 shadow-sm"
