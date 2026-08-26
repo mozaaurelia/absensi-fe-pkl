@@ -11,6 +11,8 @@ import {
   type PersonalAgenda,
 } from "@/lib/services/agenda";
 import DatePicker from "@/components/karyawan/common/DatePicker";
+import { getStaticHolidayMap } from "@/lib/holidays";
+import { getHolidays } from "@/lib/services/admin";
 
 function formatDateLabel(iso: string, locale: string) {
   const ts = new Date(iso + "T00:00:00");

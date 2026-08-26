@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createOvertimeRequest } from "@/lib/services/attendance";
 import { getHolidays } from "@/lib/services/admin";
+import { getStaticHolidayMap } from "@/lib/holidays";
 import DatePicker from "../common/DatePicker";
 
 const MAX_OVERTIME_HOURS = 2;

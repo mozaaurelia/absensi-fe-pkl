@@ -6,6 +6,8 @@ import { FiAlertTriangle, FiCalendar, FiChevronLeft, FiChevronRight, FiClock, Fi
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import { createPersonalAgenda } from "@/lib/services/agenda";
+import { getHolidays } from "@/lib/services/admin";
+import { getStaticHolidayMap } from "@/lib/holidays";
 import DatePicker from "../common/DatePicker";
 
 interface Props {
