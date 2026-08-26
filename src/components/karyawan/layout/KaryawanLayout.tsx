@@ -12,7 +12,7 @@ export default function KaryawanLayout({
   contentClassName = "flex-1 p-4 md:p-8",
 }: KaryawanLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="flex min-h-screen bg-white">
       <Sidebar />
       <MobileHeader />
       <main className={contentClassName}>{children}</main>

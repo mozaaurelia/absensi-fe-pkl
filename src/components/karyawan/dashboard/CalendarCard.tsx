@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FiCalendar } from "react-icons/fi";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { getStaticHolidayMap } from "@/lib/holidays";
 
 type Holiday = {
   id: string;
@@ -56,6 +57,8 @@ export default function CalendarCard() {
 
   const markers = useMemo(() => {
     const map: Record<string, "holiday" | "event"> = {};
+    const staticMap = getStaticHolidayMap(year);
+    Object.keys(staticMap).forEach((k) => { map[k] = "holiday"; });
     holidays.forEach((h) => {
       map[dateKey(h.date)] = "holiday";
     });
@@ -63,7 +66,15 @@ export default function CalendarCard() {
       map[dateKey(e.event_date)] = "event";
     });
     return map;
-  }, [holidays, events]);
+  }, [holidays, events, year]);
+
+  const holidayNames = useMemo(() => {
+    const map: Record<string, string> = {};
+    const staticMap = getStaticHolidayMap(year);
+    Object.entries(staticMap).forEach(([k, v]) => { map[k] = v.name; });
+    holidays.forEach((h) => { map[dateKey(h.date)] = h.name; });
+    return map;
+  }, [holidays, year]);
 
   const upcoming = useMemo(() => {
     const todayKey = dateKey(new Date().toISOString());
@@ -121,24 +132,30 @@ export default function CalendarCard() {
           const isToday = day === currentDate;
           const key = day ? `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}` : "";
           const marker = day ? markers[key] : undefined;
+          const isHoliday = marker === "holiday";
+          const holidayName = day ? holidayNames[key] : undefined;
           return (
             <div
               key={`${day ?? "blank"}-${index}`}
-              className={`h-10 rounded-2xl flex flex-col items-center justify-center relative ${
+              className={`h-10 rounded-2xl flex flex-col items-center justify-center relative group ${
                 isToday
                   ? "bg-[#1E3A5F] text-white shadow-sm"
+                  : isHoliday && day
+                  ? "bg-red-50 dark:bg-red-500/10 text-red-500 dark:text-red-400 font-semibold"
                   : day
                   ? "bg-gray-50 dark:bg-gray-700/50"
                   : "bg-transparent"
               }`}
             >
               {day || ""}
-              {marker && (
-                <span
-                  className={`absolute bottom-1 w-1 h-1 rounded-full ${
-                    marker === "holiday" ? "bg-red-500" : "bg-blue-500"
-                  }`}
-                />
+              {isHoliday && day && (
+                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-red-500" />
+              )}
+              {isHoliday && day && holidayName && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+                  {holidayName}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-0.5 w-2 h-2 bg-gray-900 dark:bg-gray-700 rotate-45" />
+                </div>
               )}
             </div>
           );

@@ -44,10 +44,10 @@ export default function AgendaSummary() {
       : t("agendaSummary.leaveValue");
 
   const stats = [
-    { label: t("agendaSummary.shiftActive"), value: shiftValue, note: t("agendaSummary.today"), noteColor: "text-green-600 dark:text-green-300", icon: <FiClock size={18} />, iconBox: "bg-cyan-50 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400" },
-    { label: t("agendaSummary.todayAgenda"), value: t("agendaSummary.todayValue"), note: t("agendaList.today"), noteColor: "text-blue-600 dark:text-blue-300", icon: <FiCalendar size={18} />, iconBox: "bg-blue-50 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400" },
-    { label: t("agendaSummary.leaveRemaining"), value: leaveValue, note: t("agendaSummary.thisYear"), noteColor: "text-amber-600 dark:text-amber-300", icon: <FiFileText size={18} />, iconBox: "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400" },
-    { label: t("agendaSummary.monthAgenda"), value: t("agendaSummary.monthValue"), note: t("agendaSummary.thisMonth"), noteColor: "text-purple-600 dark:text-purple-300", icon: <FiList size={18} />, iconBox: "bg-sky-50 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400" },
+    { label: t("agendaSummary.shiftActive"), value: shiftValue, note: t("agendaSummary.today"), noteColor: "text-green-600", icon: <FiClock size={18} />, iconBox: "bg-cyan-50 text-cyan-600" },
+    { label: t("agendaSummary.todayAgenda"), value: t("agendaSummary.todayValue"), note: t("agendaList.today"), noteColor: "text-blue-600", icon: <FiCalendar size={18} />, iconBox: "bg-blue-50 text-blue-600" },
+    { label: t("agendaSummary.leaveRemaining"), value: leaveValue, note: t("agendaSummary.thisYear"), noteColor: "text-amber-600", icon: <FiFileText size={18} />, iconBox: "bg-indigo-50 text-indigo-600" },
+    { label: t("agendaSummary.monthAgenda"), value: t("agendaSummary.monthValue"), note: t("agendaSummary.thisMonth"), noteColor: "text-purple-600", icon: <FiList size={18} />, iconBox: "bg-sky-50 text-sky-600" },
   ];
 
   return (

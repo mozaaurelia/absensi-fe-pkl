@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { FiCalendar, FiSend, FiTrash2 } from "react-icons/fi";
+import { FiAlertTriangle, FiCalendar, FiSend, FiTrash2 } from "react-icons/fi";
 import { useLanguage } from "@/context/LanguageContext";
 import { ApiError } from "@/lib/api";
 import {
@@ -31,6 +31,23 @@ export default function Agenda() {
   const [agendaTime, setAgendaTime] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const staticMap = getStaticHolidayMap(new Date().getFullYear());
+    const merged: Record<string, string> = {};
+    Object.entries(staticMap).forEach(([k, v]) => { merged[k] = v.name; });
+    getHolidays()
+      .then((list) => {
+        list.forEach((h) => { merged[h.date] = h.name; });
+        setHolidayMap(merged);
+      })
+      .catch(() => {
+        setHolidayMap(merged);
+      });
+  }, []);
+
+  const holidayName = agendaDate ? holidayMap[agendaDate] ?? null : null;
 
   const load = useCallback(async () => {
     try {
@@ -48,6 +65,10 @@ export default function Agenda() {
   const handleAdd = async () => {
     if (!agendaDate || !agendaTitle.trim()) {
       setErrorMsg(t("agenda.addRequired"));
+      return;
+    }
+    if (holidayMap[agendaDate]) {
+      setErrorMsg(t("scheduleForm.holidayBlocked"));
       return;
     }
     setSubmitting(true);

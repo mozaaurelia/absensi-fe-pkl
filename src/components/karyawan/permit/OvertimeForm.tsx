@@ -41,13 +41,17 @@ export default function OvertimeForm() {
   const [holidayMap, setHolidayMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    const staticMap = getStaticHolidayMap(new Date().getFullYear());
+    const merged: Record<string, string> = {};
+    Object.entries(staticMap).forEach(([k, v]) => { merged[k] = v.name; });
     getHolidays()
       .then((list) => {
-        const map: Record<string, string> = {};
-        list.forEach((h) => { map[h.date] = h.name; });
-        setHolidayMap(map);
+        list.forEach((h) => { merged[h.date] = h.name; });
+        setHolidayMap(merged);
       })
-      .catch(() => {});
+      .catch(() => {
+        setHolidayMap(merged);
+      });
   }, []);
 
   const maxEnd = jamMulai ? addHours(jamMulai, MAX_OVERTIME_HOURS) : "";
@@ -154,7 +158,7 @@ export default function OvertimeForm() {
             placeholder={t("overtimeForm.date")}
           />
           {holidayName && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600">
               <FiAlertTriangle size={12} className="shrink-0" />
               {t("overtimeForm.holidayWarning", { name: holidayName })}
             </p>

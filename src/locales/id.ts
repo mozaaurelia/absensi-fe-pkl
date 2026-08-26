@@ -732,6 +732,7 @@ export const id = {
     titleLabel: "Judul Agenda",
     titlePlaceholder: "Contoh: Rapat Evaluasi Proyek",
     dateLabel: "Tanggal",
+    datePlaceholder: "Pilih tanggal",
     timeLabel: "Jam Mulai",
     categoryLabel: "Kategori",
     categoryPlaceholder: "Pilih kategori",
@@ -745,6 +746,9 @@ export const id = {
     failed: "Gagal menyimpan agenda. Silakan coba lagi.",
     activeShift: "Shift Aktif",
     noSchedule: "Belum ada jadwal kerja aktif yang ditetapkan.",
+    holidayLegend: "Hari Libur",
+    holidayWarning: "Tanggal ini adalah hari libur ({name}).",
+    holidayBlocked: "Tanggal tersebut merupakan hari libur dan tidak dapat digunakan untuk membuat agenda.",
   },
 
   leaveSummary: {
