@@ -7,7 +7,6 @@ import PermitForm from "./PermitForm";
 import PermitHistory from "./PermitHistory";
 import OvertimeForm from "./OvertimeForm";
 import RiwayatLembur from "./RiwayatLembur";
-import InfoCalendar from "@/components/karyawan/common/InfoCalendar";
 import LeaveSummary from "@/components/karyawan/leave/LeaveSummary";
 import {
   getLeaveTypes,
@@ -112,8 +111,7 @@ export default function PermitContent() {
           <OvertimeForm />
           <RiwayatLembur />
         </div>
-        <div className="space-y-6">
-          <InfoCalendar />
+        <div>
           <PermitHistory requests={izinRequests} />
         </div>
       </div>
