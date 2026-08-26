@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import LeaveSummary from "./LeaveSummary";
 import LeaveForm from "./LeaveForm";
 import LeaveHistory from "./LeaveHistory";
+import InfoCalendar from "@/components/karyawan/common/InfoCalendar";
 import {
   getMyLeaveRequests,
   getLeaveQuota,
@@ -108,7 +109,8 @@ export default function LeaveContent() {
           <LeaveForm leaveTypes={cutiTypes} onSubmitted={loadData} />
         </div>
 
-        <div>
+        <div className="space-y-6">
+          <InfoCalendar />
           <LeaveHistory requests={cutiRequests} />
         </div>
       </div>
