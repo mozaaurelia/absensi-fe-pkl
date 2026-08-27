@@ -23,7 +23,7 @@ export default function KaryawanLayout({
       <MobileHeader />
       <div className="flex min-h-screen pt-14 md:pt-0">
         <Sidebar />
-        <main className={contentClassName}>{children}</main>
+        <main className={`min-w-0 ${contentClassName}`}>{children}</main>
       </div>
     </div>
   );
