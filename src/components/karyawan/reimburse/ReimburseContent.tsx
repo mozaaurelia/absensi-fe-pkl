@@ -61,7 +61,7 @@ export default function ReimburseContent() {
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-8 text-center">
+      <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-5 sm:p-8 text-center">
         <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
           {t("common.loadErrorTitle")}
         </h3>

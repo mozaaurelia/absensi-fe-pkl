@@ -51,7 +51,7 @@ export default function AttendanceSummary({ selectedDate }) {
   }, [selectedDate]);
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
       <div className="rounded-2xl bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 p-5 text-center">
         <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.hadir}</p>
         <p className="text-sm font-medium text-green-700 dark:text-green-300 mt-1">{t("attendanceSummary.checkedIn")}</p>
