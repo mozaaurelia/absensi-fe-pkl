@@ -17,7 +17,7 @@ export default function KaryawanLayout({
       <style
         dangerouslySetInnerHTML={{
           __html:
-            "@media (max-width:767.98px){aside[data-karyawan-sidebar]{display:none!important}}",
+            "@media (max-width:767.98px){aside[data-karyawan-sidebar]{display:none!important;width:0!important;min-width:0!important}}",
         }}
       />
       <MobileHeader />

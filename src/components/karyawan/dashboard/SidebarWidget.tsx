@@ -43,7 +43,7 @@ export default function Sidebar() {
       data-karyawan-sidebar
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`hidden md:flex md:flex-col bg-[#1E3A5F] h-screen px-3 py-6 shrink-0 overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${open ? "w-64" : "w-17"
+      className={`hidden md:flex md:flex-col bg-[#1E3A5F] h-screen px-3 py-6 shrink-0 overflow-hidden md:overflow-y-auto sticky top-0 transition-[width] duration-300 ease-in-out ${open ? "w-0 md:w-64" : "w-0 md:w-17"
         }`}
     >
       <div className={`flex items-center mb-8 ${open ? "px-2 justify-between" : "justify-center"}`}>
