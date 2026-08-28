@@ -238,9 +238,9 @@ export default function AdminKalenderContent() {
       )}
 
       <div className="flex flex-col lg:flex-row gap-6 items-stretch">
-      <div className="flex-1 min-w-0 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-        <div className="flex items-center justify-between mb-5">
-          <div>
+      <div className="w-full flex-1 min-w-0 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div className="min-w-0">
             <h3 className="font-bold text-gray-900 dark:text-gray-100">
               {t("adminKalender.calendarTitle")}
             </h3>
@@ -264,7 +264,7 @@ export default function AdminKalenderContent() {
             >
               <FiChevronLeft size={18} />
             </button>
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-[120px] text-center">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 min-w-0 text-center">
               {months[viewMonth]} {viewYear}
             </p>
             <button
@@ -313,7 +313,7 @@ export default function AdminKalenderContent() {
                         .join("\n")
                     : undefined
                 }
-                className={`relative min-h-[64px] rounded-lg flex flex-col items-stretch px-1 pt-1.5 pb-1 transition-colors ${
+                className={`relative min-h-[52px] rounded-lg flex flex-col items-stretch px-1 pt-1.5 pb-1 transition-colors ${
                   !day
                     ? "bg-transparent cursor-default"
                     : isSelected

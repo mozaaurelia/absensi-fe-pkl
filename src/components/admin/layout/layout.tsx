@@ -59,7 +59,7 @@ export default function Layout({ children, title }: { children: ReactNode; title
 
       <div className="flex-1 flex flex-col min-w-0">
         <header className="px-8 pt-8">
-          <div className="lg:hidden flex items-center justify-between mb-4">
+          <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between mb-4 bg-gray-50">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -95,17 +95,26 @@ export default function Layout({ children, title }: { children: ReactNode; title
         <main className="flex-1 p-8 pt-0 min-w-0">{children}</main>
       </div>
 
-      {menuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="relative w-full max-w-64 h-full">
-            <Sidebar onClose={() => setMenuOpen(false)} />
-          </div>
+      <div
+        className={`lg:hidden fixed inset-0 z-50 flex ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+        aria-hidden={!menuOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            menuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setMenuOpen(false)}
+        />
+        <div
+          className={`relative w-full max-w-64 h-full transition-transform duration-300 ease-in-out ${
+            menuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <Sidebar onClose={() => setMenuOpen(false)} />
         </div>
-      )}
+      </div>
     </div>
   );
 }
