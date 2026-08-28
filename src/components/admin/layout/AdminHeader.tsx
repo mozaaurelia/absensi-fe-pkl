@@ -49,8 +49,8 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
   });
 
   return (
-    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-8 py-6 text-white shadow-lg mb-8">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-0">
+    <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 text-white shadow-lg mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-5 lg:gap-6">
         <div className="space-y-1.5 min-w-0">
           <h1 className="text-2xl font-bold tracking-tight">
             {title ?? (
@@ -87,11 +87,11 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <LanguageToggle />
           <Notification />
           {user?.role !== "superadmin" && <AttendanceShortcut />}
-          <div className="w-11 h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
+          <div className="ml-auto w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/20 text-white font-bold text-sm flex items-center justify-center overflow-hidden ring-2 ring-white/30">
             {user?.image ? (
               <img
                 src={user.image}

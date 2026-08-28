@@ -58,8 +58,8 @@ export default function Layout({ children, title }: { children: ReactNode; title
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="px-8 pt-8">
-          <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between mb-4 bg-gray-50">
+        <div className="lg:hidden sticky top-0 z-30 bg-gray-50 px-4 sm:px-8 pt-[env(safe-area-inset-top)]">
+          <div className="flex items-center justify-between py-3">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -88,11 +88,13 @@ export default function Layout({ children, title }: { children: ReactNode; title
               {initials}
             </div>
           </div>
+        </div>
 
+        <header className="px-4 sm:px-8 pt-2 sm:pt-4 lg:pt-8">
           <AdminHeader title={title} />
         </header>
 
-        <main className="flex-1 p-8 pt-0 min-w-0">{children}</main>
+        <main className="flex-1 p-4 sm:p-8 pt-0 min-w-0">{children}</main>
       </div>
 
       <div
