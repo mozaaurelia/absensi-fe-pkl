@@ -131,7 +131,7 @@ export default function PerizinanFilter({
           </svg>
         </div>
 
-        <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1 overflow-x-auto">
           {TABS.map((tb) => (
             <button
               key={tb.id}

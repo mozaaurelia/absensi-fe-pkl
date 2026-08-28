@@ -32,7 +32,7 @@ export default function SettingsHeader({ isSaving = false, onCancel }: Props) {
             "AD"
           )}
         </div>
-        <div>
+        <div className="min-w-0">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {t("settingsHeader.title")}
           </h1>
@@ -42,7 +42,7 @@ export default function SettingsHeader({ isSaving = false, onCancel }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
         <CancelButton onClick={onCancel} />
         <SaveButton form="profile-form" loading={isSaving} />
       </div>
