@@ -125,7 +125,7 @@ export default function ProfileForm({
           </p>
         )}
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {t("profileForm.fullName")}
@@ -151,7 +151,7 @@ export default function ProfileForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {t("profileForm.email")}

@@ -50,8 +50,8 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
 
   return (
     <div className="bg-linear-to-r from-[#1E3A5F] to-[#2a4f7a] rounded-2xl px-8 py-6 text-white shadow-lg mb-8">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1.5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-0">
+        <div className="space-y-1.5 min-w-0">
           <h1 className="text-2xl font-bold tracking-tight">
             {title ?? (
               <>
@@ -73,7 +73,7 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-blue-200/80"
+              className="text-blue-200/80 shrink-0"
             >
               <circle cx="12" cy="12" r="9" />
               <path d="M12 7v5l3 3" />
@@ -87,7 +87,7 @@ export default function AdminHeader({ title }: AdminHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
           <LanguageToggle />
           <Notification />
           {user?.role !== "superadmin" && <AttendanceShortcut />}

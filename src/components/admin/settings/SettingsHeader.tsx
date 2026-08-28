@@ -16,8 +16,8 @@ export default function SettingsHeader({ isSaving = false, onCancel }: Props) {
   const user = session?.user;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between mb-6">
-      <div className="flex items-center gap-4">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 mb-6">
+      <div className="flex items-center gap-4 min-w-0">
         <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-500/20 text-[#1E3A5F] dark:text-blue-300 font-bold text-base flex items-center justify-center overflow-hidden shrink-0">
           {user?.image ? (
             <img src={user.image} alt="" className="w-full h-full object-cover" />
