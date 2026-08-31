@@ -95,9 +95,9 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 | 3.2 | Dashboard atasan           | `/atasan`                                      | Ringkasan tim: hadir/telat/alpha + pending cuti                                        | ✅     | Data histori 21 hari sudah di-seed |
 | 3.3 | Approve/reject cuti tim    | `/atasan` → daftar pending                     | Status berubah; tercatat di history. Ada 1 leave pending yang sudah di-seed buat dites | ✅     |                                    |
 | 3.4 | Approve/reject lembur tim  | `/atasan` → daftar lembur tim                  | Status berubah. Ada 1 overtime pending yang sudah di-seed                              | ✅     |                                    |
-| 3.5 | Jadwal & riwayat tim       | Lihat jadwal + riwayat anggota tim             | Data 2 karyawan (karyawan1, karyawan2) tampil                                          | ⬜     | Sepertinya belum ada fitur ini untuk frontend.                                   |
+| 3.5 | Jadwal & riwayat tim       | Lihat jadwal + riwayat anggota tim             | Data 2 karyawan (karyawan1, karyawan2) tampil                                          | ⚠️     | Sepertinya belum ada fitur ini untuk frontend, tapi ada di backend.                                   |
 | 3.6 | Guard role                 | Supervisor buka `/admin`                       | Ditolak                                                                                | ✅     | Berhasil ditolak, namun mengalihkan ke halaman login sangat lambat/tidak dapat beralih sama sekali.                                   |
-| 3.7 | Policy departemen (read)   | Lihat policy departemen via API                | Bisa GET, tidak bisa PUT                                                               | ⬜     | Sepertinya belum ada fitur ini untuk frontend.                                   |
+| 3.7 | Policy departemen (read)   | Lihat policy departemen via API                | Bisa GET, tidak bisa PUT                                                               | ⚠️     | Sepertinya belum ada fitur ini untuk frontend, tapi ada API endpoint-nya.                                   |
 | 3.8 | Forgot password supervisor | `/auth/forgot-password` pakai email supervisor | Email terkirim, reset sukses                                                           | ⚠️     | Hasilnya sama. Lihat pada bagian 1.9 dalam SUPER ADMIN                                   |
 
 ---
@@ -114,10 +114,10 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 | 4.1.1 | Clock-in (wajah + lokasi)  | `/karyawan` → Check-in → izinkan lokasi + kamera → selfie → submit | Dalam radius + wajah match → status "Hadir"/"Telat" | ⬜     |                                                       |
 | 4.1.2 | Clock-out (wajah + lokasi) | Tombol Check-out → selfie                                          | Dalam radius + wajah match → waktu pulang tercatat  | ⬜     |                                                       |
 | 4.1.3 | Face tidak match           | Selfie orang lain                                                  | Ditolak `FACE_MISMATCH`                             | ⬜     |                                                       |
-| 4.1.4 | Belum ada referensi wajah  | Check-in sebelum wajah didaftarkan                                 | Ditolak `FACE_REFERENCE_NOT_FOUND`                  | ⬜     |                                                       |
+| 4.1.4 | Belum ada referensi wajah  | Check-in sebelum wajah didaftarkan                                 | Ditolak `FACE_REFERENCE_NOT_FOUND`                  | ❌     |                               Tidak dapat testing tanpa register face (lihat #2.16)                                   |
 | 4.1.5 | Lokasi di luar radius      | Check-in dari lokasi jauh                                          | Ditolak `OUTSIDE_RADIUS`, tampilkan jarak aktual    | ⚠️     | (Coba matikan GPS akurat / pura-pura jauh buat tes ini) Meskipun akses ke lokasi GPS tidak diblokir, tidak dapat menampilkan layar GPS. teks juga menampilkan 'gpsVerification.success', 'gpsVerification.successDesc', dan 'gpsVerification.continue'. Tidak ada error yang muncul dari frontend dan backend untuk ini. (Bug UI) |
-| 4.1.6 | Tanpa selfie               | Submit tanpa foto                                                  | Ditolak `FACE_IMAGE_REQUIRED`                       | ⬜     |                                                       |
-| 4.1.7 | Status wajah               | `/karyawan` menampilkan status referensi wajah                     | Terlihat terdaftar/belum                            | ⬜     |                                                       |
+| 4.1.6 | Tanpa selfie               | Submit tanpa foto                                                  | Ditolak `FACE_IMAGE_REQUIRED`                       | ❌     |                               Wajib memiliki foto selfie untuk verifikasi                                   |
+| 4.1.7 | Status wajah               | `/karyawan` menampilkan status referensi wajah                     | Terlihat terdaftar/belum                            | ⚠️     |                                       Status depends on face reference registration                                   |
 | 4.1.8 | Kamera ditolak             | Blokir akses kamera browser                                        | Pesan error kamera, tidak bisa lanjut               | ✅     |                                                       |
 
 ### 4.2 Dashboard & data
@@ -156,8 +156,8 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 | #   | Skenario                                                                              | Status | Catatan |
 | --- | ------------------------------------------------------------------------------------- | ------ | ------- |
 | 5.1 | Admin login tetap normal setelah perubahan NextAuth                                   | ✅     |         |
-| 5.2 | Karyawan dari perusahaan Nonaktif gagal login (dari #1.7) dengan pesan jelas          | ⬜     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #1.7    |
-| 5.3 | Clock-in tanpa foto ditolak `FACE_IMAGE_REQUIRED` di clock-in DAN clock-out           | ⬜     |    Belum dites ulang karena alur absensi utama terblokir oleh kendala pada #2.16.    |
+| 5.2 | Karyawan dari perusahaan Nonaktif gagal login (dari #1.7) dengan pesan jelas          | ❌     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #1.7 Superadmin tidak dapat mengubah status perusahaan.                                    |
+| 5.3 | Clock-in tanpa foto ditolak `FACE_IMAGE_REQUIRED` di clock-in DAN clock-out           | ❌     |    Belum dites ulang karena alur absensi utama terblokir oleh kendala pada #2.16 Registrasi wajah gagal.                                        |
 | 5.4 | Jam kerja/history tidak berubah format setelah penambahan verif wajah                 | ⬜     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #2.16  |
 | 5.5 | Responsif: layout admin & karyawan di mobile/tablet                                   | ✅     |    Cukup responsif untuk perangkat dengan layar kecil     |
 | 5.6 | Dark mode: tidak ada kontras rusak di halaman baru (companies, superadmin, perizinan) | ❌     |    Warna background Karyawan masih dalam light mode. Fitur Dark mode hilang untuk Admin.     |
@@ -172,12 +172,12 @@ Setelah selesai testing, isi ini buat tau progress riil:
 
 | Kategori    | Total | ✅ Lolos | ⚠️ Partial | ❌ Gagal | ⬜ Untested/Blocked | QA Coverage |
 |-------------|------:|--------:|-----------:|-------:|-------------------:|------------:|
-| Super Admin |     9 |       6 |          2 |      1 |                  0 |     100.00% |
+| Super Admin |     9 |       6 |          3 |      1 |                  0 |     100.00% |
 | Admin/HRD   |    19 |      11 |          5 |      2 |                  1 |      94.74% |
-| Supervisor  |     8 |       5 |          1 |      0 |                  2 |      75.00% |
-| Karyawan    |    22 |      14 |          2 |      0 |                  6 |      72.73% |
-| Regresi     |     8 |       2 |          2 |      1 |                  3 |      62.50% |
-| **TOTAL**   | **66** | **38** | **12** | **4** | **12** | **81.82%** |
+| Supervisor  |     8 |       5 |          3 |      0 |                  0 |      75.00% |
+| Karyawan    |    22 |      14 |          3 |      2 |                  3 |      72.73% |
+| Regresi     |     8 |       2 |          2 |      3 |                  1 |      62.50% |
+| **TOTAL**   | **66** | **38** | **15** | **8** | **5** | **81.82%** |
 
 > **Koreksi jumlah test case:** versi awal dokumen mencantumkan
 > 27 test Karyawan dan 71 test total. Setelah dihitung ulang berdasarkan
