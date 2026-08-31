@@ -43,7 +43,7 @@ interface ApiResponse<T> {
   };
 }
 
-export class ApiError extends Error {
+export     class ApiError extends Error {
   code: string;
 
   constructor(code: string, message: string) {
