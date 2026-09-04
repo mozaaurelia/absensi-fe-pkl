@@ -3,9 +3,9 @@
 > Backend: `http://localhost:4000/api/v1` | Frontend: `http://localhost:3000`
 > Login utama: `/auth/login` | Login super admin: `/auth/superadmin`
 >
-> **Cara pakai dokumen ini**: tiap baris ada kolom **Status** — isi ✅ (lolos) / ❌ (gagal) / ⚠️ (partial/ada catatan) / ⬜ (belum dites) pas kamu testing. Total di akhir dokumen buat hitung progress %.
+> **Cara pakai dokumen ini**: tiap baris ada kolom **Status** — isi ✅ (lolos) / ❌ (gagal) / ⚠️ (partial/ada catatan/terblokir oleh bug dari fitur lain) / ⬜ (belum dites) pas kamu testing. Total di akhir dokumen buat hitung progress %.
 
-> Tester: Raihan Abyan Allam
+> Tester: Raihan Abyan Allam | 
 > Tanggal: 28 Agustus - 31 Agustus 2026
 
 ---
@@ -70,9 +70,9 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 | 2.3  | Kelola karyawan         | `/admin/karyawan`: tambah, edit, resign                                         | CRUD berfungsi; resign menonaktifkan                                                                                   | ⚠️     | Proses lancar dan data berhasil masuk dalam Database, namun ada kesalahan pada UI: Opsi Default untuk Jenis Kelamin dan Status Pernikahan masih dalam pilihan teks 'Pilih Manager --'. Tombol untuk menambahkan Karyawan masih tertulis 'Lanjut Face Scan' (Apakah Admin perlu melakukan face scan sendiri sebelum menambahkan Karyawan?).                          |
 | 2.4  | Kelola departemen       | `/admin/departemen`: tambah/edit/hapus                                          | **Cek dulu**: apakah beneran tersimpan ke DB atau cuma di state lokal (lihat Known Limitations)                        | ✅     |               Sudah bukan mock lagi. Data berhasil masuk ke dalam DB 👍              |
 | 2.5  | Policy departemen       | Klik tombol Policy di baris departemen                                          | Modal muncul; simpan `allow_overtime`, `allow_wfh`, `min_attendance_percentage`, `effective_date`; refresh → tersimpan | ✅     | Data policy sudah di-seed, harusnya kelihatan  |
-| 2.6  | Kelola jabatan          | `/admin/jabatan`                                                                | Cek juga apakah tersimpan beneran atau mock                                                                            | ⚠️      | CRUD sudah terhubung ke backend, tetapi field deskripsi belum tersimpan ke database. |                            |
+| 2.6  | Kelola jabatan          | `/admin/jabatan`                                                                | Cek juga apakah tersimpan beneran atau mock                                                                            | ⚠️      | CRUD sudah terhubung ke backend, tetapi field deskripsi belum tersimpan ke database. |                            
 | 2.7  | Kelola shift            | `/admin/jadwal-kerja`                                                           | Cek juga apakah tersimpan beneran atau mock                                                                            | ✅     | Sudah tidak mock lagi. Berhasil menambahkan, mengedit, dan menghapus jadwal shift sebuah karyawan. Data shift tersebut masuk dalam DB 👍                            |
-| 2.8  | Pola hari kerja         | `/admin/pola-kerja`: tambah pola, centang hari aktif, edit                      | CRUD berfungsi; hari aktif tersimpan                                                                                   | ⬜     | Meskipun sudah ada dalam DB backend (working_day_patterns), belum dapat menemukan fitur ini untuk Admin, hanya ada sebagai dropdown saja.                                               |
+| 2.8  | Pola hari kerja         | `/admin/pola-kerja`: tambah pola, centang hari aktif, edit                      | CRUD berfungsi; hari aktif tersimpan                                                                                   | ⚠️     | Meskipun sudah ada dalam DB backend (working_day_patterns), belum dapat menemukan fitur ini untuk Admin, hanya ada sebagai dropdown saja.                                               |
 | 2.9  | Penjadwalan             | `/admin/penjadwalan`: pilih karyawan → shift, lokasi, pola, start date → Assign | Jadwal muncul di "Current Schedule"; End Schedule mengakhiri                                                           | ✅     |                                                |
 | 2.10 | Kelola lokasi           | `/admin/lokasi` (lat, lng, radius)                                              | CRUD berfungsi                                                                                                         | ❌     |  Berhasil membuat lokasi, namun tidak dapat menyimpan informasi Alamat Lengkap dan Tipe Lokasi. Lokasi tidak dapat mengubah toggle Aktif/Nonaktif dengan tombol switch berwarna hijau (Hanya refresh saja). Lokasi tidak dapat dihapus, sehingga menghasilkan teks peringatan merah: 'Something went wrong. Please try again.' Error backend: [deleteLocation] Error: error: update or delete on table "office_locations" violates foreign key constraint "employee_schedules_location_id_fkey" on table "employee_schedules"                                              |
 | 2.11 | Kalender & libur        | `/admin/kalender`: tambah libur + acara                                         | CRUD berfungsi                                                                                                         | ⚠️     |  Berhasil menambahkan, membaca, dan menghapus acara pada kalender, tetapi tidak ada cara untuk mengedit acara tersebut (secara definisi, CRUD ada **Update**. kalau memang seperti itu, berarti hasilnya CRD)                                             |
@@ -111,12 +111,12 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 
 | #     | Skenario                   | Langkah                                                            | Hasil yang diharapkan                               | Status | Catatan                                               |
 | ----- | -------------------------- | ------------------------------------------------------------------ | --------------------------------------------------- | ------ | ----------------------------------------------------- |
-| 4.1.1 | Clock-in (wajah + lokasi)  | `/karyawan` → Check-in → izinkan lokasi + kamera → selfie → submit | Dalam radius + wajah match → status "Hadir"/"Telat" | ⬜     |                                                       |
-| 4.1.2 | Clock-out (wajah + lokasi) | Tombol Check-out → selfie                                          | Dalam radius + wajah match → waktu pulang tercatat  | ⬜     |                                                       |
-| 4.1.3 | Face tidak match           | Selfie orang lain                                                  | Ditolak `FACE_MISMATCH`                             | ⬜     |                                                       |
+| 4.1.1 | Clock-in (wajah + lokasi)  | `/karyawan` → Check-in → izinkan lokasi + kamera → selfie → submit | Dalam radius + wajah match → status "Hadir"/"Telat" | ⚠️     | Tidak dapat di tes karena terkendala pada bagian 2.16                                                      |
+| 4.1.2 | Clock-out (wajah + lokasi) | Tombol Check-out → selfie                                          | Dalam radius + wajah match → waktu pulang tercatat  | ⚠️     | Tidak dapat di tes karena terkendala pada bagian 2.16                                                      |
+| 4.1.3 | Face tidak match           | Selfie orang lain                                                  | Ditolak `FACE_MISMATCH`                             | ⚠️     | Tidak dapat di tes karena terkendala pada bagian 2.16                                                      |
 | 4.1.4 | Belum ada referensi wajah  | Check-in sebelum wajah didaftarkan                                 | Ditolak `FACE_REFERENCE_NOT_FOUND`                  | ❌     |                               Tidak dapat testing tanpa register face (lihat #2.16)                                   |
 | 4.1.5 | Lokasi di luar radius      | Check-in dari lokasi jauh                                          | Ditolak `OUTSIDE_RADIUS`, tampilkan jarak aktual    | ⚠️     | (Coba matikan GPS akurat / pura-pura jauh buat tes ini) Meskipun akses ke lokasi GPS tidak diblokir, tidak dapat menampilkan layar GPS. teks juga menampilkan 'gpsVerification.success', 'gpsVerification.successDesc', dan 'gpsVerification.continue'. Tidak ada error yang muncul dari frontend dan backend untuk ini. (Bug UI) |
-| 4.1.6 | Tanpa selfie               | Submit tanpa foto                                                  | Ditolak `FACE_IMAGE_REQUIRED`                       | ❌     |                               Wajib memiliki foto selfie untuk verifikasi                                   |
+| 4.1.6 | Tanpa selfie               | Submit tanpa foto                                                  | Ditolak `FACE_IMAGE_REQUIRED`                       | ⚠️     |                               (Wajib memiliki foto selfie untuk verifikasi) Tidak bisa di tes karena terkendala pada bagian 2.16                                   |
 | 4.1.7 | Status wajah               | `/karyawan` menampilkan status referensi wajah                     | Terlihat terdaftar/belum                            | ⚠️     |                                       Status depends on face reference registration                                   |
 | 4.1.8 | Kamera ditolak             | Blokir akses kamera browser                                        | Pesan error kamera, tidak bisa lanjut               | ✅     |                                                       |
 
@@ -156,9 +156,9 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 | #   | Skenario                                                                              | Status | Catatan |
 | --- | ------------------------------------------------------------------------------------- | ------ | ------- |
 | 5.1 | Admin login tetap normal setelah perubahan NextAuth                                   | ✅     |         |
-| 5.2 | Karyawan dari perusahaan Nonaktif gagal login (dari #1.7) dengan pesan jelas          | ❌     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #1.7 Superadmin tidak dapat mengubah status perusahaan.                                    |
-| 5.3 | Clock-in tanpa foto ditolak `FACE_IMAGE_REQUIRED` di clock-in DAN clock-out           | ❌     |    Belum dites ulang karena alur absensi utama terblokir oleh kendala pada #2.16 Registrasi wajah gagal.                                        |
-| 5.4 | Jam kerja/history tidak berubah format setelah penambahan verif wajah                 | ⬜     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #2.16  |
+| 5.2 | Karyawan dari perusahaan Nonaktif gagal login (dari #1.7) dengan pesan jelas          | ❌     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #1.7. Superadmin tidak dapat mengubah status perusahaan.                                    |
+| 5.3 | Clock-in tanpa foto ditolak `FACE_IMAGE_REQUIRED` di clock-in DAN clock-out           | ❌     |    Belum dites ulang karena alur absensi utama terblokir oleh kendala pada #2.16. Registrasi wajah gagal.                                        |
+| 5.4 | Jam kerja/history tidak berubah format setelah penambahan verifikasi wajah            | ⚠️     |    Tidak dapat di tes karena ada kendala/error. Lihat pada bagian #2.16  |
 | 5.5 | Responsif: layout admin & karyawan di mobile/tablet                                   | ✅     |    Cukup responsif untuk perangkat dengan layar kecil     |
 | 5.6 | Dark mode: tidak ada kontras rusak di halaman baru (companies, superadmin, perizinan) | ❌     |    Warna background Karyawan masih dalam light mode. Fitur Dark mode hilang untuk Admin.     |
 | 5.7 | Bahasa EN/ID: label halaman baru (perizinan, jadwal-kerja stats) diterjemahkan        | ⚠️     |    Tidak semua kata telah diterjemahkan ke Bahasa EN/ID     |
@@ -170,14 +170,14 @@ Beberapa hal ini **sudah diketahui belum berfungsi penuh**, bukan bug baru yang 
 
 Setelah selesai testing, isi ini buat tau progress riil:
 
-| Kategori    | Total | ✅ Lolos | ⚠️ Partial | ❌ Gagal | ⬜ Untested/Blocked | QA Coverage |
-|-------------|------:|--------:|-----------:|-------:|-------------------:|------------:|
-| Super Admin |     9 |       6 |          3 |      1 |                  0 |     100.00% |
-| Admin/HRD   |    19 |      11 |          5 |      2 |                  1 |      94.74% |
-| Supervisor  |     8 |       5 |          3 |      0 |                  0 |      75.00% |
-| Karyawan    |    22 |      14 |          3 |      2 |                  3 |      72.73% |
-| Regresi     |     8 |       2 |          2 |      3 |                  1 |      62.50% |
-| **TOTAL**   | **66** | **38** | **15** | **8** | **5** | **81.82%** |
+| Kategori    | Total | ✅ Lolos | ⚠️ Partial | ❌ Gagal |     %     |
+|-------------|------:|---------:|-----------:|---------:|------------:|
+| Super Admin |     9 |        6 |          2 |        1 |      66.67% |
+| Admin/HRD   |    19 |       11 |          6 |        2 |      57.89% |
+| Supervisor  |     8 |        5 |          3 |        0 |      62.50% |
+| Karyawan    |    22 |       14 |          7 |        1 |      63.64% |
+| Regresi     |     8 |        2 |          3 |        3 |      25.00% |
+| **TOTAL**   | **66** | **38** | **21** | **7** | **57.58%** |
 
 > **Koreksi jumlah test case:** versi awal dokumen mencantumkan
 > 27 test Karyawan dan 71 test total. Setelah dihitung ulang berdasarkan
