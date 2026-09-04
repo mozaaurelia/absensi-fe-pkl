@@ -51,16 +51,16 @@ Total Relevant Audited Items
 
 | Category               | Total | Completed / Verified | Remaining | Progress |
 | ---------------------- | ----: | -------------------: | --------: | -------: |
-| Core Authentication    | 3 | 3 | 0 | 100% |
-| Superadmin             | 3 | 2 | 1 | 67% |
-| Company Admin          | 5 | 4 | 1 | 80% |
-| Supervisor             | 4 | 3 | 1 | 75% |
-| Employee / Karyawan    | 5 | 3 | 2 | 60% |
-| Attendance System      | 4 | 3 | 1 | 75% |
-| Realtime Features      | 2 | 0 | 2 | 0% |
-| Database / Backend     | 5 | 4 | 1 | 80% |
-| UI / UX / Theme / i18n | 4 | 4 | 0 | 100% |
-| **OVERALL**            | **22** | **11** | **11** | **50%** |
+| Core Authentication    | 3     | 3                    | 0         | 100%     |
+| Superadmin             | 3     | 2                    | 1         | 67%      |
+| Company Admin          | 5     | 4                    | 1         | 80%      |
+| Supervisor             | 4     | 3                    | 1         | 75%      |
+| Employee / Karyawan    | 5     | 3                    | 2         | 60%      |
+| Attendance System      | 4     | 3                    | 1         | 75%      |
+| Realtime Features      | 2     | 0                    | 2         | 0%       |
+| Database / Backend     | 5     | 4                    | 1         | 80%      |
+| UI / UX / Theme / i18n | 4     | 4                    | 0         | 100%     |
+| **OVERALL**            | **22**| **11**               | **11**    | **50%**  |
 
 *Progress calculated as: (Verified Working + Fix-Ready Findings) / (Total - Intentionally Excluded) × 100*
 
